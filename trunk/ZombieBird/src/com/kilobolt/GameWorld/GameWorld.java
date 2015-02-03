@@ -69,6 +69,15 @@ public class GameWorld {
 			renderer.prepareTransition(255, 255, 255, .3f);
 
 			AssetLoader.fall.play();
+			
+			scroller.stop();
+			bird.decelerate();
+			currentState = GameState.GAMEOVER;
+
+			if (score > AssetLoader.getHighScore()) {
+				AssetLoader.setHighScore(score);
+				currentState = GameState.HIGHSCORE;
+			}
 		}
 
 		if (Intersector.overlaps(bird.getBoundingCircle(), ground)) {
@@ -80,11 +89,11 @@ public class GameWorld {
 				bird.die();
 			}
 
-			scroller.stop();
+			/*scroller.stop();
 			bird.decelerate();
 			currentState = GameState.GAMEOVER;
 
-			/*if (score > AssetLoader.getHighScore()) {
+			if (score > AssetLoader.getHighScore()) {
 				AssetLoader.setHighScore(score);
 				currentState = GameState.HIGHSCORE;
 			}*/
