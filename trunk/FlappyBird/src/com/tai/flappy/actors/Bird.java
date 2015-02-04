@@ -22,18 +22,15 @@ public class Bird extends Image {
 	Animation animation;
 	TextureRegion curFrame;
 	float dura;
-	
 	public boolean isDie;
 	
 	public Bird(TextureRegion[] regions)
 	{
 		super(regions[0]);
 		setOrigin(getWidth()/2, getHeight()/2);
-		
 		animation = new Animation (0.03f, regions);
 		dura = 0;
 		isDie = false;
-		
 	}
 
 	@Override
@@ -41,18 +38,18 @@ public class Bird extends Image {
 		super.act(delta);
 		
 		if (isDie) return;
-		//animation flying...
+		//animation flying...		
 		dura += delta;
 		curFrame = animation.getKeyFrame(dura, true);
-		setDrawable(new TextureRegionDrawable(curFrame));
+		setDrawable(new TextureRegionDrawable(curFrame));		
 	}
 
 	public void tapMe()
 	{
 		this.removeAction(curAction);
 
-		float y = getY() + config.kjumpHeight;
-		
+		//float y = getY() + config.kjumpHeight;
+		float y = config.landY + config.kjumpHeight;
 		//fly up
         RotateToAction faceup = new RotateToAction();
         faceup.setDuration(config.kjumpDura);

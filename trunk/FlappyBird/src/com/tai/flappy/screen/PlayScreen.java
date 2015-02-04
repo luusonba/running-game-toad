@@ -69,7 +69,8 @@ public class PlayScreen implements Screen {
 	
 	private void addLand()
 	{
-		land = new Land(atlas.findRegion("land"));		
+		land = new Land(atlas.findRegion("land"));
+		config.landY = land.getY() + land.getHeight();
 		stage.addActor(land);
 	}
 	
@@ -80,7 +81,7 @@ public class PlayScreen implements Screen {
 		
 		bird = new Bird(regions);
 		//bird.setPosition(FlappyBird.VIEWPORT.x/2 - bird.getWidth()/2, FlappyBird.VIEWPORT.y/2);
-		bird.setPosition(FlappyBird.VIEWPORT.x/2 - bird.getWidth()/2, land.getY() + land.getHeight());
+		bird.setPosition(FlappyBird.VIEWPORT.x/2 - bird.getWidth()/2, config.landY);
 		
 		stage.addActor(bird);
 	}
@@ -130,8 +131,12 @@ public class PlayScreen implements Screen {
 	    
 	    Pipe pipe2 = new Pipe(atlas.findRegion("pipe2"), bird, true);
 	    pipe2.setZIndex(1);
-	    float x = FlappyBird.VIEWPORT.x;
-	    float y = (FlappyBird.VIEWPORT.y - config.kLandHeight)/2 + config.kLandHeight - pipe2.getHeight() - config.kHoleBetweenPipes/2;
+	    float x = FlappyBird.VIEWPORT.x + (50 * config.random(0, 4));
+	    //float y = (FlappyBird.VIEWPORT.y - config.kLandHeight)/2 + config.kLandHeight - pipe2.getHeight() - config.kHoleBetweenPipes/2;
+
+	    float y = config.landY;		/*****************Positon Y****************/
+	    //float y = config.landY - 300;
+	    	    
 	    pipe2.setPosition(x, y);
 	    
 	    //stage.addActor(pipe1);
@@ -147,7 +152,7 @@ public class PlayScreen implements Screen {
     public void resize(
         int width,
         int height )
-    {
+    {    	
     	// resize the stage
 //    	stage.setViewport(width, height, false );
     	stage.setViewport( FlappyBird.VIEWPORT.x, FlappyBird.VIEWPORT.y, false );

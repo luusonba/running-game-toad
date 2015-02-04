@@ -29,8 +29,10 @@ public class MyStage extends Stage {
 			}
 			else
 			{
-				screen.bird.tapMe();
-				FlappyBird.sounds.get(config.SoundJump).play();
+				if(screen.bird.getY() == config.landY){
+					screen.bird.tapMe();
+					FlappyBird.sounds.get(config.SoundJump).play();
+				}
 			}
 		}
 		
