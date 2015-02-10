@@ -26,7 +26,11 @@ public class config {
     //khoang ho giua hai ong nuoc
     public static float kHoleBetweenPipes = 100;
     
+    //position land Y
     public static float landY = 0;
+    
+    //check first tap is init
+    public static boolean firstTap = false;
     
     //ham tinh random mot so trong pham vi tu min den max
 	public static int random(int min, int max)

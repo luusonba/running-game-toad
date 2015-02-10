@@ -1,11 +1,13 @@
 package com.tai.flappy.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
@@ -23,13 +25,16 @@ public class PlayScreen implements Screen {
 	
 	private Land land;
 	public Bird bird;
-
-	float duraAddPipe;
 	
+	float duraAddPipe;
+		
 	public static Label labelScore;
 	
-	public PlayScreen(FlappyBird game)
-	{
+	public static Button btnPlay;
+	
+	private static Preferences prefs;
+		
+	public PlayScreen(FlappyBird game) {		
 		stage = new MyStage(0, 0, true);
 		stage.setPlayScreen(this);
 		
@@ -38,56 +43,69 @@ public class PlayScreen implements Screen {
 
 		atlas = game.manager.get("data/flappy.txt", TextureAtlas.class);
 		
+		// Create (or retrieve existing) preferences file
+		prefs = Gdx.app.getPreferences("ZombieBird");
+
+		if (!prefs.contains("highScore")) {
+			prefs.putInteger("highScore", 0);
+		}
+
+	}
+	
+	public static void setHighScore(int val) {
+		prefs.putInteger("highScore", val);
+		prefs.flush();
+	}
+
+	public static int getHighScore() {
+		return prefs.getInteger("highScore");
 	}
 	
 	@Override
-    public void show()
-    {
+    public void show() {
         // set the stage as the input processor
         Gdx.input.setInputProcessor( stage );
         Gdx.input.setCatchBackKey(true);
 
-        resetGame();
-        
+        resetGame();     
     }
-
-	public void resetGame()
-	{
+	
+	public void resetGame()	{
 		stage.clear();
         duraAddPipe = 0;
         addBackground();
         addLand();
         addBird();
-        addLabelScore();
+        addLabelScore();        
+        addButton();
 	}
 	
-	private void addBackground()
-	{
+	private void addButton() {		
+		
+		
+	}
+	
+	private void addBackground() {
         Image bg = new Image(atlas.findRegion("background"));
         stage.addActor(bg);
 	}
 	
-	private void addLand()
-	{
+	private void addLand() {
 		land = new Land(atlas.findRegion("land"));
 		config.landY = land.getY() + land.getHeight();
 		stage.addActor(land);
 	}
 	
-	private void addBird()
-	{
+	private void addBird() {
 		TextureRegion[] regions = new TextureRegion[] { atlas.findRegion("bird1"),
 				atlas.findRegion("bird2"), atlas.findRegion("bird3") };
 		
 		bird = new Bird(regions);
-		//bird.setPosition(FlappyBird.VIEWPORT.x/2 - bird.getWidth()/2, FlappyBird.VIEWPORT.y/2);
-		bird.setPosition(FlappyBird.VIEWPORT.x/2 - bird.getWidth()/2, config.landY);
-		
+		bird.setPosition(FlappyBird.VIEWPORT.x/2 - bird.getWidth()/2, config.landY);		
 		stage.addActor(bird);
 	}
 	
-	private void addLabelScore()
-	{
+	private void addLabelScore() {
 		LabelStyle textStyle = new LabelStyle();
 		textStyle.font = new BitmapFont(Gdx.files.internal("data/flappyfont.fnt"), Gdx.files.internal("data/flappyfont.png"), false);
 
@@ -97,82 +115,42 @@ public class PlayScreen implements Screen {
 		stage.addActor(labelScore);
 	}
 	
-	private void addPipe()
-	{
-	    //random cho Hole lech len va xuong
-	    //random lech
-	    //int r = config.random(0, 4);
-	    //float dy = r * 10; //random 0, 10, 20, 30, 40
-	    
-	    //random lech len hay xuong
-	    //r = config.random(0, 1);
-	    //if (r==0) dy = -dy;
-	    
-	    
-	    //add pipe1 ben tren vaf pipe2 ben duoi...khoang cach giua co dinh la kHoleBetweenPipe px
-	    //tam hole giua canh tren man hinh va canh tren Land...
-	    //sau nay random lech len , lech xuong sau...
-	    /*Pipe pipe1 = new Pipe(atlas.findRegion("pipe1"), bird, true);
-	    pipe1.setZIndex(1);
-	    float x = FlappyBird.VIEWPORT.x;
-	    float y = (FlappyBird.VIEWPORT.y - config.kLandHeight)/2 + config.kLandHeight + config.kHoleBetweenPipes/2;
-	    pipe1.setPosition(x, y + dy);
-	    
-	    Pipe pipe2 = new Pipe(atlas.findRegion("pipe2"), bird, false);
-	    pipe2.setZIndex(1);
-	    y = (FlappyBird.VIEWPORT.y - config.kLandHeight)/2 + config.kLandHeight - pipe2.getHeight() - config.kHoleBetweenPipes/2;
-	    pipe2.setPosition(x, y + dy);*/
-	    
-	    /*Pipe pipe1 = new Pipe(atlas.findRegion("pipe1"), bird, true);
-	    pipe1.setZIndex(1);
-	    float x = FlappyBird.VIEWPORT.x;
-	    float y = (FlappyBird.VIEWPORT.y - config.kLandHeight)/2 + config.kLandHeight + config.kHoleBetweenPipes/2;
-	    pipe1.setPosition(x, y + dy);*/
-	    
+	private void addPipe() {	    
 	    Pipe pipe2 = new Pipe(atlas.findRegion("pipe2"), bird, true);
 	    pipe2.setZIndex(1);
 	    float x = FlappyBird.VIEWPORT.x + (50 * config.random(0, 4));
-	    //float y = (FlappyBird.VIEWPORT.y - config.kLandHeight)/2 + config.kLandHeight - pipe2.getHeight() - config.kHoleBetweenPipes/2;
 
-	    float y = config.landY;		/*****************Positon Y****************/
-	    //float y = config.landY - 300;
+	    /*****************Positon Y cua Pipe****************/
+	    //float y = config.landY;		
+	    float y = config.landY - 300;
 	    	    
 	    pipe2.setPosition(x, y);
 	    
-	    //stage.addActor(pipe1);
 	    stage.addActor(pipe2);
 	    
 		land.setZIndex(pipe2.getZIndex());
 		bird.setZIndex(land.getZIndex());
 		labelScore.setZIndex(bird.getZIndex());
-
 	}
 	
     @Override
-    public void resize(
-        int width,
-        int height )
-    {    	
+    public void resize(int width, int height){    	
     	// resize the stage
-//    	stage.setViewport(width, height, false );
-    	stage.setViewport( FlappyBird.VIEWPORT.x, FlappyBird.VIEWPORT.y, false );
-    	
+    	stage.setViewport( FlappyBird.VIEWPORT.x, FlappyBird.VIEWPORT.y, false );    	
     }
 
     @Override
-    public void render(
-        float delta )
-    {
+    public void render (float delta ){
     	
-    	if (bird.isDie)
-    	{
-    		land.clearActions();
+    	if (bird.isDie){
+    		if (bird.score > getHighScore()) {
+				setHighScore(bird.score);
+			}
+    		land.clearActions();    		
     	}
-    	else
-    	{
+    	else {			
 	    	duraAddPipe += delta;
-	    	if (duraAddPipe > config.kTimeAddPipe)
-	    	{
+	    	if (duraAddPipe > config.kTimeAddPipe){
 	    		duraAddPipe = 0;
 	    		addPipe();
 	    	}
@@ -190,24 +168,20 @@ public class PlayScreen implements Screen {
     }
 
     @Override
-    public void hide()
-    {
+    public void hide(){
         // dispose the resources by default
         dispose();
     }
 
     @Override
-    public void pause()
-    {
+    public void pause() {    
     }
 
     @Override
-    public void resume()
-    {
+    public void resume() {
     }
 
     @Override
-    public void dispose()
-    {
+    public void dispose() {
     }
 }

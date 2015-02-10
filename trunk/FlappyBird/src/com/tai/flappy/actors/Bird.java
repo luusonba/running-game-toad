@@ -46,6 +46,9 @@ public class Bird extends Image {
 
 	public void tapMe()
 	{
+		if(config.firstTap == false){
+			config.firstTap = true;
+		}
 		this.removeAction(curAction);
 
 		//float y = getY() + config.kjumpHeight;
@@ -83,7 +86,7 @@ public class Bird extends Image {
 	}
 
 	public void hitMe()
-	{
+	{		
 		isDie = true;
 		this.removeAction(curAction);
 		
@@ -99,7 +102,7 @@ public class Bird extends Image {
         movedown.setInterpolation(Interpolation.sineIn);
         
         curAction  = parallel( facedown, movedown);
-        this.addAction(curAction);		
+        this.addAction(curAction);
 	}
 
 	

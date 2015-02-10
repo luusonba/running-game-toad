@@ -14,29 +14,27 @@ public class Pipe extends Image {
 	
 	Bird bird;
 	
-	public Pipe(TextureRegion region, Bird bird, boolean getScore)
-	{
+	public Pipe(TextureRegion region, Bird bird, boolean getScore) {
 		super(region);
 		this.bird = bird;
 		this.getScore = getScore;
 		
-		
-		actionMoveLeft();
+		if(config.firstTap == true){
+			actionMoveLeft();
+		}
 	}
 	
 	@Override
 	public void act(float delta) {
 		super.act(delta);
 		
-		if (bird.isDie)
-		{
+		if (bird.isDie) {
 			clearActions();
 			return;
 		}
 		
 		//ra khoi man hinh remove...
-		if (getX() < -getWidth())
-		{
+		if (getX() < -getWidth()) {
 			remove();
 		}
 		
@@ -44,23 +42,17 @@ public class Pipe extends Image {
 		checkCollision();
 	}
 	
-	private void actionMoveLeft()
-	{
-		
+	private void actionMoveLeft() {		
 	    MoveByAction moveleft = new MoveByAction();
 	    moveleft.setDuration(config.kmoveLeftDura);
 	    moveleft.setAmountX(-config.kLandWidth);
 	    
 	    addAction(forever(moveleft));
-
 	}
 	
-	private void bypass()
-	{
-        if (getX() <= bird.getX())
-        {
-        	if (getScore)
-        	{
+	private void bypass() {
+        if (getX() <= bird.getX()) {
+        	if (getScore) {
         		getScore = false; //chi tinh diem mot lan....
         		bird.updateScore();
         		FlappyBird.sounds.get(config.SoundScore).play();
@@ -68,17 +60,14 @@ public class Pipe extends Image {
         }
 	}
 	
-	private void checkCollision()
-	{
-		if (isCollision())
-		{
+	private void checkCollision() {
+		if (isCollision()) {
 			bird.hitMe();
 			FlappyBird.sounds.get(config.SoundHit).play();
 		}
 	}
 	
-	private boolean isCollision()
-	{
+	private boolean isCollision() {
 		float d = 4; //gia giam de chim dung vao pipe nhieu hon....
     
 		float maxx1 = getX() + getWidth() - d;
@@ -94,8 +83,7 @@ public class Pipe extends Image {
 		return !(maxx1 < minx2 ||
 				maxx2 < minx1 ||
 				maxy1 < miny2 ||
-				maxy2 < miny1);
-    
+				maxy2 < miny1);    
 	}
 	
 }

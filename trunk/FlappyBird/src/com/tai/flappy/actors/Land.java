@@ -12,6 +12,7 @@ public class Land extends  Image {
 	public Land(TextureRegion region)
 	{
 		super(region);
+		
 		actionMoveLeft();
 	}
 	
