@@ -7,33 +7,33 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.math.Vector2;
 import com.tai.flappy.screen.PlayScreen;
 import com.tai.flappy.utils.config;
 
 public class FlappyBird  extends Game {
 
 	//design viewport
-	public static final Vector2 VIEWPORT = new Vector2(320, 480);
-	
+	//public static final Vector2 VIEWPORT = new Vector2(320, 480);
+		
 	//Quan ly textureAtals va sound
     public AssetManager manager = new AssetManager();
 	public static HashMap<String, Sound> sounds = new HashMap<String, Sound>();
-	
-	public PlayScreen getPlayScreen()
-	{
+	public static int screenW = 0;
+	public static int screenH = 0;
+	public PlayScreen getPlayScreen() {
 		return new PlayScreen(this);
 	}
 	
 	
 	@Override
 	public void create() {
-		
 		//nap danh sach cac sound, de bat ky dau cuxng co the goi va "play"
 		sounds.put(config.SoundJump, Gdx.audio.newSound(Gdx.files.internal("data/sounds/sfx_wing.mp3")));
 		sounds.put(config.SoundScore, Gdx.audio.newSound(Gdx.files.internal("data/sounds/sfx_point.mp3")));
 		sounds.put(config.SoundHit, Gdx.audio.newSound(Gdx.files.internal("data/sounds/sfx_hit.mp3")));
-
+		
+		screenW = Gdx.graphics.getWidth();
+		screenH = Gdx.graphics.getHeight();	
 	}
 
 	@Override
@@ -62,8 +62,7 @@ public class FlappyBird  extends Game {
     }
 
     @Override
-    public void resume()
-    {
+    public void resume() {
         super.resume();
     }
     

@@ -9,6 +9,9 @@ public class config {
     public static String SoundScore = "score";
     public static String SoundHit = "hit";
     
+    //Volume
+    public static float volume = 1.0f;
+    
     //chieu cao va chieu dai thiet ke cua hinh land.png
     public static int kLandHeight = 112;
     public static float kLandWidth = 336;

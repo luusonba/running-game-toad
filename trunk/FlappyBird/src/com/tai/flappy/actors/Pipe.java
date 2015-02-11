@@ -55,7 +55,7 @@ public class Pipe extends Image {
         	if (getScore) {
         		getScore = false; //chi tinh diem mot lan....
         		bird.updateScore();
-        		FlappyBird.sounds.get(config.SoundScore).play();
+        		FlappyBird.sounds.get(config.SoundScore).play(config.volume);
         	}
         }
 	}
@@ -63,7 +63,7 @@ public class Pipe extends Image {
 	private void checkCollision() {
 		if (isCollision()) {
 			bird.hitMe();
-			FlappyBird.sounds.get(config.SoundHit).play();
+			FlappyBird.sounds.get(config.SoundHit).play(config.volume);
 		}
 	}
 	

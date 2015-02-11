@@ -4,13 +4,18 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.tai.flappy.FlappyBird;
 import com.tai.flappy.actors.Bird;
 import com.tai.flappy.actors.Land;
@@ -33,23 +38,29 @@ public class PlayScreen implements Screen {
 	public static Button btnPlay;
 	
 	private static Preferences prefs;
+	
+	int screenW = 0;
+	int screenH = 0;
 		
 	public PlayScreen(FlappyBird game) {		
-		stage = new MyStage(0, 0, true);
-		stage.setPlayScreen(this);
 		
+		screenW = FlappyBird.screenW;
+		screenH = FlappyBird.screenH;
+		
+		stage = new MyStage(screenW, screenH, true);
+		stage.setPlayScreen(this);
+				
 		game.manager.load("data/flappy.txt", TextureAtlas.class);
 		game.manager.finishLoading();
 
 		atlas = game.manager.get("data/flappy.txt", TextureAtlas.class);
 		
 		// Create (or retrieve existing) preferences file
-		prefs = Gdx.app.getPreferences("ZombieBird");
+		prefs = Gdx.app.getPreferences("FlappyBird");
 
 		if (!prefs.contains("highScore")) {
 			prefs.putInteger("highScore", 0);
-		}
-
+		}		
 	}
 	
 	public static void setHighScore(int val) {
@@ -82,7 +93,49 @@ public class PlayScreen implements Screen {
 	
 	private void addButton() {		
 		
-		
+		Button button;	    
+	    Skin skin;
+	    TextureAtlas buttonAtlas;
+	    ButtonStyle btnStyle = new ButtonStyle();
+	    Texture.setEnforcePotImages(false);
+	    skin = new Skin();
+        buttonAtlas = new TextureAtlas(Gdx.files.internal("data/buttons/button.pack"));
+        skin.addRegions(buttonAtlas);
+        btnStyle.up = skin.getDrawable("buttonon");
+        btnStyle.checked = skin.getDrawable("buttonoff");
+                                        
+        button = new Button(btnStyle);
+        
+        button.setPosition(screenW - button.getWidth(), screenH - button.getHeight());
+        
+        if(config.volume == 0.0f){
+        	button.setChecked(true);
+        }else{
+        	button.setChecked(false);     	
+        }
+                                
+        button.addListener(new InputListener() {
+            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {                    
+                return true;
+            }
+            
+            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+                if(config.volume == 0.0f){
+                	normalizeFX();
+                }else{
+                	muteFX();                    	
+                }
+            }
+        });
+        
+        stage.addActor(button);		
+	}
+	
+	public static void muteFX(){
+	    config.volume = 0.0f;
+	}
+	public static void normalizeFX(){
+		config.volume = 1.0f;
 	}
 	
 	private void addBackground() {
@@ -101,7 +154,7 @@ public class PlayScreen implements Screen {
 				atlas.findRegion("bird2"), atlas.findRegion("bird3") };
 		
 		bird = new Bird(regions);
-		bird.setPosition(FlappyBird.VIEWPORT.x/2 - bird.getWidth()/2, config.landY);		
+		bird.setPosition(screenW/2 - bird.getWidth()/2, config.landY);		
 		stage.addActor(bird);
 	}
 	
@@ -110,7 +163,7 @@ public class PlayScreen implements Screen {
 		textStyle.font = new BitmapFont(Gdx.files.internal("data/flappyfont.fnt"), Gdx.files.internal("data/flappyfont.png"), false);
 
 		labelScore = new Label("0",textStyle);
-		labelScore.setPosition(FlappyBird.VIEWPORT.x/2 - labelScore.getWidth()/2, FlappyBird.VIEWPORT.y - labelScore.getHeight());
+		labelScore.setPosition(screenW/2 - labelScore.getWidth()/2, screenH - labelScore.getHeight());
 		
 		stage.addActor(labelScore);
 	}
@@ -118,7 +171,7 @@ public class PlayScreen implements Screen {
 	private void addPipe() {	    
 	    Pipe pipe2 = new Pipe(atlas.findRegion("pipe2"), bird, true);
 	    pipe2.setZIndex(1);
-	    float x = FlappyBird.VIEWPORT.x + (50 * config.random(0, 4));
+	    float x = screenW + (50 * config.random(0, 4));
 
 	    /*****************Positon Y cua Pipe****************/
 	    //float y = config.landY;		
@@ -135,8 +188,8 @@ public class PlayScreen implements Screen {
 	
     @Override
     public void resize(int width, int height){    	
-    	// resize the stage
-    	stage.setViewport( FlappyBird.VIEWPORT.x, FlappyBird.VIEWPORT.y, false );    	
+    	// resize the stage    	
+    	stage.setViewport(screenW, screenH, false );
     }
 
     @Override
@@ -179,6 +232,7 @@ public class PlayScreen implements Screen {
 
     @Override
     public void resume() {
+    	
     }
 
     @Override

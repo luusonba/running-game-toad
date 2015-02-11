@@ -8,8 +8,7 @@ public class MyStage extends Stage {
 	
 	PlayScreen screen;
 	
-	public MyStage(float width, float height, boolean keepAspecyRatio)
-	{
+	public MyStage(float width, float height, boolean keepAspecyRatio) {
 		super(width, height, keepAspecyRatio);
 	}
 		
@@ -23,15 +22,14 @@ public class MyStage extends Stage {
 
 		if (screen != null)
 		{
-			if (screen.bird.isDie)
-			{
+			if (screen.bird.isDie) {
 				screen.resetGame();
 			}
 			else
 			{
 				if(screen.bird.getY() == config.landY){
 					screen.bird.tapMe();
-					FlappyBird.sounds.get(config.SoundJump).play();
+					FlappyBird.sounds.get(config.SoundJump).play(config.volume);
 				}
 			}
 		}
