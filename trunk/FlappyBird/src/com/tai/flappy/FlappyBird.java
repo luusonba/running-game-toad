@@ -7,7 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
-import com.tai.flappy.screen.PlayScreen;
+import com.tai.flappy.screen.SplashScreen;
 import com.tai.flappy.utils.config;
 
 public class FlappyBird  extends Game {
@@ -20,8 +20,12 @@ public class FlappyBird  extends Game {
 	public static HashMap<String, Sound> sounds = new HashMap<String, Sound>();
 	public static int screenW = 0;
 	public static int screenH = 0;
-	public PlayScreen getPlayScreen() {
+	/*public PlayScreen getPlayScreen() {
 		return new PlayScreen(this);
+	}*/
+	
+	public SplashScreen getSplashScreen() {
+		return new SplashScreen(this);
 	}
 	
 	public FlappyBird(int width, int height){		
@@ -45,7 +49,7 @@ public class FlappyBird  extends Game {
         super.resize( width, height );
         
         if( getScreen() == null ) {
-        	setScreen( getPlayScreen() );
+        	setScreen( getSplashScreen() );
         }
     };
 
@@ -58,8 +62,7 @@ public class FlappyBird  extends Game {
     @Override
     public void pause()
     {
-        super.pause();
-
+        super.pause();        
     }
 
     @Override

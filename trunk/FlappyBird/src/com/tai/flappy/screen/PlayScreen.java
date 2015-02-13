@@ -39,11 +39,18 @@ public class PlayScreen implements Screen {
 	
 	private static Preferences prefs;
 	
+	static final int GAME_RUNNING = 0;
+	static final int GAME_PAUSED = 1;
+	static final int GAME_OVER = 2;
+	int state;
 	int screenW = 0;
 	int screenH = 0;
+	FlappyBird game;
 		
 	public PlayScreen(FlappyBird game) {		
 		
+		this.game = game;
+		state = GAME_RUNNING;
 		screenW = FlappyBird.screenW;
 		screenH = FlappyBird.screenH;
 		
@@ -82,6 +89,7 @@ public class PlayScreen implements Screen {
     }
 	
 	public void resetGame()	{
+		state = GAME_RUNNING;
 		stage.clear();
         duraAddPipe = 0;
         addBackground();
@@ -93,28 +101,35 @@ public class PlayScreen implements Screen {
 	
 	private void addButton() {		
 		
-		Button button;	    
+		Button btnSound;
+		Button btnPause;
 	    Skin skin;
 	    TextureAtlas buttonAtlas;
-	    ButtonStyle btnStyle = new ButtonStyle();
+	    ButtonStyle btnStyleSound = new ButtonStyle();
+	    ButtonStyle btnStylePause = new ButtonStyle();
 	    Texture.setEnforcePotImages(false);
 	    skin = new Skin();
         buttonAtlas = new TextureAtlas(Gdx.files.internal("data/buttons/button.pack"));
         skin.addRegions(buttonAtlas);
-        btnStyle.up = skin.getDrawable("buttonon");
-        btnStyle.checked = skin.getDrawable("buttonoff");
-                                        
-        button = new Button(btnStyle);
+        btnStyleSound.up = skin.getDrawable("buttonon");
+        btnStyleSound.checked = skin.getDrawable("buttonoff");
         
-        button.setPosition(screenW - button.getWidth(), screenH - button.getHeight());
+        btnStylePause.up = skin.getDrawable("buttonon");
+        btnStylePause.checked = skin.getDrawable("buttonoff");
+                                        
+        btnSound = new Button(btnStyleSound);
+        btnPause = new Button(btnStylePause);
+        
+        btnSound.setPosition(screenW - btnSound.getWidth(), screenH - btnSound.getHeight());
+        btnPause.setPosition(screenW - btnSound.getWidth() - btnPause.getWidth(), screenH - btnPause.getHeight());
         
         if(config.volume == 0.0f){
-        	button.setChecked(true);
+        	btnSound.setChecked(true);
         }else{
-        	button.setChecked(false);     	
+        	btnSound.setChecked(false);     	
         }
                                 
-        button.addListener(new InputListener() {
+        btnSound.addListener(new InputListener() {
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {                    
                 return true;
             }
@@ -128,7 +143,22 @@ public class PlayScreen implements Screen {
             }
         });
         
-        stage.addActor(button);		
+        btnPause.addListener(new InputListener() {
+            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {                    
+                return true;
+            }
+            
+            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+                if(state != GAME_PAUSED){
+                	state = GAME_PAUSED;
+                }else{
+                	state = GAME_RUNNING;
+                }
+            }
+        });
+        
+        stage.addActor(btnSound);
+        stage.addActor(btnPause);
 	}
 	
 	public static void muteFX(){
@@ -195,27 +225,43 @@ public class PlayScreen implements Screen {
     @Override
     public void render (float delta ){
     	
-    	if (bird.isDie){
-    		if (bird.score > getHighScore()) {
-				setHighScore(bird.score);
-			}
-    		land.clearActions();    		
-    	}
-    	else {			
-	    	duraAddPipe += delta;
-	    	if (duraAddPipe > config.kTimeAddPipe){
-	    		duraAddPipe = 0;
-	    		addPipe();
-	    	}
-    	}
+    	if (delta > 0.1f)
+    	    delta = 0.1f;
     	
-        // update the action of actors
-        stage.act( delta );
+    	switch (state) {
+		case GAME_RUNNING:
+			if (bird.isDie){
+	    		if (bird.score > getHighScore()) {
+					setHighScore(bird.score);
+				}
+	    		state = GAME_OVER;    		
+	    	}
+	    	else {			
+		    	duraAddPipe += delta;
+		    	if (duraAddPipe > config.kTimeAddPipe){
+		    		duraAddPipe = 0;
+		    		addPipe();
+		    	}
+	    	}
+	    	
+	        // update the action of actors
+	        stage.act( delta );
 
-        // clear the screen with the given RGB color (black)
-        Gdx.gl.glClearColor( 0f, 0f, 0f, 1f );
-        Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT );
-
+	        // clear the screen with the given RGB color (black)
+	        Gdx.gl.glClearColor( 0f, 0f, 0f, 1f );
+	        Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT );
+			break;
+		case GAME_OVER:
+			land.clearActions();
+			break;
+		case GAME_PAUSED:
+			/////////
+			//https://github.com/libgdx/libgdx-demo-superjumper/blob/master/core/src/com/badlogicgames/superjumper/GameScreen.java
+			break;
+		default:
+			break;
+		}
+    	    	        
         // draw the actors
         stage.draw();
     }
@@ -228,11 +274,12 @@ public class PlayScreen implements Screen {
 
     @Override
     public void pause() {    
+    	state = GAME_PAUSED;
     }
 
     @Override
     public void resume() {
-    	
+    	state = GAME_RUNNING;
     }
 
     @Override
