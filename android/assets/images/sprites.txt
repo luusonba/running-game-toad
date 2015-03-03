@@ -3,183 +3,169 @@ format: RGBA8888
 filter: Linear,Linear
 repeat: none
 buttons/home
-  rotate: true
-  xy: 166, 2
+  rotate: false
+  xy: 2, 524
   size: 78, 69
   orig: 80, 70
   offset: 1, 1
   index: -1
 buttons/musicoff
-  rotate: true
-  xy: 166, 82
+  rotate: false
+  xy: 2, 595
   size: 78, 69
   orig: 80, 70
   offset: 1, 1
   index: -1
 buttons/musicon
   rotate: false
-  xy: 180, 178
+  xy: 2, 666
   size: 78, 69
   orig: 80, 70
   offset: 1, 1
   index: -1
 buttons/restart
-  rotate: true
-  xy: 260, 172
+  rotate: false
+  xy: 2, 737
   size: 78, 69
   orig: 80, 70
   offset: 1, 1
   index: -1
 buttons/score
-  rotate: true
-  xy: 331, 172
+  rotate: false
+  xy: 2, 808
   size: 78, 69
   orig: 80, 70
   offset: 1, 1
   index: -1
-buttons/screenmusicoff
-  rotate: true
-  xy: 2, 178
-  size: 73, 87
-  orig: 80, 92
-  offset: 3, 3
-  index: -1
-buttons/screenmusicon
-  rotate: true
-  xy: 91, 178
-  size: 70, 87
-  orig: 80, 92
-  offset: 6, 3
-  index: -1
 buttons/screenpause
   rotate: false
-  xy: 394, 74
-  size: 63, 76
-  orig: 80, 80
-  offset: 8, 2
+  xy: 87, 441
+  size: 20, 24
+  orig: 30, 30
+  offset: 5, 3
   index: -1
 buttons/screenplay
   rotate: false
-  xy: 402, 2
-  size: 52, 70
-  orig: 80, 76
-  offset: 17, 3
+  xy: 87, 410
+  size: 21, 29
+  orig: 30, 29
+  offset: 6, 0
   index: -1
 buttons/star
   rotate: false
-  xy: 237, 2
+  xy: 2, 879
   size: 78, 69
   orig: 80, 70
   offset: 1, 1
   index: -1
 buttons/start
   rotate: false
-  xy: 237, 73
+  xy: 2, 950
   size: 78, 69
   orig: 80, 70
   offset: 1, 1
   index: -1
 cloud/cloud
   rotate: true
-  xy: 440, 165
-  size: 80, 19
+  xy: 87, 467
+  size: 76, 19
   orig: 80, 19
-  offset: 0, 0
+  offset: 2, 0
   index: -1
 dinos/die
-  rotate: false
+  rotate: true
   xy: 2, 2
-  size: 80, 86
-  orig: 80, 86
+  size: 100, 108
+  orig: 100, 108
   offset: 0, 0
   index: -1
 dinos/fly
-  rotate: false
-  xy: 2, 90
-  size: 80, 86
-  orig: 80, 86
+  rotate: true
+  xy: 2, 104
+  size: 100, 108
+  orig: 100, 108
   offset: 0, 0
   index: -1
 dinos/left
-  rotate: false
-  xy: 84, 2
-  size: 80, 86
-  orig: 80, 86
+  rotate: true
+  xy: 2, 206
+  size: 100, 108
+  orig: 100, 108
   offset: 0, 0
   index: -1
 dinos/right
-  rotate: false
-  xy: 84, 90
-  size: 80, 86
-  orig: 80, 86
+  rotate: true
+  xy: 2, 308
+  size: 100, 108
+  orig: 100, 108
   offset: 0, 0
   index: -1
 lands/land1
   rotate: true
-  xy: 343, 2
+  xy: 82, 707
   size: 75, 11
   orig: 75, 11
   offset: 0, 0
   index: -1
 lands/land2
   rotate: false
-  xy: 166, 172
+  xy: 82, 545
   size: 28, 4
   orig: 28, 4
   offset: 0, 0
   index: -1
 lands/land3
-  rotate: false
-  xy: 394, 152
+  rotate: true
+  xy: 95, 707
   size: 61, 11
   orig: 61, 11
   offset: 0, 0
   index: -1
 lands/land4
-  rotate: false
-  xy: 166, 162
+  rotate: true
+  xy: 95, 770
   size: 188, 8
   orig: 188, 8
   offset: 0, 0
   index: -1
 plants/big4
-  rotate: false
-  xy: 356, 2
+  rotate: true
+  xy: 2, 410
   size: 36, 83
   orig: 39, 83
   offset: 1, 0
   index: -1
 plants/big5
-  rotate: false
-  xy: 356, 87
+  rotate: true
+  xy: 2, 448
   size: 36, 83
   orig: 39, 83
   offset: 1, 0
   index: -1
 plants/big6
-  rotate: false
-  xy: 402, 165
+  rotate: true
+  xy: 2, 486
   size: 36, 83
   orig: 39, 83
   offset: 1, 0
   index: -1
 plants/small1
   rotate: false
-  xy: 317, 2
+  xy: 82, 551
   size: 24, 50
   orig: 27, 51
   offset: 2, 0
   index: -1
 plants/small2
   rotate: false
-  xy: 317, 54
+  xy: 82, 603
   size: 24, 50
   orig: 27, 51
   offset: 2, 0
   index: -1
 plants/small3
   rotate: false
-  xy: 317, 106
+  xy: 82, 655
   size: 24, 50
   orig: 27, 51
   offset: 2, 0
