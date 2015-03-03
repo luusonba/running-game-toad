@@ -109,7 +109,7 @@ public class PlayScreen implements Screen {
 	}
 		
 	private void addButton() {
-		Button btnSound, btnRestart;		
+		Button btnRestart;		
 	    
 	    
 	    ButtonStyle btnStyleSound, btnStylePause;
@@ -123,17 +123,15 @@ public class PlayScreen implements Screen {
         btnStylePause.up = skin.getDrawable("buttons/screenplay");
         btnStylePause.checked = skin.getDrawable("buttons/screenpause");
                                         
-        btnSound = new Button(btnStyleSound);
         btnPause = new Button(btnStylePause);        
         btnRestart = new Button(skin.getDrawable("buttons/restart"));
                                     
-        btnSound.setPosition(screenW - btnSound.getWidth(), screenH - btnSound.getHeight());
-        btnPause.setPosition(screenW - btnSound.getWidth() - btnPause.getWidth(), screenH - btnPause.getHeight());        
+        btnPause.setPosition(screenW - btnPause.getWidth() - btnPause.getWidth(), screenH - btnPause.getHeight());        
         btnRestart.setPosition(screenW/2 - btnRestart.getWidth()/2, screenH/2 - btnRestart.getHeight()/2);
                         
         btnRestart.setVisible(false);
         
-        if(config.volume == 0.0f){
+        /*if(config.volume == 0.0f){
         	btnSound.setChecked(true);
         }else{
         	btnSound.setChecked(false);     	
@@ -151,7 +149,7 @@ public class PlayScreen implements Screen {
                 	muteFX();                    	
                 }
             }
-        });
+        });*/
          
         btnPause.addListener(new InputListener() {
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {                    
@@ -167,8 +165,7 @@ public class PlayScreen implements Screen {
                 }
             }
         });
-                
-        stage.addActor(btnSound);
+        
         stage.addActor(btnPause);        
         stage.addActor(btnRestart);
 	}
