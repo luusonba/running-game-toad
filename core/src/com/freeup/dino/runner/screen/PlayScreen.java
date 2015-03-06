@@ -58,9 +58,9 @@ public class PlayScreen implements Screen {
 		
 		stage = new MyStage(0, 0, true);
 		stage.setPlayScreen(this);		
-		game.manager.load("images/sprites.txt", TextureAtlas.class);
+		game.manager.load("images/sprites.pack", TextureAtlas.class);
 		game.manager.finishLoading();
-		atlas = game.manager.get("images/sprites.txt", TextureAtlas.class);			    
+		atlas = game.manager.get("images/sprites.pack", TextureAtlas.class);			    
 		skin = new Skin();
         skin.addRegions(atlas);
 		
@@ -112,14 +112,10 @@ public class PlayScreen implements Screen {
 		Button btnRestart;		
 	    
 	    
-	    ButtonStyle btnStyleSound, btnStylePause;
-	    
-	    btnStyleSound = new ButtonStyle();
+	    ButtonStyle btnStylePause;
+	    	    
 	    btnStylePause = new ButtonStyle();
-	    
-        btnStyleSound.up = skin.getDrawable("buttons/screenmusicon");
-        btnStyleSound.checked = skin.getDrawable("buttons/screenmusicoff");
-        
+	            
         btnStylePause.up = skin.getDrawable("buttons/screenplay");
         btnStylePause.checked = skin.getDrawable("buttons/screenpause");
                                         
