@@ -110,20 +110,21 @@ public class PlayScreen implements Screen {
 	}
 		
 	private void addButton() {
-		Button btnRestart;		
-	    
-	    
-	    ButtonStyle btnStylePause;
-	    	    
+		Button btnRestart;		    
+	    ButtonStyle btnStylePause;	    	    
 	    btnStylePause = new ButtonStyle();
 	    int screenSize = Gdx.graphics.getWidth();
 	    if(screenSize >= 320){
-	    	btnStylePause.up = skin.getDrawable("buttons/screenpause");
-	    } else{
+	    	btnStylePause.up = skin.getDrawable("buttons/screenpause");	    	
+	    } else{	    	
 	    	btnStylePause.up = skin.getDrawable("buttons/small_screenpause");
 	    }
                                         
-        btnScreenPause = new Button(btnStylePause);        
+        btnScreenPause = new Button(btnStylePause); 
+        if(screenSize < 320){
+        	btnScreenPause.setSize(35, 35);	    	
+	    }
+        
         btnRestart = new Button(skin.getDrawable("buttons/restart"));
                                     
         btnScreenPause.setPosition(screenW - btnScreenPause.getWidth() - btnScreenPause.getWidth(), screenH - btnScreenPause.getHeight());        
@@ -229,7 +230,7 @@ public class PlayScreen implements Screen {
 		TextureRegion[] regions = new TextureRegion[] { atlas.findRegion("dinos/left"),
 				atlas.findRegion("dinos/right") };
 		
-		dino = new Dino(regions);		
+		dino = new Dino(regions);
 		dino.setPosition(screenW/2 - dino.getWidth()/2, config.landY);
 		stage.addActor(dino);
 	}
