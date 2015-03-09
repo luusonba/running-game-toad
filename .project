@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>Zombie</name>
+	<name>running-game-toad</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -17,7 +17,7 @@
 	</natures>
 	<filteredResources>
 		<filter>
-			<id>1425397642109</id>
+			<id>1425868736213</id>
 			<name></name>
 			<type>26</type>
 			<matcher>
