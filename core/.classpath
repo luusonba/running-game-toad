@@ -3,6 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="con" path="org.springsource.ide.eclipse.gradle.classpathcontainer"/>
-	<classpathentry exported="true" kind="lib" path="D:/ThisisEnd/Zombie/core/libs/tween-engine-api.jar"/>
+	<classpathentry kind="lib" path="D:/Study/running-game-toad/core/libs/tween-engine-api.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

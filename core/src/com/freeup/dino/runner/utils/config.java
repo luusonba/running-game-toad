@@ -17,18 +17,18 @@ public class config {
     public static float kLandWidth = 336;
     
     //thoi gian move sang trai khoang kLandWidth
-    public static float kmoveLeftDura = 1.5f;
+    public static float kmoveLeftDura = 0.8f;
+    
+    //thoi gian move sang trai khoang Cloud
+    public static float cmoveLeftDura = 2.0f;
 
     //chieu cao va thoi gian khi bay len do "tap"
-    public static int kjumpHeight = 150;
+    public static int kjumpHeight = 300;
     public static float kjumpDura = 0.3f;
     
     //khoang thoi gian them ong nuoc vao man hinh
-    public static float kTimeAddPipe = 2;
-    
-    //khoang ho giua hai ong nuoc
-    public static float kHoleBetweenPipes = 100;
-    
+    public static float kTimeAddPipe = 1;
+        
     //position land Y
     public static float landY = 0;
     

@@ -24,15 +24,15 @@ public class MyStage extends Stage {
 
 		if (screen != null)
 		{
-			if (screen.bird.isDie) {
+			if (screen.dino.isDie) {
 				screen.showGame();
 				config.state = GameState.GAME_RUNNING;
 			}
 			else
 			{
-				if(screen.bird.getY() == config.landY){
+				if(screen.dino.getY() == config.landY){
 					if(config.state == GameState.GAME_RUNNING){
-						screen.bird.tapMe();
+						screen.dino.tapMe();
 						DinoRunner.sounds.get(config.SoundJump).play(config.volume);
 					}					
 				}

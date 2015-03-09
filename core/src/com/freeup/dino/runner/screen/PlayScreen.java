@@ -16,10 +16,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.freeup.dino.runner.DinoRunner;
-import com.freeup.dino.runner.actors.Bird;
+import com.freeup.dino.runner.actors.Dino;
 import com.freeup.dino.runner.actors.Cloud;
 import com.freeup.dino.runner.actors.Land;
-import com.freeup.dino.runner.actors.Pipe;
+import com.freeup.dino.runner.actors.Plant;
 import com.freeup.dino.runner.utils.MyStage;
 import com.freeup.dino.runner.utils.config;
 
@@ -29,12 +29,13 @@ public class PlayScreen implements Screen {
 	private TextureAtlas atlas;
 	
 	private Land land;
-	public Bird bird;
+	public Dino dino;
 	
 	float duraAddPipe;
+	float duraAddCloud;
 		
 	public static Label labelScore;
-	public Button btnPlay, btnPause;
+	public Button btnPlay, btnScreenPause;
 	public Table tableTop;
 	private static Preferences prefs;
 	Skin skin;
@@ -58,9 +59,9 @@ public class PlayScreen implements Screen {
 		
 		stage = new MyStage(0, 0, true);
 		stage.setPlayScreen(this);		
-		game.manager.load("images/sprites.pack", TextureAtlas.class);
+		game.manager.load("images/sprites.atlas", TextureAtlas.class);
 		game.manager.finishLoading();
-		atlas = game.manager.get("images/sprites.pack", TextureAtlas.class);			    
+		atlas = game.manager.get("images/sprites.atlas", TextureAtlas.class);			    
 		skin = new Skin();
         skin.addRegions(atlas);
 		
@@ -93,9 +94,9 @@ public class PlayScreen implements Screen {
 	public void showGame()	{		
 		stage.clear();
         duraAddPipe = 0;
-        /*addBackground();*/
+        duraAddCloud = 0;
         addLand();
-        addBird();
+        addBird();               
         addButton();
         addLabelScore();
                 
@@ -115,14 +116,17 @@ public class PlayScreen implements Screen {
 	    ButtonStyle btnStylePause;
 	    	    
 	    btnStylePause = new ButtonStyle();
-	            
-        btnStylePause.up = skin.getDrawable("buttons/screenplay");
-        btnStylePause.checked = skin.getDrawable("buttons/screenpause");
+	    int screenSize = Gdx.graphics.getWidth();
+	    if(screenSize >= 320){
+	    	btnStylePause.up = skin.getDrawable("buttons/screenpause");
+	    } else{
+	    	btnStylePause.up = skin.getDrawable("buttons/small_screenpause");
+	    }
                                         
-        btnPause = new Button(btnStylePause);        
+        btnScreenPause = new Button(btnStylePause);        
         btnRestart = new Button(skin.getDrawable("buttons/restart"));
                                     
-        btnPause.setPosition(screenW - btnPause.getWidth() - btnPause.getWidth(), screenH - btnPause.getHeight());        
+        btnScreenPause.setPosition(screenW - btnScreenPause.getWidth() - btnScreenPause.getWidth(), screenH - btnScreenPause.getHeight());        
         btnRestart.setPosition(screenW/2 - btnRestart.getWidth()/2, screenH/2 - btnRestart.getHeight()/2);
                         
         btnRestart.setVisible(false);
@@ -147,7 +151,7 @@ public class PlayScreen implements Screen {
             }
         });*/
          
-        btnPause.addListener(new InputListener() {
+        btnScreenPause.addListener(new InputListener() {
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {                    
                 return true;
             }
@@ -155,6 +159,7 @@ public class PlayScreen implements Screen {
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
                 if(config.state != GameState.GAME_PAUSED){
                 	config.state = GameState.GAME_PAUSED;
+                	btnScreenPause.setVisible(false);
                 	showPlay(true);
                 }else{
                 	config.state = GameState.GAME_RUNNING;
@@ -162,7 +167,7 @@ public class PlayScreen implements Screen {
             }
         });
         
-        stage.addActor(btnPause);        
+        stage.addActor(btnScreenPause);        
         stage.addActor(btnRestart);
 	}
 	
@@ -172,27 +177,7 @@ public class PlayScreen implements Screen {
 	public static void normalizeFX(){
 		config.volume = 1.0f;
 	}
-	
-	/*private void addBackground() {
-		Image bg = new Image(atlas.findRegion("background"));
-		stage.addActor(bg);
-	}*/
-	
-	private void addLand() {
-		land = new Land(atlas.findRegion("lands/land1"));
-		config.landY = land.getY() + land.getHeight();		
-		stage.addActor(land);
-	}
-	
-	private void addBird() {
-		TextureRegion[] regions = new TextureRegion[] { atlas.findRegion("dinos/left"),
-				atlas.findRegion("dinos/right") };
 		
-		bird = new Bird(regions);		
-		bird.setPosition(screenW/2 - bird.getWidth()/2, config.landY);
-		stage.addActor(bird);
-	}
-	
 	private void addLabelScore() {
 		LabelStyle textStyle = new LabelStyle();
 		textStyle.font = new BitmapFont(Gdx.files.internal("font/font.fnt"), Gdx.files.internal("font/font.png"), false);
@@ -233,32 +218,42 @@ public class PlayScreen implements Screen {
 	    stage.addActor(tableTop);
 	}
 	
+	private void addLand() {
+		land = new Land(atlas.findRegion("lands/land"));
+		land.setY(100);
+		config.landY = land.getY() + land.getHeight() - 15;		
+		stage.addActor(land);
+	}
+	
+	private void addBird() {
+		TextureRegion[] regions = new TextureRegion[] { atlas.findRegion("dinos/left"),
+				atlas.findRegion("dinos/right") };
+		
+		dino = new Dino(regions);		
+		dino.setPosition(screenW/2 - dino.getWidth()/2, config.landY);
+		stage.addActor(dino);
+	}
+	
 	private void addPipe() {	    
-	    Pipe pipe2 = new Pipe(atlas.findRegion("plants/big5"), bird, true);
+	    Plant pipe2 = new Plant(atlas.findRegion("plants/big5"), dino, true);
 	    pipe2.setZIndex(1);
-	    float x = screenW + (50 * config.random(0, 4));
-
-	    /*****************Positon Y cua Pipe****************/
-	    //float y = config.landY;		
-	    float y = config.landY - 300;
+	    float x = screenW + (5 * config.random(-2, 2));
+	    float y = config.landY;
 	    	    
 	    pipe2.setPosition(x, y);
 	    
 	    stage.addActor(pipe2);
 	    
 		land.setZIndex(pipe2.getZIndex());
-		bird.setZIndex(land.getZIndex());
-		labelScore.setZIndex(bird.getZIndex());
+		dino.setZIndex(land.getZIndex());
+		labelScore.setZIndex(dino.getZIndex());
 	}
 	
 	private void addCloud() {	    
 	    Cloud cloud = new Cloud(atlas.findRegion("cloud/cloud"));
-	    cloud.setRotation(-90.0f);
-	    float x = screenW + (50 * config.random(0, 4));
-
-	    /*****************Positon Y cua Pipe****************/
-	    //float y = config.landY;		
-	    float y = config.landY + 400;
+	    float x = screenW + (80 * config.random(0, 5));
+	    
+	    float y = config.landY + (40 * config.random(10, 14));
 	    	    
 	    cloud.setPosition(x, y);
 	    
@@ -287,17 +282,21 @@ public class PlayScreen implements Screen {
 	        Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT );
     		break;
 		case GameState.GAME_RUNNING:
-			if (bird.isDie){
-	    		if (bird.score > getHighScore()) {
-					setHighScore(bird.score);
+			if (dino.isDie){
+	    		if (dino.score > getHighScore()) {
+					setHighScore(dino.score);
 				}
 	    		config.state = GameState.GAME_OVER;    		
 	    	}
 	    	else {			
 		    	duraAddPipe += delta;
-		    	if (duraAddPipe > config.kTimeAddPipe){
+		    	if (duraAddPipe > config.kTimeAddPipe + 0.1f * config.random(-1,10)){
 		    		duraAddPipe = 0;
 		    		addPipe();
+		    	}
+		    	duraAddCloud += delta;
+		    	if (duraAddCloud > config.kTimeAddPipe * config.random(5,9)){
+		    		duraAddCloud = 0;
 		    		addCloud();
 		    	}
 	    	}
