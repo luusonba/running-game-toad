@@ -1,0 +1,172 @@
+
+sprites.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+buttons/home
+  rotate: false
+  xy: 1, 47
+  size: 80, 70
+  orig: 80, 70
+  offset: 0, 0
+  index: -1
+buttons/musicoff
+  rotate: false
+  xy: 83, 47
+  size: 80, 70
+  orig: 80, 70
+  offset: 0, 0
+  index: -1
+buttons/musicon
+  rotate: false
+  xy: 165, 47
+  size: 80, 70
+  orig: 80, 70
+  offset: 0, 0
+  index: -1
+buttons/restart
+  rotate: false
+  xy: 247, 47
+  size: 80, 70
+  orig: 80, 70
+  offset: 0, 0
+  index: -1
+buttons/score
+  rotate: false
+  xy: 329, 47
+  size: 80, 70
+  orig: 80, 70
+  offset: 0, 0
+  index: -1
+buttons/star
+  rotate: false
+  xy: 411, 47
+  size: 80, 70
+  orig: 80, 70
+  offset: 0, 0
+  index: -1
+buttons/start
+  rotate: false
+  xy: 493, 47
+  size: 80, 70
+  orig: 80, 70
+  offset: 0, 0
+  index: -1
+buttons/screenpause
+  rotate: false
+  xy: 1, 1
+  size: 44, 44
+  orig: 44, 44
+  offset: 0, 0
+  index: -1
+buttons/small_screenpause
+  rotate: false
+  xy: 575, 90
+  size: 27, 27
+  orig: 27, 27
+  offset: 0, 0
+  index: -1
+
+sprites2.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+cloud/cloud
+  rotate: false
+  xy: 1, 1
+  size: 80, 19
+  orig: 80, 19
+  offset: 0, 0
+  index: -1
+
+sprites3.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+dinos/die
+  rotate: false
+  xy: 1, 1
+  size: 100, 108
+  orig: 100, 108
+  offset: 0, 0
+  index: -1
+dinos/fly
+  rotate: false
+  xy: 103, 1
+  size: 100, 108
+  orig: 100, 108
+  offset: 0, 0
+  index: -1
+dinos/left
+  rotate: false
+  xy: 205, 1
+  size: 100, 108
+  orig: 100, 108
+  offset: 0, 0
+  index: -1
+dinos/right
+  rotate: false
+  xy: 307, 1
+  size: 100, 108
+  orig: 100, 108
+  offset: 0, 0
+  index: -1
+
+sprites4.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+lands/land
+  rotate: false
+  xy: 1, 1
+  size: 672, 112
+  orig: 672, 112
+  offset: 0, 0
+  index: -1
+
+sprites5.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+plants/big4
+  rotate: false
+  xy: 1, 1
+  size: 39, 83
+  orig: 39, 83
+  offset: 0, 0
+  index: -1
+plants/big5
+  rotate: false
+  xy: 42, 1
+  size: 39, 83
+  orig: 39, 83
+  offset: 0, 0
+  index: -1
+plants/big6
+  rotate: false
+  xy: 83, 1
+  size: 39, 83
+  orig: 39, 83
+  offset: 0, 0
+  index: -1
+plants/small1
+  rotate: false
+  xy: 124, 33
+  size: 27, 51
+  orig: 27, 51
+  offset: 0, 0
+  index: -1
+plants/small2
+  rotate: false
+  xy: 153, 33
+  size: 27, 51
+  orig: 27, 51
+  offset: 0, 0
+  index: -1
+plants/small3
+  rotate: false
+  xy: 182, 33
+  size: 27, 51
+  orig: 27, 51
+  offset: 0, 0
+  index: -1
