@@ -32,7 +32,7 @@ public class Cloud extends Image {
 	
 	private void actionMoveLeft() {		
 	    MoveByAction moveleft = new MoveByAction();
-	    moveleft.setDuration(config.kmoveLeftDura);
+	    moveleft.setDuration(config.cmoveLeftDura);
 	    moveleft.setAmountX(-config.kLandWidth);
 	    
 	    addAction(forever(moveleft));
