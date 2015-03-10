@@ -9,8 +9,8 @@ public class DesktopLauncher {
 		
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 		cfg.title = "FlappyBird";
-		cfg.width = 240;
-		cfg.height = 320;
+		cfg.width = 480;
+		cfg.height = 800;
 		
 		new LwjglApplication(new DinoRunner(), cfg);
 	}

@@ -1,5 +1,7 @@
 package com.freeup.dino.runner.screen;
 
+import java.util.Random;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
@@ -50,6 +52,8 @@ public class PlayScreen implements Screen {
 	float screenW = 0;
 	float screenH = 0;
 	DinoRunner game;
+	int iCloud = 0;
+	int iPlant = 0;
 			
 	public PlayScreen(DinoRunner game) {		
 		
@@ -221,7 +225,7 @@ public class PlayScreen implements Screen {
 	
 	private void addLand() {
 		land = new Land(atlas.findRegion("lands/land"));
-		land.setY(100);
+		land.setY(200);
 		config.landY = land.getY() + land.getHeight() - 15;		
 		stage.addActor(land);
 	}
@@ -238,7 +242,7 @@ public class PlayScreen implements Screen {
 	private void addPipe() {	    
 	    Plant pipe2 = new Plant(atlas.findRegion("plants/big5"), dino, true);
 	    pipe2.setZIndex(1);
-	    float x = screenW + (5 * config.random(-2, 2));
+	    float x = screenW + 10;
 	    float y = config.landY;
 	    	    
 	    pipe2.setPosition(x, y);
@@ -252,10 +256,8 @@ public class PlayScreen implements Screen {
 	
 	private void addCloud() {	    
 	    Cloud cloud = new Cloud(atlas.findRegion("cloud/cloud"));
-	    float x = screenW + (80 * config.random(0, 5));
-	    
-	    float y = config.landY + (40 * config.random(10, 14));
-	    	    
+	    float x = screenW + 10;
+	    float y = config.landY + (40 * random(8, 12));
 	    cloud.setPosition(x, y);
 	    
 	    stage.addActor(cloud);
@@ -267,7 +269,7 @@ public class PlayScreen implements Screen {
     	// resize the stage
     	stage.getViewport().update(width, height);
     }
-
+    
     @Override
     public void render (float delta ){
     	if (delta > 0.1f)
@@ -290,13 +292,23 @@ public class PlayScreen implements Screen {
 	    		config.state = GameState.GAME_OVER;    		
 	    	}
 	    	else {			
-		    	duraAddPipe += delta;
-		    	if (duraAddPipe > config.kTimeAddPipe + 0.1f * config.random(-1,10)){
+		    	duraAddPipe += delta;		    	
+		    	if(iPlant == 0){
+		    		iPlant = random(-3, 5);
+		    	}
+		    	if (duraAddPipe > config.kTimeAddPipe + 0.1f * iPlant){
+		    		
+		    		iPlant = 0;
 		    		duraAddPipe = 0;
 		    		addPipe();
 		    	}
+		    	
 		    	duraAddCloud += delta;
-		    	if (duraAddCloud > config.kTimeAddPipe * config.random(5,9)){
+		    	if(iCloud == 0){
+		    		iCloud = random(2, 5);
+		    	}
+		    	if (duraAddCloud > config.kTimeAddPipe * iCloud){
+		    		iCloud = 0;
 		    		duraAddCloud = 0;
 		    		addCloud();
 		    	}
@@ -331,6 +343,13 @@ public class PlayScreen implements Screen {
         // draw the actors
         stage.draw();
     }
+    
+    public int random(int min, int max)	{
+    	Random rand = new Random();
+        int randomNum = rand.nextInt((max - min) + 1) + min;
+
+        return randomNum;
+	}	
 
     @Override
     public void hide(){
