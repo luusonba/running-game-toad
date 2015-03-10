@@ -14,8 +14,7 @@ public class MyStage extends Stage {
 		super(new StretchViewport(480, 800));
 	}
 		
-	public void setPlayScreen(PlayScreen screen)
-	{
+	public void setPlayScreen(PlayScreen screen){
 		this.screen = screen;
 	}
 	
@@ -31,7 +30,7 @@ public class MyStage extends Stage {
 			else
 			{
 				if(screen.dino.getY() == config.landY){
-					if(config.state == GameState.GAME_RUNNING){
+					if(config.state == GameState.GAME_RUNNING){						
 						screen.dino.tapMe();
 						DinoRunner.sounds.get(config.SoundJump).play(config.volume);
 					}					

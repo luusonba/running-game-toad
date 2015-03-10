@@ -99,7 +99,7 @@ public class PlayScreen implements Screen {
 		stage.clear();
         duraAddPipe = 0;
         duraAddCloud = 0;
-        addLand();
+        addLand(0);
         addBird();               
         addButton();
         addLabelScore();
@@ -223,33 +223,33 @@ public class PlayScreen implements Screen {
 	    stage.addActor(tableTop);
 	}
 	
-	private void addLand() {
+	private void addLand(float dis) {
 		land = new Land(atlas.findRegion("lands/land"));
 		land.setY(200);
+		land.setX(dis);
 		config.landY = land.getY() + land.getHeight() - 15;		
 		stage.addActor(land);
 	}
 	
 	private void addBird() {
 		TextureRegion[] regions = new TextureRegion[] { atlas.findRegion("dinos/left"),
-				atlas.findRegion("dinos/right") };
-		
+				atlas.findRegion("dinos/right"), atlas.findRegion("dinos/fly"), atlas.findRegion("dinos/die") };
 		dino = new Dino(regions);
 		dino.setPosition(screenW/2 - dino.getWidth()/2, config.landY);
 		stage.addActor(dino);
 	}
 	
 	private void addPipe() {	    
-	    Plant pipe2 = new Plant(atlas.findRegion("plants/big5"), dino, true);
-	    pipe2.setZIndex(1);
+	    Plant pipe = new Plant(atlas.findRegion("plants/big5"), dino, true);
+	    pipe.setZIndex(1);
 	    float x = screenW + 10;
 	    float y = config.landY;
 	    	    
-	    pipe2.setPosition(x, y);
+	    pipe.setPosition(x, y);
 	    
-	    stage.addActor(pipe2);
+	    stage.addActor(pipe);
 	    
-		land.setZIndex(pipe2.getZIndex());
+		land.setZIndex(pipe.getZIndex());
 		dino.setZIndex(land.getZIndex());
 		labelScore.setZIndex(dino.getZIndex());
 	}
@@ -283,6 +283,10 @@ public class PlayScreen implements Screen {
 	        // clear the screen with the given RGB color (black)
 	        Gdx.gl.glClearColor( 247/255f, 247/255f, 247/255f, 1f );
 	        Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT );
+	        if(land.getWidth()-land.getX() >= screenW){
+    			addLand(screenW);
+    			land.toBack();
+    		}
     		break;
 		case GameState.GAME_RUNNING:
 			if (dino.isDie){
@@ -292,12 +296,15 @@ public class PlayScreen implements Screen {
 	    		config.state = GameState.GAME_OVER;    		
 	    	}
 	    	else {			
+	    		if(land.getWidth()-land.getX() >= screenW){
+	    			addLand(screenW);
+	    			land.toBack();
+	    		}
 		    	duraAddPipe += delta;		    	
 		    	if(iPlant == 0){
 		    		iPlant = random(-3, 5);
 		    	}
-		    	if (duraAddPipe > config.kTimeAddPipe + 0.1f * iPlant){
-		    		
+		    	if (duraAddPipe > config.kTimeAddPipe + 0.1f * iPlant){		    		
 		    		iPlant = 0;
 		    		duraAddPipe = 0;
 		    		addPipe();
