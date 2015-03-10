@@ -19,7 +19,7 @@ public class Land extends Image {
 	public void act(float delta) {
 		super.act(delta);		
 		if (getX() <= -config.kLandWidth + 240) {
-			setX(0);
+			setX(480);
 		}
 	}
 	
