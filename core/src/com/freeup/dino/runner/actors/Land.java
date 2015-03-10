@@ -18,8 +18,9 @@ public class Land extends Image {
 	@Override
 	public void act(float delta) {
 		super.act(delta);		
-		if (getX() <= -config.kLandWidth + 240) {
-			setX(480);
+		
+		if (getX() < -getWidth()) {
+			remove();
 		}
 	}
 	

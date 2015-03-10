@@ -21,6 +21,7 @@ public class Dino extends Image {
 
 	Animation animation;
 	TextureRegion curFrame;
+	TextureRegion[] regions;
 	float dura;
 	public boolean isDie;
 	
@@ -28,7 +29,10 @@ public class Dino extends Image {
 	{
 		super(regions[0]);
 		setOrigin(getWidth()/2, getHeight()/2);
-		animation = new Animation (0.1f, regions);
+		this.regions = regions;
+		TextureRegion[] runs = new TextureRegion[] { regions[0],
+				regions[1] };
+		animation = new Animation (0.1f, runs);
 		dura = 0;
 		isDie = false;
 	}
@@ -37,31 +41,27 @@ public class Dino extends Image {
 	public void act(float delta) {
 		super.act(delta);
 		
-		if (isDie) return;		
+		if (isDie || getY()> config.landY){ 
+			return;		
+		}
 		dura += delta;
 		curFrame = animation.getKeyFrame(dura, true);
 		setDrawable(new TextureRegionDrawable(curFrame));		
 	}
 
 	public void tapMe() {
-		
 		this.removeAction(curAction);
-
-		//float y = getY() + config.kjumpHeight;
+		setDrawable(new TextureRegionDrawable(regions[2]));
 		float y = config.landY + config.kjumpHeight;
 		//fly up
         RotateToAction faceup = new RotateToAction();
         faceup.setDuration(config.kjumpDura);
-        //faceup.setRotation(30.0f);
-        faceup.setRotation(0.0f);
         
         MoveToAction moveup = new MoveToAction();
         moveup.setDuration(config.kjumpDura);
         moveup.setPosition(getX(), y);
         moveup.setInterpolation(Interpolation.sineOut);
-        
-        Action fly  = parallel( faceup, moveup);
-        
+        Action fly  = parallel( faceup, moveup);        
         //fall down
         float durafall = getDuraDown(y, config.kLandHeight);
         
@@ -72,31 +72,16 @@ public class Dino extends Image {
         MoveToAction movedown = new MoveToAction();
         movedown.setDuration(durafall);
         movedown.setPosition(this.getX(), config.landY);
-        movedown.setInterpolation(Interpolation.sineIn);
-        
-        Action fall  = parallel( facedown, movedown);
-        
+        movedown.setInterpolation(Interpolation.sineIn);        
+        Action fall  = parallel( facedown, movedown);      
         curAction = sequence(fly, fall);
-        this.addAction(curAction);		
+        this.addAction(curAction);        
 	}
 
-	public void hitMe() {		
+	public void hitMe() {
 		isDie = true;
 		this.removeAction(curAction);
-		
-        //fall down
-        RotateToAction facedown = new RotateToAction();
-        facedown.setDuration(config.kjumpDura);
-        //facedown.setRotation(-90.0f);
-        facedown.setRotation(0.0f);
-        
-        MoveToAction movedown = new MoveToAction();
-        movedown.setDuration(getDuraDown(getY(), config.kLandHeight) * 1/2);
-        movedown.setPosition(this.getX(), config.landY);
-        movedown.setInterpolation(Interpolation.sineIn);
-        
-        curAction  = parallel( facedown, movedown);
-        this.addAction(curAction);
+		setDrawable(new TextureRegionDrawable(regions[3]));     
 	}
 
 	
