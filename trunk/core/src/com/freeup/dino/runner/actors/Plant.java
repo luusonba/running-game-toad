@@ -54,8 +54,7 @@ public class Plant extends Image {
 	private void bypass() {
         if (getX() <= bird.getX()) {
         	if (getScore) {
-        		getScore = false; //chi tinh diem mot lan....
-        		bird.updateScore();
+        		getScore = false;
         		DinoRunner.sounds.get(config.SoundScore).play(config.volume);
         	}
         }

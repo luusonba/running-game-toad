@@ -31,16 +31,21 @@ public class PlayScreen implements Screen {
 	private TextureAtlas atlas;
 	
 	private Land land;
+	private Cloud cloud;
 	public Dino dino;
 	
-	float duraAddPipe;
-	float duraAddCloud;
+	private float duraAddPipe;
+	private float duraAddCloud;
+	
+	private long score = 0;
+	private long startTime = 0;
 		
-	public static Label labelScore;
+	private Label labelScore;
 	public Button btnPlay, btnScreenPause;
 	public Table tableTop;
 	private static Preferences prefs;
 	Skin skin;
+	private int famousNumber = 175;	
 		
 	public class GameState {
 		public static final int GAME_START = 0;
@@ -100,6 +105,7 @@ public class PlayScreen implements Screen {
         duraAddPipe = 0;
         duraAddCloud = 0;
         addLand(0);
+        config.landY = land.getY() + land.getHeight() - 15;	
         addBird();               
         addButton();
         addLabelScore();
@@ -209,7 +215,8 @@ public class PlayScreen implements Screen {
             
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {            	
             	showPlay(false);
-            	config.state = GameState.GAME_RUNNING;            	
+            	config.state = GameState.GAME_RUNNING;   
+            	startTime = System.currentTimeMillis();
             }
         });
 				
@@ -223,11 +230,10 @@ public class PlayScreen implements Screen {
 	    stage.addActor(tableTop);
 	}
 	
-	private void addLand(float dis) {
+	private void addLand(float dis) {				
 		land = new Land(atlas.findRegion("lands/land"));
 		land.setY(200);
-		land.setX(dis);
-		config.landY = land.getY() + land.getHeight() - 15;		
+		land.setX(dis);			
 		stage.addActor(land);
 	}
 	
@@ -235,33 +241,27 @@ public class PlayScreen implements Screen {
 		TextureRegion[] regions = new TextureRegion[] { atlas.findRegion("dinos/left"),
 				atlas.findRegion("dinos/right"), atlas.findRegion("dinos/fly"), atlas.findRegion("dinos/die") };
 		dino = new Dino(regions);
-		dino.setPosition(screenW/2 - dino.getWidth()/2, config.landY);
+		dino.setPosition(dino.getWidth()/2, config.landY);
 		stage.addActor(dino);
 	}
 	
 	private void addPipe() {	    
-	    Plant pipe = new Plant(atlas.findRegion("plants/big5"), dino, true);
-	    pipe.setZIndex(1);
+	    Plant pipe = new Plant(atlas.findRegion("plants/big5"), dino, true);	    
 	    float x = screenW + 10;
 	    float y = config.landY;
 	    	    
 	    pipe.setPosition(x, y);
 	    
 	    stage.addActor(pipe);
-	    
-		land.setZIndex(pipe.getZIndex());
-		dino.setZIndex(land.getZIndex());
-		labelScore.setZIndex(dino.getZIndex());
 	}
 	
 	private void addCloud() {	    
-	    Cloud cloud = new Cloud(atlas.findRegion("cloud/cloud"));
+		cloud = new Cloud(atlas.findRegion("cloud/cloud"));
 	    float x = screenW + 10;
-	    float y = config.landY + (40 * random(8, 12));
+	    float y = config.landY + (40 * random(8, 10));
 	    cloud.setPosition(x, y);
 	    
-	    stage.addActor(cloud);
-	    
+	    stage.addActor(cloud);	    
 	}
 	
     @Override
@@ -269,12 +269,12 @@ public class PlayScreen implements Screen {
     	// resize the stage
     	stage.getViewport().update(width, height);
     }
-    
+    private long oldScore = 0;
     @Override
     public void render (float delta ){
-    	if (delta > 0.1f)
+    	if (delta > 0.1f){
     	    delta = 0.1f;
-    	
+    	}
     	switch (config.state) {
     	case GameState.GAME_START:
 	        // update the action of actors
@@ -290,12 +290,19 @@ public class PlayScreen implements Screen {
     		break;
 		case GameState.GAME_RUNNING:
 			if (dino.isDie){
-	    		if (dino.score > getHighScore()) {
+	    		/*if (dino.score > getHighScore()) {
 					setHighScore(dino.score);
-				}
+				}*/
 	    		config.state = GameState.GAME_OVER;    		
 	    	}
-	    	else {			
+	    	else {
+	    		
+	    		score = (System.currentTimeMillis() - startTime)/(int)(famousNumber/config.kmoveLeftDura);
+	    		if(score > oldScore){
+	    			oldScore = score;
+	    			labelScore.setText(""+score);
+	    		}
+	    		
 	    		if(land.getWidth()-land.getX() >= screenW){
 	    			addLand(screenW);
 	    			land.toBack();
@@ -318,6 +325,7 @@ public class PlayScreen implements Screen {
 		    		iCloud = 0;
 		    		duraAddCloud = 0;
 		    		addCloud();
+		    		cloud.toBack();
 		    	}
 	    	}
 	    	
