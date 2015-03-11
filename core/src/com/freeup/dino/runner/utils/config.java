@@ -18,7 +18,7 @@ public class config {
     public static float kmoveLeftDura = 0.7f;
     
     //thoi gian move sang trai khoang Cloud
-    public static float cmoveLeftDura = 2.0f;
+    public static float cmoveLeftDura = 3.0f;
 
     //chieu cao va thoi gian khi bay len do "tap"
     public static int kjumpHeight = 300;

@@ -28,7 +28,6 @@ public class Land extends Image {
 		MoveByAction moveleft = new MoveByAction();
 	    moveleft.setDuration(config.kmoveLeftDura);
 	    moveleft.setAmountX(-config.kLandWidth);
-	    
 		addAction(forever(moveleft));
 	}	
 }

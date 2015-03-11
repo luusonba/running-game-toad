@@ -8,15 +8,13 @@ import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RotateToAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.freeup.dino.runner.screen.PlayScreen;
 import com.freeup.dino.runner.utils.config;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
 
 public class Dino extends Image {
-	
-	public int score;
+		
 	private Action curAction;
 
 	Animation animation;
@@ -81,13 +79,7 @@ public class Dino extends Image {
 	public void hitMe() {
 		isDie = true;
 		this.removeAction(curAction);
-		setDrawable(new TextureRegionDrawable(regions[3]));     
-	}
-
-	
-	public void updateScore() {
-		score++;
-		PlayScreen.labelScore.setText("" + score);
+		setDrawable(new TextureRegionDrawable(regions[3]));
 	}
 	
 	float getDuraDown(float up, float down) {
