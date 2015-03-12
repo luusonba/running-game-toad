@@ -38,12 +38,13 @@ public class PlayScreen implements Screen {
 	private float duraAddCloud;
 	
 	private long score = 0;
-	private long startTime = 0;
+	public long startTime = 0;
+	public long oldScore = 0;
 		
 	private Label labelScore;
 	public Button btnPlay, btnScreenPause;
 	public Table tableTop;
-	private static Preferences prefs;
+	private Preferences prefs;
 	Skin skin;
 	private int famousNumber = 175;	
 		
@@ -82,13 +83,13 @@ public class PlayScreen implements Screen {
 		}		
 	}
 	
-	public static void setHighScore(int val) {
-		prefs.putInteger("highScore", val);
+	public void setHighScore(long val) {
+		prefs.putLong("highScore", val);
 		prefs.flush();
 	}
 
-	public static int getHighScore() {
-		return prefs.getInteger("highScore");
+	public long getHighScore() {
+		return prefs.getLong("highScore");
 	}
 	
 	@Override
@@ -173,7 +174,7 @@ public class PlayScreen implements Screen {
                 	btnScreenPause.setVisible(false);
                 	showPlay(true);
                 }else{
-                	config.state = GameState.GAME_RUNNING;
+                	config.state = GameState.GAME_RUNNING;                	
                 }
             }
         });
@@ -216,6 +217,7 @@ public class PlayScreen implements Screen {
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {            	
             	showPlay(false);
             	config.state = GameState.GAME_RUNNING;   
+            	oldScore = 0;
             	startTime = System.currentTimeMillis();
             }
         });
@@ -269,7 +271,7 @@ public class PlayScreen implements Screen {
     	// resize the stage
     	stage.getViewport().update(width, height);
     }
-    private long oldScore = 0;
+    
     @Override
     public void render (float delta ){
     	if (delta > 0.1f){
@@ -290,17 +292,21 @@ public class PlayScreen implements Screen {
     		break;
 		case GameState.GAME_RUNNING:
 			if (dino.isDie){
-	    		/*if (dino.score > getHighScore()) {
-					setHighScore(dino.score);
-				}*/
+	    		if (score > getHighScore()) {
+					setHighScore(score);
+				}
+	    		score = 0;
 	    		config.state = GameState.GAME_OVER;    		
 	    	}
-	    	else {
-	    		
+	    	else {	    		
 	    		score = (System.currentTimeMillis() - startTime)/(int)(famousNumber/config.kmoveLeftDura);
 	    		if(score > oldScore){
 	    			oldScore = score;
 	    			labelScore.setText(""+score);
+	    		}
+	    		
+	    		if(score > 0 && score % 100 == 0){
+	    			config.kmoveLeftDura = config.kmoveLeftDura + 0.1f;
 	    		}
 	    		
 	    		if(land.getWidth()-land.getX() >= screenW){
@@ -311,17 +317,17 @@ public class PlayScreen implements Screen {
 		    	if(iPlant == 0){
 		    		iPlant = random(-3, 5);
 		    	}
-		    	if (duraAddPipe > config.kTimeAddPipe + 0.1f * iPlant){		    		
+		    	if (duraAddPipe > config.kmoveLeftDura/0.7f + 0.1f * iPlant){		    		
 		    		iPlant = 0;
 		    		duraAddPipe = 0;
-		    		addPipe();
+		    		/////////////////////////addPipe();
 		    	}
 		    	
 		    	duraAddCloud += delta;
 		    	if(iCloud == 0){
 		    		iCloud = random(2, 5);
 		    	}
-		    	if (duraAddCloud > config.kTimeAddPipe * iCloud){
+		    	if (duraAddCloud > config.kmoveLeftDura/0.7f * iCloud){
 		    		iCloud = 0;
 		    		duraAddCloud = 0;
 		    		addCloud();

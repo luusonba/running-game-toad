@@ -26,6 +26,8 @@ public class MyStage extends Stage {
 			if (screen.dino.isDie) {
 				screen.showGame();
 				config.state = GameState.GAME_RUNNING;
+				screen.oldScore = 0;
+				screen.startTime = System.currentTimeMillis();				
 			}
 			else
 			{

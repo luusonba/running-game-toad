@@ -77,7 +77,7 @@ public class Dino extends Image {
 	}
 
 	public void hitMe() {
-		isDie = true;
+		isDie = true;		
 		this.removeAction(curAction);
 		setDrawable(new TextureRegionDrawable(regions[3]));
 	}
