@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
-import com.badlogic.gdx.scenes.scene2d.actions.RotateToAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.freeup.dino.runner.utils.config;
@@ -52,26 +51,20 @@ public class Dino extends Image {
 		setDrawable(new TextureRegionDrawable(regions[2]));
 		float y = config.landY + config.kjumpHeight;
 		//fly up
-        RotateToAction faceup = new RotateToAction();
-        faceup.setDuration(config.kjumpDura);
-        
+                
         MoveToAction moveup = new MoveToAction();
         moveup.setDuration(config.kjumpDura);
         moveup.setPosition(getX(), y);
         moveup.setInterpolation(Interpolation.sineOut);
-        Action fly  = parallel( faceup, moveup);        
+        Action fly  = parallel(moveup);        
         //fall down
         float durafall = getDuraDown(y, config.kLandHeight);
-        
-        RotateToAction facedown = new RotateToAction();
-        facedown.setDuration(durafall);
-        facedown.setRotation(0.0f);
-        
+                
         MoveToAction movedown = new MoveToAction();
         movedown.setDuration(durafall);
         movedown.setPosition(this.getX(), config.landY);
         movedown.setInterpolation(Interpolation.sineIn);        
-        Action fall  = parallel( facedown, movedown);      
+        Action fall  = parallel(movedown);      
         curAction = sequence(fly, fall);
         this.addAction(curAction);        
 	}

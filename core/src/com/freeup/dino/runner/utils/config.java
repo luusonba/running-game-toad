@@ -15,14 +15,11 @@ public class config {
     public static float kLandWidth = 336;
     
     //thoi gian move sang trai khoang kLandWidth
-    public static float kmoveLeftDura = 0.9f;
+    public static float kmoveLeftDura = 0.75f;
     
-    //thoi gian move sang trai khoang Cloud
-    public static float cmoveLeftDura = 3.0f;
-
     //chieu cao va thoi gian khi bay len do "tap"
-    public static int kjumpHeight = 300;
-    public static float kjumpDura = 0.23f;
+    public static int kjumpHeight = 250;
+    public static float kjumpDura = 0.25f;
             
     //position land Y
     public static float landY = 0;
