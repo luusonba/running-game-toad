@@ -46,7 +46,7 @@ public class PlayScreen implements Screen {
 	public Table tableTop;
 	private Preferences prefs;
 	Skin skin;
-	private int famousNumber = 175;	
+	private float famousNumber = 253.3f;	
 		
 	public class GameState {
 		public static final int GAME_START = 0;
@@ -299,15 +299,16 @@ public class PlayScreen implements Screen {
 	    		config.state = GameState.GAME_OVER;    		
 	    	}
 	    	else {	    		
-	    		score = (System.currentTimeMillis() - startTime)/(int)(famousNumber/config.kmoveLeftDura);
+	    		score = (System.currentTimeMillis() - startTime)/(int)(famousNumber*config.kmoveLeftDura);
+	    		
 	    		if(score > oldScore){
 	    			oldScore = score;
 	    			labelScore.setText(""+score);
 	    		}
 	    		
-	    		if(score > 0 && score % 100 == 0){
-	    			config.kmoveLeftDura = config.kmoveLeftDura + 0.1f;
-	    		}
+	    		/*if(score > 0 && score % 100 == 0){
+	    			config.kmoveLeftDura = config.kmoveLeftDura - 0.1f;
+	    		}*/
 	    		
 	    		if(land.getWidth()-land.getX() >= screenW){
 	    			addLand(screenW);
