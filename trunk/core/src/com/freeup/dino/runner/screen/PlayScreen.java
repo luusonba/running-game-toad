@@ -40,6 +40,7 @@ public class PlayScreen implements Screen {
 	private long score = 0;
 	public long startTime = 0;
 	public long oldScore = 0;
+	public long hundredScore = 0;
 		
 	private Label labelScore;
 	public Button btnPlay, btnScreenPause;
@@ -286,7 +287,7 @@ public class PlayScreen implements Screen {
 	        Gdx.gl.glClearColor( 247/255f, 247/255f, 247/255f, 1f );
 	        Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT );
 	        if(land.getWidth()-land.getX() >= screenW){
-    			addLand(screenW);
+	        	addLand(screenW);
     			land.toBack();
     		}
     		break;
@@ -296,19 +297,27 @@ public class PlayScreen implements Screen {
 					setHighScore(score);
 				}
 	    		score = 0;
+	    		hundredScore = 0;
+	    		config.kmoveLeftDura = 0.75f; 
 	    		config.state = GameState.GAME_OVER;    		
 	    	}
 	    	else {	    		
-	    		score = (System.currentTimeMillis() - startTime)/(int)(famousNumber*config.kmoveLeftDura);
-	    		
-	    		if(score > oldScore){
-	    			oldScore = score;
-	    			labelScore.setText(""+score);
-	    		}
-	    		
-	    		/*if(score > 0 && score % 100 == 0){
+	    			    		
+	    		if(score > 0 && score % 100 == 0){
+	    			startTime = System.currentTimeMillis();
+	    			hundredScore = hundredScore + 100;
+	    			oldScore = 0;
 	    			config.kmoveLeftDura = config.kmoveLeftDura - 0.1f;
-	    		}*/
+	    		}	    		
+	    		score = 1 + hundredScore + (System.currentTimeMillis() - startTime)/(int)(famousNumber*config.kmoveLeftDura);	    		   			    			    		
+	    		if(score > oldScore){
+	    			if(score % 100 == 1){
+	    				labelScore.setText(""+(score-1));
+	    			}else{
+	    				labelScore.setText(""+score);
+	    			}
+	    			oldScore = score;	    			
+	    		}
 	    		
 	    		if(land.getWidth()-land.getX() >= screenW){
 	    			addLand(screenW);
@@ -316,19 +325,19 @@ public class PlayScreen implements Screen {
 	    		}
 		    	duraAddPipe += delta;		    	
 		    	if(iPlant == 0){
-		    		iPlant = random(-3, 5);
+		    		iPlant = random(-2, 5);
 		    	}
-		    	if (duraAddPipe > config.kmoveLeftDura/0.7f + 0.1f * iPlant){		    		
+		    	if (duraAddPipe > config.kmoveLeftDura/0.75f + 0.1f * iPlant){		    		
 		    		iPlant = 0;
 		    		duraAddPipe = 0;
-		    		/////////////////////////addPipe();
+		    		addPipe();
 		    	}
 		    	
 		    	duraAddCloud += delta;
 		    	if(iCloud == 0){
 		    		iCloud = random(2, 5);
 		    	}
-		    	if (duraAddCloud > config.kmoveLeftDura/0.7f * iCloud){
+		    	if (duraAddCloud > config.kmoveLeftDura/0.75f * iCloud){
 		    		iCloud = 0;
 		    		duraAddCloud = 0;
 		    		addCloud();

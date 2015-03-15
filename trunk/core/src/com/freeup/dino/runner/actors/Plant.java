@@ -84,6 +84,5 @@ public class Plant extends Image {
 				maxx2 < minx1 ||
 				maxy1 < miny2 ||
 				maxy2 < miny1);    
-	}
-	
+	}	
 }
