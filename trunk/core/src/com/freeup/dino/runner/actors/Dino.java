@@ -53,7 +53,7 @@ public class Dino extends Image {
 		//fly up
                 
         MoveToAction moveup = new MoveToAction();
-        moveup.setDuration(config.kjumpDura);
+        moveup.setDuration(0.33f*config.kmoveLeftDura);
         moveup.setPosition(getX(), y);
         moveup.setInterpolation(Interpolation.sineOut);
         Action fly  = parallel(moveup);        
@@ -81,10 +81,10 @@ public class Dino extends Image {
 	    float duraDown;
 	    
 	    //neu dy <= kjumheight => thoi gian khong doi
-	    if (dy <= config.kjumpHeight) duraDown = config.kjumpDura;
+	    if (dy <= config.kjumpHeight) duraDown = 0.33f*config.kmoveLeftDura;
 	    else //neu cao hon thi tinh theo ti le thuan
 	    {
-	        duraDown = dy * (config.kjumpDura) / config.kjumpHeight;
+	        duraDown = dy * (0.33f*config.kmoveLeftDura) / config.kjumpHeight;
 	    }
 	    
 	    return duraDown;

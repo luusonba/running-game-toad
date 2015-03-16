@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -18,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.freeup.dino.runner.DinoRunner;
+import com.freeup.dino.runner.actors.Bug;
 import com.freeup.dino.runner.actors.Dino;
 import com.freeup.dino.runner.actors.Cloud;
 import com.freeup.dino.runner.actors.Land;
@@ -32,8 +34,10 @@ public class PlayScreen implements Screen {
 	
 	private Land land;
 	private Cloud cloud;
+	private Bug bug;
 	public Dino dino;
 	
+	private float duraAddBug;
 	private float duraAddPipe;
 	private float duraAddCloud;
 	
@@ -67,7 +71,6 @@ public class PlayScreen implements Screen {
 		this.game = game;		
 		screenW = DinoRunner.VIEWPORT.x;
 		screenH = DinoRunner.VIEWPORT.y;
-		
 		stage = new MyStage(0, 0, true);
 		stage.setPlayScreen(this);		
 		game.manager.load("images/sprites.atlas", TextureAtlas.class);
@@ -106,7 +109,8 @@ public class PlayScreen implements Screen {
 		stage.clear();
         duraAddPipe = 0;
         duraAddCloud = 0;
-        addLand(0);
+        duraAddBug = 0;
+        addLand();
         config.landY = land.getY() + land.getHeight() - 15;	
         addBird();               
         addButton();
@@ -233,10 +237,10 @@ public class PlayScreen implements Screen {
 	    stage.addActor(tableTop);
 	}
 	
-	private void addLand(float dis) {				
+	private void addLand() {
 		land = new Land(atlas.findRegion("lands/land"));
 		land.setY(200);
-		land.setX(dis);			
+		land.setX(0);		
 		stage.addActor(land);
 	}
 	
@@ -248,8 +252,30 @@ public class PlayScreen implements Screen {
 		stage.addActor(dino);
 	}
 	
-	private void addPipe() {	    
-	    Plant pipe = new Plant(atlas.findRegion("plants/big5"), dino, true);	    
+	private void addPipe() {
+		Plant pipe;
+		int i = random(1, 5);
+		switch (i) {
+		case 1:
+			pipe = new Plant(atlas.findRegion("plants/plant1"), dino, true);
+			break;
+		case 2:
+			pipe = new Plant(atlas.findRegion("plants/plant2"), dino, true);
+			break;
+		case 3:
+			pipe = new Plant(atlas.findRegion("plants/plant3"), dino, true);
+			break;
+		case 4:
+			pipe = new Plant(atlas.findRegion("plants/plant4"), dino, true);
+			break;
+		case 5:
+			pipe = new Plant(atlas.findRegion("plants/plant5"), dino, true);
+			break;				
+		default:
+			pipe = new Plant(atlas.findRegion("plants/plant5"), dino, true);
+			break;
+		}
+	    	    
 	    float x = screenW + 10;
 	    float y = config.landY;
 	    	    
@@ -267,6 +293,26 @@ public class PlayScreen implements Screen {
 	    stage.addActor(cloud);	    
 	}
 	
+	private void addBug() {
+		int i = random(1, 2);
+		switch (i) {
+		case 1:
+			bug = new Bug(new TextureRegion(new Texture(Gdx.files.internal("bugs/bug1.png"))));
+			break;
+		case 2:
+			bug = new Bug(new TextureRegion(new Texture(Gdx.files.internal("bugs/bug2.png"))));
+			break;
+		default:
+			break;
+		}
+		
+	    float x = screenW + 10;		
+	    float y = config.landY - random(-4, 7);
+	    bug.setPosition(x, y);
+	    
+	    stage.addActor(bug);	    
+	}
+	
     @Override
     public void resize(int width, int height){    	
     	// resize the stage
@@ -278,18 +324,21 @@ public class PlayScreen implements Screen {
     	if (delta > 0.1f){
     	    delta = 0.1f;
     	}
+    	
     	switch (config.state) {
     	case GameState.GAME_START:
+    		
+    		duraAddBug += delta;
+    		if (duraAddBug > 0.01f * random(5,9)){
+    			duraAddBug = 0;
+	    		addBug();
+	    	}
 	        // update the action of actors
 	        stage.act(delta);
 
 	        // clear the screen with the given RGB color (black)
-	        Gdx.gl.glClearColor( 247/255f, 247/255f, 247/255f, 1f );
-	        Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT );
-	        if(land.getWidth()-land.getX() >= screenW){
-	        	addLand(screenW);
-    			land.toBack();
-    		}
+	        Gdx.gl.glClearColor( 245/255f, 245/255f, 245/255f, 1f );
+	        Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT );	        
     		break;
 		case GameState.GAME_RUNNING:
 			if (dino.isDie){
@@ -319,14 +368,16 @@ public class PlayScreen implements Screen {
 	    			oldScore = score;	    			
 	    		}
 	    		
-	    		if(land.getWidth()-land.getX() >= screenW){
-	    			addLand(screenW);
-	    			land.toBack();
-	    		}
+	    		duraAddBug += delta;
+	    		if (duraAddBug > 0.01f * random(5,9)){
+	    			duraAddBug = 0;
+		    		addBug();
+		    	}
+	    		
 		    	duraAddPipe += delta;		    	
 		    	if(iPlant == 0){
 		    		iPlant = random(-2, 5);
-		    	}
+		    	}		    	
 		    	if (duraAddPipe > config.kmoveLeftDura/0.75f + 0.1f * iPlant){		    		
 		    		iPlant = 0;
 		    		duraAddPipe = 0;
@@ -342,28 +393,28 @@ public class PlayScreen implements Screen {
 		    		duraAddCloud = 0;
 		    		addCloud();
 		    		cloud.toBack();
-		    	}
+		    	}		    	
 	    	}
 	    	
 	        // update the action of actors
 	        stage.act(delta);
 
 	        // clear the screen with the given RGB color (black)
-	        Gdx.gl.glClearColor( 247/255f, 247/255f, 247/255f, 1f );
+	        Gdx.gl.glClearColor( 245/255f, 245/255f, 245/255f, 1f );
 	        Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT );
 			break;
 		case GameState.GAME_PAUSED:			
 			stage.act(0f);
 
 	        // clear the screen with the given RGB color (black)
-	        Gdx.gl.glClearColor( 247/255f, 247/255f, 247/255f, 1f );
+	        Gdx.gl.glClearColor( 245/255f, 245/255f, 245/255f, 1f );
 	        Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT );
 			break;
 		case GameState.GAME_OVER:
 			stage.act(0f);
 
 	        // clear the screen with the given RGB color (black)
-	        Gdx.gl.glClearColor( 247/255f, 247/255f, 247/255f, 1f );
+	        Gdx.gl.glClearColor( 245/255f, 245/255f, 245/255f, 1f );
 	        Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT );
 			land.clearActions();
 			break;		
@@ -372,7 +423,7 @@ public class PlayScreen implements Screen {
 		}
     	    	        
         // draw the actors
-        stage.draw();
+        stage.draw();       
     }
     
     public int random(int min, int max)	{

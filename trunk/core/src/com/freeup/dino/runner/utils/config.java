@@ -19,7 +19,6 @@ public class config {
     
     //chieu cao va thoi gian khi bay len do "tap"
     public static int kjumpHeight = 250;
-    public static float kjumpDura = 0.25f;
             
     //position land Y
     public static float landY = 0;

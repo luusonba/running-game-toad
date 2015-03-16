@@ -10,8 +10,6 @@ import com.freeup.dino.runner.utils.config;
 
 public class Cloud extends Image {
 
-	boolean getScore;
-			
 	public Cloud(TextureRegion region) {
 		super(region);
 		
