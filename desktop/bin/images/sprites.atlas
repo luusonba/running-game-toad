@@ -128,45 +128,38 @@ sprites5.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-plants/big4
+plants/plant4
   rotate: false
-  xy: 1, 1
-  size: 39, 83
-  orig: 39, 83
+  xy: 1, 15
+  size: 133, 84
+  orig: 133, 84
   offset: 0, 0
   index: -1
-plants/big5
+plants/plant3
   rotate: false
-  xy: 42, 1
-  size: 39, 83
-  orig: 39, 83
+  xy: 136, 1
+  size: 113, 98
+  orig: 113, 98
   offset: 0, 0
   index: -1
-plants/big6
+plants/plant1
   rotate: false
-  xy: 83, 1
-  size: 39, 83
-  orig: 39, 83
+  xy: 251, 15
+  size: 38, 84
+  orig: 38, 84
   offset: 0, 0
   index: -1
-plants/small1
+plants/plant2
   rotate: false
-  xy: 124, 33
-  size: 27, 51
-  orig: 27, 51
+  xy: 291, 40
+  size: 49, 59
+  orig: 49, 59
   offset: 0, 0
   index: -1
-plants/small2
+plants/plant5
   rotate: false
-  xy: 153, 33
-  size: 27, 51
-  orig: 27, 51
-  offset: 0, 0
-  index: -1
-plants/small3
-  rotate: false
-  xy: 182, 33
-  size: 27, 51
-  orig: 27, 51
+  xy: 342, 35
+  size: 27, 64
+  orig: 27, 64
   offset: 0, 0
   index: -1
