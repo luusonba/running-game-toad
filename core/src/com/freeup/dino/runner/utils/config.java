@@ -8,7 +8,8 @@ public class config {
     public static String SoundHit = "hit";
     
     //Volume
-    public static float volume = 1.0f;
+    ////////////////////////////////*public static float volume = 1.0f;*/
+    public static float volume = 0.0f;
     
     //chieu cao va chieu dai thiet ke cua hinh land.png
     public static int kLandHeight = 112;

@@ -306,7 +306,7 @@ public class PlayScreen implements Screen {
 			break;
 		}
 		
-	    float x = screenW + 10;		
+	    float x = screenW + 10;
 	    float y = config.landY - random(-4, 7);
 	    bug.setPosition(x, y);
 	    
