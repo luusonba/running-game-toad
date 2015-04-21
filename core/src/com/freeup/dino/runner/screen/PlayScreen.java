@@ -6,10 +6,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -19,7 +19,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.freeup.dino.runner.DinoRunner;
-import com.freeup.dino.runner.actors.Bug;
 import com.freeup.dino.runner.actors.Dino;
 import com.freeup.dino.runner.actors.Cloud;
 import com.freeup.dino.runner.actors.Land;
@@ -34,10 +33,8 @@ public class PlayScreen implements Screen {
 	
 	private Land land;
 	private Cloud cloud;
-	private Bug bug;
 	public Dino dino;
 	
-	private float duraAddBug;
 	private float duraAddPipe;
 	private float duraAddCloud;
 	
@@ -51,8 +48,13 @@ public class PlayScreen implements Screen {
 	public Table tableTop;
 	private Preferences prefs;
 	Skin skin;
-	private float famousNumber = 253.3f;	
-		
+	private float famousNumber = 253.3f;
+	
+	private static final int VIRTUAL_WIDTH = 480;
+    private static final int VIRTUAL_HEIGHT = 800;
+    private static final float ASPECT_RATIO =
+        (float)VIRTUAL_WIDTH/(float)VIRTUAL_HEIGHT;
+    	
 	public class GameState {
 		public static final int GAME_START = 0;
 	    public static final int GAME_RUNNING = 1;
@@ -78,7 +80,7 @@ public class PlayScreen implements Screen {
 		atlas = game.manager.get("images/sprites.atlas", TextureAtlas.class);			    
 		skin = new Skin();
         skin.addRegions(atlas);
-		
+        
 		// Create (or retrieve existing) preferences file
 		prefs = Gdx.app.getPreferences("FlappyBird");
 
@@ -106,10 +108,9 @@ public class PlayScreen implements Screen {
     }
 		
 	public void showGame()	{		
-		stage.clear();
+		stage.clear();		
         duraAddPipe = 0;
         duraAddCloud = 0;
-        duraAddBug = 0;
         addLand();
         config.landY = land.getY() + land.getHeight() - 15;	
         addBird();               
@@ -292,31 +293,33 @@ public class PlayScreen implements Screen {
 	    
 	    stage.addActor(cloud);	    
 	}
-	
-	private void addBug() {
-		int i = random(1, 2);
-		switch (i) {
-		case 1:
-			bug = new Bug(new TextureRegion(new Texture(Gdx.files.internal("bugs/bug1.png"))));
-			break;
-		case 2:
-			bug = new Bug(new TextureRegion(new Texture(Gdx.files.internal("bugs/bug2.png"))));
-			break;
-		default:
-			break;
-		}
 		
-	    float x = screenW + 10;
-	    float y = config.landY - random(-4, 7);
-	    bug.setPosition(x, y);
-	    
-	    stage.addActor(bug);	    
-	}
-	
     @Override
     public void resize(int width, int height){    	
     	// resize the stage
-    	stage.getViewport().update(width, height);
+        float aspectRatio = (float)width/(float)height;
+        float scale = 1f;
+        Vector2 crop = new Vector2(0f, 0f);
+        if(aspectRatio > ASPECT_RATIO)
+        {
+            scale = (float)height/(float)VIRTUAL_HEIGHT;
+            crop.x = (width - VIRTUAL_WIDTH*scale)/2f;
+        }
+        else if(aspectRatio < ASPECT_RATIO)
+        {
+            scale = (float)width/(float)VIRTUAL_WIDTH;
+            crop.y = (height - VIRTUAL_HEIGHT*scale)/2f;
+        }
+        else
+        {
+            scale = (float)width/(float)VIRTUAL_WIDTH;
+        }
+
+        float w = (float)VIRTUAL_WIDTH*scale;
+        float h = (float)VIRTUAL_HEIGHT*scale;
+        
+        // set viewport
+        Gdx.gl.glViewport((width - (int)w)/2, (height - (int)h)/2, (int)w, (int)h);
     }
     
     @Override
@@ -324,15 +327,9 @@ public class PlayScreen implements Screen {
     	if (delta > 0.1f){
     	    delta = 0.1f;
     	}
-    	
     	switch (config.state) {
     	case GameState.GAME_START:
-    		
-    		duraAddBug += delta;
-    		if (duraAddBug > 0.01f * random(5,9)){
-    			duraAddBug = 0;
-	    		addBug();
-	    	}
+    		    		
 	        // update the action of actors
 	        stage.act(delta);
 
@@ -367,13 +364,7 @@ public class PlayScreen implements Screen {
 	    			}
 	    			oldScore = score;	    			
 	    		}
-	    		
-	    		duraAddBug += delta;
-	    		if (duraAddBug > 0.01f * random(5,9)){
-	    			duraAddBug = 0;
-		    		addBug();
-		    	}
-	    		
+	    			    		
 		    	duraAddPipe += delta;		    	
 		    	if(iPlant == 0){
 		    		iPlant = random(-2, 5);

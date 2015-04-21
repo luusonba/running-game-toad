@@ -15,7 +15,7 @@ public class MyStage extends Stage {
 	}
 		
 	public void setPlayScreen(PlayScreen screen){
-		this.screen = screen;
+		this.screen = screen;		
 	}
 	
 	@Override
@@ -38,20 +38,17 @@ public class MyStage extends Stage {
 					}					
 				}
 			}
-		}
-		
+		}		
 		return super.touchDown(x, y, pointer, button);
 	}
 	
 	@Override
 	public boolean touchDragged(int x, int y, int pointer) {
-
 		return super.touchDragged(x, y, pointer);
 	}
 	
 	@Override
-	public boolean touchUp(int x, int y, int pointer, int button) {
-		
+	public boolean touchUp(int x, int y, int pointer, int button) {		
 		return super.touchUp(x, y, pointer, button);
 	}
 }

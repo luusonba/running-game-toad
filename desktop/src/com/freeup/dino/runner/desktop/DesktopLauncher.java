@@ -8,10 +8,9 @@ public class DesktopLauncher {
 	public static void main (String[] arg) {
 		
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
-		cfg.title = "FlappyBird";
-		cfg.width = 480;
-		cfg.height = 800;
-		
+		cfg.title = "Dino Runner";
+		cfg.width = 240;
+		cfg.height = 320;
 		new LwjglApplication(new DinoRunner(), cfg);
 	}
 }
