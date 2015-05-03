@@ -12,11 +12,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.freeup.dino.runner.DinoRunner;
 import com.freeup.dino.runner.actors.Dino;
@@ -32,6 +29,7 @@ public class PlayScreen implements Screen {
 	private TextureAtlas atlas;
 	
 	private Land land;
+	private Land subLand;
 	private Cloud cloud;
 	public Dino dino;
 	
@@ -44,10 +42,8 @@ public class PlayScreen implements Screen {
 	public long hundredScore = 0;
 		
 	private Label labelScore;
-	public Button btnPlay, btnScreenPause;
 	public Table tableTop;
-	private Preferences prefs;
-	Skin skin;
+	private Preferences prefs;	
 	private float famousNumber = 253.3f;
 	
 	private static final int VIRTUAL_WIDTH = 480;
@@ -78,11 +74,9 @@ public class PlayScreen implements Screen {
 		game.manager.load("images/sprites.atlas", TextureAtlas.class);
 		game.manager.finishLoading();
 		atlas = game.manager.get("images/sprites.atlas", TextureAtlas.class);			    
-		skin = new Skin();
-        skin.addRegions(atlas);
-        
+		
 		// Create (or retrieve existing) preferences file
-		prefs = Gdx.app.getPreferences("FlappyBird");
+		prefs = Gdx.app.getPreferences("firstrunner");
 
 		if (!prefs.contains("highScore")) {
 			prefs.putInteger("highScore", 0);
@@ -111,7 +105,8 @@ public class PlayScreen implements Screen {
 		stage.clear();		
         duraAddPipe = 0;
         duraAddCloud = 0;
-        addLand();
+        addLand();        
+        addSubLand();
         config.landY = land.getY() + land.getHeight() - 15;	
         addBird();               
         addButton();
@@ -119,36 +114,16 @@ public class PlayScreen implements Screen {
                 
         if(config.state == GameState.GAME_START){
         	addScreenPlay();
+        	addScreenTap();
         }
 	}
 	
-	private void showPlay(boolean isShow) {
+	/*private void showPlay(boolean isShow) {
 		tableTop.setVisible(isShow);
-	}
+	}*/
 		
 	private void addButton() {
-		Button btnRestart;		    
-	    ButtonStyle btnStylePause;	    	    
-	    btnStylePause = new ButtonStyle();
-	    int screenSize = Gdx.graphics.getWidth();
-	    if(screenSize >= 320){
-	    	btnStylePause.up = skin.getDrawable("buttons/screenpause");	    	
-	    } else{	    	
-	    	btnStylePause.up = skin.getDrawable("buttons/small_screenpause");
-	    }
-                                        
-        btnScreenPause = new Button(btnStylePause); 
-        if(screenSize < 320){
-        	btnScreenPause.setSize(35, 35);	    	
-	    }
-        
-        btnRestart = new Button(skin.getDrawable("buttons/restart"));
-                                    
-        btnScreenPause.setPosition(screenW - btnScreenPause.getWidth() - btnScreenPause.getWidth(), screenH - btnScreenPause.getHeight());        
-        btnRestart.setPosition(screenW/2 - btnRestart.getWidth()/2, screenH/2 - btnRestart.getHeight()/2);
-                        
-        btnRestart.setVisible(false);
-        
+		        
         /*if(config.volume == 0.0f){
         	btnSound.setChecked(true);
         }else{
@@ -168,25 +143,6 @@ public class PlayScreen implements Screen {
                 }
             }
         });*/
-         
-        btnScreenPause.addListener(new InputListener() {
-            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {                    
-                return true;
-            }
-            
-            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-                if(config.state != GameState.GAME_PAUSED){
-                	config.state = GameState.GAME_PAUSED;
-                	btnScreenPause.setVisible(false);
-                	showPlay(true);
-                }else{
-                	config.state = GameState.GAME_RUNNING;                	
-                }
-            }
-        });
-        
-        stage.addActor(btnScreenPause);        
-        stage.addActor(btnRestart);
 	}
 	
 	public static void muteFX(){
@@ -198,40 +154,60 @@ public class PlayScreen implements Screen {
 		
 	private void addLabelScore() {
 		LabelStyle textStyle = new LabelStyle();
-		textStyle.font = new BitmapFont(Gdx.files.internal("font/font.fnt"), Gdx.files.internal("font/font.png"), false);
+		textStyle.font = new BitmapFont(Gdx.files.internal("font/score.fnt"), Gdx.files.internal("font/score.png"), false);
 
 		labelScore = new Label("0",textStyle);
-		labelScore.setPosition(screenW/2 - labelScore.getWidth()/2, screenH - labelScore.getHeight());
+		labelScore.setPosition(screenW - labelScore.getWidth()/2 - 30, screenH - labelScore.getHeight() - 5);
 		
 		stage.addActor(labelScore);
 	}
 	
-	private void addScreenPlay() {
+	private void addScreenTap() {
 		LabelStyle textStyle = new LabelStyle();
-		textStyle.font = new BitmapFont(Gdx.files.internal("font/font.fnt"), Gdx.files.internal("font/font.png"), false);
+		textStyle.font = new BitmapFont(Gdx.files.internal("font/tap.fnt"), Gdx.files.internal("font/tap.png"), false);
 		
 		Label labelTitle;
-		labelTitle = new Label("DINO RUNNER",textStyle);
-		labelTitle.setFontScale((float)screenW/480);
-		
-		btnPlay = new Button(skin.getDrawable("buttons/start"));        
-        btnPlay.addListener(new InputListener() {
-            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {                    
+		labelTitle = new Label("TAP TO START",textStyle);
+		labelTitle.setFontScale((float)screenW/480);		       	
+            	/*showPlay(false);
+            	config.state = GameState.GAME_RUNNING;   
+            	oldScore = 0;
+            	startTime = System.currentTimeMillis();*/
+        		
+		/*tableTop = new Table();*/		
+		tableTop.add(labelTitle);
+		tableTop.row();
+
+		labelTitle.addListener(new InputListener() {
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {                    
                 return true;
             }
             
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {            	
-            	showPlay(false);
+				// TODO Auto-generated method stub
+				config.state = GameState.GAME_RUNNING;
+            }			
+		});
+		
+		/*tableTop.setPosition(screenW/2, screenH - screenH/4);
+	    stage.addActor(tableTop);*/
+	}
+	
+	private void addScreenPlay() {
+		LabelStyle textStyle = new LabelStyle();
+		textStyle.font = new BitmapFont(Gdx.files.internal("font/dino.fnt"), Gdx.files.internal("font/dino.png"), false);
+		
+		Label labelTitle;
+		labelTitle = new Label("DINO RUNNER",textStyle);
+		labelTitle.setFontScale((float)screenW/480);		       	
+            	/*showPlay(false);
             	config.state = GameState.GAME_RUNNING;   
             	oldScore = 0;
-            	startTime = System.currentTimeMillis();
-            }
-        });
-				
+            	startTime = System.currentTimeMillis();*/
+        		
 		tableTop = new Table();
 		tableTop.add(labelTitle);
 		tableTop.row();
-		tableTop.add(btnPlay);
 
 		
 		tableTop.setPosition(screenW/2, screenH - screenH/4);
@@ -243,6 +219,13 @@ public class PlayScreen implements Screen {
 		land.setY(200);
 		land.setX(0);		
 		stage.addActor(land);
+	}
+	
+	private void addSubLand() {
+		subLand = new Land(atlas.findRegion("lands/land"));
+		subLand.setY(200);
+		subLand.setX(subLand.getWidth()/2);		
+		stage.addActor(subLand);
 	}
 	
 	private void addBird() {
@@ -280,9 +263,9 @@ public class PlayScreen implements Screen {
 	    float x = screenW + 10;
 	    float y = config.landY;
 	    	    
-	    pipe.setPosition(x, y);
-	    
+	    pipe.setPosition(x, y);	    
 	    stage.addActor(pipe);
+	    pipe.toBack();
 	}
 	
 	private void addCloud() {	    
@@ -329,15 +312,25 @@ public class PlayScreen implements Screen {
     	}
     	switch (config.state) {
     	case GameState.GAME_START:
-    		    		
 	        // update the action of actors
 	        stage.act(delta);
-
+	        
+	        if(stage.getCamera().position.x -VIRTUAL_WIDTH/2> subLand.getX()){
+	            land.setPosition(subLand.getX(),200);
+	            subLand.setPosition(land.getX()+VIRTUAL_WIDTH, 200);
+	        }
+	        
 	        // clear the screen with the given RGB color (black)
-	        Gdx.gl.glClearColor( 245/255f, 245/255f, 245/255f, 1f );
+	        Gdx.gl.glClearColor( 247/255f, 247/255f, 247/255f, 1f );
 	        Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT );	        
     		break;
 		case GameState.GAME_RUNNING:
+			
+			if(stage.getCamera().position.x -VIRTUAL_WIDTH/2> subLand.getX()){
+	            land.setPosition(subLand.getX(),200);
+	            subLand.setPosition(land.getX()+VIRTUAL_WIDTH, 200);
+	        }
+			
 			if (dino.isDie){
 	    		if (score > getHighScore()) {
 					setHighScore(score);
@@ -349,7 +342,8 @@ public class PlayScreen implements Screen {
 	    	}
 	    	else {	    		
 	    			    		
-	    		if(score > 0 && score % 100 == 0){
+	    		/*if(score > 0 && score % 100 == 0){
+	    			DinoRunner.sounds.get(config.SoundScore).play(config.volume);
 	    			startTime = System.currentTimeMillis();
 	    			hundredScore = hundredScore + 100;
 	    			oldScore = 0;
@@ -363,7 +357,7 @@ public class PlayScreen implements Screen {
 	    				labelScore.setText(""+score);
 	    			}
 	    			oldScore = score;	    			
-	    		}
+	    		}*/
 	    			    		
 		    	duraAddPipe += delta;		    	
 		    	if(iPlant == 0){
@@ -391,21 +385,21 @@ public class PlayScreen implements Screen {
 	        stage.act(delta);
 
 	        // clear the screen with the given RGB color (black)
-	        Gdx.gl.glClearColor( 245/255f, 245/255f, 245/255f, 1f );
+	        Gdx.gl.glClearColor( 247/255f, 247/255f, 247/255f, 1f );
 	        Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT );
 			break;
 		case GameState.GAME_PAUSED:			
 			stage.act(0f);
 
 	        // clear the screen with the given RGB color (black)
-	        Gdx.gl.glClearColor( 245/255f, 245/255f, 245/255f, 1f );
+	        Gdx.gl.glClearColor( 247/255f, 247/255f, 247/255f, 1f );
 	        Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT );
 			break;
 		case GameState.GAME_OVER:
 			stage.act(0f);
 
 	        // clear the screen with the given RGB color (black)
-	        Gdx.gl.glClearColor( 245/255f, 245/255f, 245/255f, 1f );
+	        Gdx.gl.glClearColor( 247/255f, 247/255f, 247/255f, 1f );
 	        Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT );
 			land.clearActions();
 			break;		

@@ -18,8 +18,7 @@ public class Plant extends Image {
 	public Plant(TextureRegion region, Dino bird, boolean getScore) {
 		super(region);
 		this.bird = bird;
-		this.getScore = getScore;
-		
+		this.getScore = getScore;		
 		if(config.state == GameState.GAME_RUNNING){
 			actionMoveLeft();
 		}
@@ -55,7 +54,7 @@ public class Plant extends Image {
         if (getX() <= bird.getX()) {
         	if (getScore) {
         		getScore = false;
-        		DinoRunner.sounds.get(config.SoundScore).play(config.volume);
+        		/*DinoRunner.sounds.get(config.SoundScore).play(config.volume);*/
         	}
         }
 	}
