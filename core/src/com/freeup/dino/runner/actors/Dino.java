@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.freeup.dino.runner.screen.PlayScreen;
 import com.freeup.dino.runner.utils.config;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
@@ -21,6 +22,7 @@ public class Dino extends Image {
 	TextureRegion[] regions;
 	float dura;
 	public boolean isDie;
+	public int score;
 	
 	public Dino(TextureRegion[] regions)
 	{
@@ -32,6 +34,11 @@ public class Dino extends Image {
 		animation = new Animation (0.1f, runs);
 		dura = 0;
 		isDie = false;
+	}
+	
+	public void updateScore() {
+		score++;
+		PlayScreen.labelScore.setText("" + score);		
 	}
 
 	@Override

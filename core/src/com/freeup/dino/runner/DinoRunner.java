@@ -29,7 +29,7 @@ public class DinoRunner  extends Game {
 		//nap danh sach cac sound, de bat ky dau cuxng co the goi va "play"
 		sounds.put(config.SoundJump, Gdx.audio.newSound(Gdx.files.internal("sounds/jump.mp3")));
 		sounds.put(config.SoundScore, Gdx.audio.newSound(Gdx.files.internal("sounds/score.mp3")));
-		sounds.put(config.SoundHit, Gdx.audio.newSound(Gdx.files.internal("sounds/hit.mp3")));			
+		sounds.put(config.SoundHit, Gdx.audio.newSound(Gdx.files.internal("sounds/hit.mp3")));	
 	}
 
 	@Override

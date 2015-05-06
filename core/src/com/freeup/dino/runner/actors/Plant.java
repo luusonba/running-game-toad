@@ -13,11 +13,11 @@ public class Plant extends Image {
 
 	boolean getScore;
 	
-	Dino bird;
+	Dino dino;
 		
-	public Plant(TextureRegion region, Dino bird, boolean getScore) {
+	public Plant(TextureRegion region, Dino dino, boolean getScore) {
 		super(region);
-		this.bird = bird;
+		this.dino = dino;
 		this.getScore = getScore;		
 		if(config.state == GameState.GAME_RUNNING){
 			actionMoveLeft();
@@ -28,7 +28,7 @@ public class Plant extends Image {
 	public void act(float delta) {
 		super.act(delta);
 		
-		if (bird.isDie) {
+		if (dino.isDie) {
 			clearActions();
 			return;
 		}
@@ -39,11 +39,11 @@ public class Plant extends Image {
 		}
 		
         bypass();
-		checkCollision();
+        ////////////////////////////////checkCollision();
 	}
 	
 	private void actionMoveLeft() {		
-	    MoveByAction moveleft = new MoveByAction();
+	    MoveByAction moveleft = new MoveByAction();	    
 	    moveleft.setDuration(config.kmoveLeftDura);
 	    moveleft.setAmountX(-config.kLandWidth);
 	    
@@ -51,9 +51,10 @@ public class Plant extends Image {
 	}
 	
 	private void bypass() {
-        if (getX() <= bird.getX()) {
+        if (getX() <= dino.getX()) {
         	if (getScore) {
         		getScore = false;
+        		dino.updateScore();
         		/*DinoRunner.sounds.get(config.SoundScore).play(config.volume);*/
         	}
         }
@@ -61,7 +62,7 @@ public class Plant extends Image {
 	
 	private void checkCollision() {
 		if (isCollision()) {
-			bird.hitMe();
+			dino.hitMe();
 			DinoRunner.sounds.get(config.SoundHit).play(config.volume);
 		}
 	}
@@ -74,10 +75,10 @@ public class Plant extends Image {
 		float maxy1 = getY() + getHeight() - d;
 		float miny1 = getY() + d;
     
-		float maxx2 = bird.getX() + bird.getWidth() - d;
-		float minx2 = bird.getX() + d;
-		float maxy2 = bird.getY() + bird.getHeight() - d;
-		float miny2 = bird.getY() + d;
+		float maxx2 = dino.getX() + dino.getWidth() - d;
+		float minx2 = dino.getX() + d;
+		float maxy2 = dino.getY() + dino.getHeight() - d;
+		float miny2 = dino.getY() + d;
     
 		return !(maxx1 < minx2 ||
 				maxx2 < minx1 ||

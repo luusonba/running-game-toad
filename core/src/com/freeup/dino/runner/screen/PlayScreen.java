@@ -35,16 +35,16 @@ public class PlayScreen implements Screen {
 	
 	private float duraAddPipe;
 	private float duraAddCloud;
+	private int oldScore = 0;
 	
-	private long score = 0;
-	public long startTime = 0;
+	/*public long startTime = 0;
 	public long oldScore = 0;
-	public long hundredScore = 0;
+	public long hundredScore = 0;*/
 		
-	private Label labelScore;
+	public static Label labelScore;
 	public Table tableTop;
 	private Preferences prefs;	
-	private float famousNumber = 253.3f;
+	/*private float famousNumber = 253.3f;*/
 	
 	private static final int VIRTUAL_WIDTH = 480;
     private static final int VIRTUAL_HEIGHT = 800;
@@ -259,13 +259,18 @@ public class PlayScreen implements Screen {
 			pipe = new Plant(atlas.findRegion("plants/plant5"), dino, true);
 			break;
 		}
-	    	    
+		pipe.setZIndex(1);	    
 	    float x = screenW + 10;
 	    float y = config.landY;
 	    	    
 	    pipe.setPosition(x, y);	    
 	    stage.addActor(pipe);
-	    pipe.toBack();
+	    
+	    land.setZIndex(pipe.getZIndex());
+		dino.setZIndex(land.getZIndex());
+		labelScore.setZIndex(dino.getZIndex());
+		
+		pipe.toBack();
 	}
 	
 	private void addCloud() {	    
@@ -332,16 +337,25 @@ public class PlayScreen implements Screen {
 	        }
 			
 			if (dino.isDie){
-	    		if (score > getHighScore()) {
-					setHighScore(score);
-				}
-	    		score = 0;
-	    		hundredScore = 0;
-	    		config.kmoveLeftDura = 0.75f; 
+	    		if (dino.score > getHighScore()) {
+					setHighScore(dino.score);
+				}	    
+	    		oldScore = 0;
+	    		/*score = 0;
+	    		 * hundredScore = 0;*/
+	    		config.kmoveLeftDura = 0.60f; 
 	    		config.state = GameState.GAME_OVER;    		
 	    	}
-	    	else {	    		
-	    			    		
+	    	else {
+	    		if(dino.score > oldScore && dino.score % 5 == 0){
+	    			oldScore = dino.score;	    				 
+	    			if(config.kmoveLeftDura > config.maxspeed){
+	    				config.kmoveLeftDura = config.kmoveLeftDura - 0.01f;
+	    			}
+	    			if(dino.score % 100 == 0){
+		    			DinoRunner.sounds.get(config.SoundScore).play(config.volume);
+		    		}
+	    		}	
 	    		/*if(score > 0 && score % 100 == 0){
 	    			DinoRunner.sounds.get(config.SoundScore).play(config.volume);
 	    			startTime = System.currentTimeMillis();
@@ -363,7 +377,7 @@ public class PlayScreen implements Screen {
 		    	if(iPlant == 0){
 		    		iPlant = random(-2, 5);
 		    	}		    	
-		    	if (duraAddPipe > config.kmoveLeftDura/0.75f + 0.1f * iPlant){		    		
+		    	if (duraAddPipe > config.kmoveLeftDura/0.60f + 0.1f * iPlant){		    		
 		    		iPlant = 0;
 		    		duraAddPipe = 0;
 		    		addPipe();
@@ -373,7 +387,7 @@ public class PlayScreen implements Screen {
 		    	if(iCloud == 0){
 		    		iCloud = random(2, 5);
 		    	}
-		    	if (duraAddCloud > config.kmoveLeftDura/0.75f * iCloud){
+		    	if (duraAddCloud > config.kmoveLeftDura/0.60f * iCloud){
 		    		iCloud = 0;
 		    		duraAddCloud = 0;
 		    		addCloud();
