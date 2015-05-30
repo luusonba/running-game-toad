@@ -4,19 +4,20 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.forever;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveByAction;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.freeup.dino.runner.DinoRunner;
 import com.freeup.dino.runner.screen.PlayScreen.GameState;
 import com.freeup.dino.runner.utils.config;
+import com.freeup.engine.collision.ImageCheckHit;
 
-public class Plant extends Image {
+public class Plant extends ImageCheckHit {
 
 	boolean getScore;
 	
 	Dino dino;
-		
+	TextureRegion txtRegion;
+	
 	public Plant(TextureRegion region, Dino dino, boolean getScore) {
 		super(region);
+		this.txtRegion = region;
 		this.dino = dino;
 		this.getScore = getScore;		
 		if(config.state == GameState.GAME_RUNNING){
@@ -39,7 +40,6 @@ public class Plant extends Image {
 		}
 		
         bypass();
-        ////////////////////////////////checkCollision();
 	}
 	
 	private void actionMoveLeft() {		
@@ -59,30 +59,4 @@ public class Plant extends Image {
         	}
         }
 	}
-	
-	private void checkCollision() {
-		if (isCollision()) {
-			dino.hitMe();
-			DinoRunner.sounds.get(config.SoundHit).play(config.volume);
-		}
-	}
-	
-	private boolean isCollision() {
-		float d = 4; //gia giam de chim dung vao pipe nhieu hon....
-    
-		float maxx1 = getX() + getWidth() - d;
-		float minx1 = getX() + d;
-		float maxy1 = getY() + getHeight() - d;
-		float miny1 = getY() + d;
-    
-		float maxx2 = dino.getX() + dino.getWidth() - d;
-		float minx2 = dino.getX() + d;
-		float maxy2 = dino.getY() + dino.getHeight() - d;
-		float miny2 = dino.getY() + d;
-    
-		return !(maxx1 < minx2 ||
-				maxx2 < minx1 ||
-				maxy1 < miny2 ||
-				maxy2 < miny1);    
-	}	
 }

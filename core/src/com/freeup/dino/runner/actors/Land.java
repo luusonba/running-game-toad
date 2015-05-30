@@ -9,7 +9,8 @@ import com.freeup.dino.runner.screen.PlayScreen.GameState;
 import com.freeup.dino.runner.utils.config;
 
 public class Land extends Image {
-
+	public MoveByAction moveleft;
+	
 	public Land(TextureRegion region) {
 		super(region);
 		
@@ -23,11 +24,10 @@ public class Land extends Image {
 		super.act(delta);
 	}
 	
-	private void actionMoveLeft() {		
-	    MoveByAction moveleft = new MoveByAction();
+	public void actionMoveLeft() {		
+		moveleft = new MoveByAction();
 	    moveleft.setDuration(config.kmoveLeftDura);
 	    moveleft.setAmountX(-config.kLandWidth);
-	    
 	    addAction(forever(moveleft));
 	}
 }
