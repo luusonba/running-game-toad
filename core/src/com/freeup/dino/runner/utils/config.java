@@ -18,6 +18,7 @@ public class config {
     public static float kmoveLeftDura = 0.55f;
     public static float kfallDura = 0.20f;
     
+    public static float scale = 1f;
     
     public static float maxFallDura = 0.15f;
     public static float maxspeed = 0.30f;

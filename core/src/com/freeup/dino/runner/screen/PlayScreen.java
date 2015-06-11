@@ -5,10 +5,13 @@ import java.util.Random;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -22,7 +25,6 @@ import com.freeup.dino.runner.actors.Land;
 import com.freeup.dino.runner.actors.Plant;
 import com.freeup.dino.runner.utils.MyStage;
 import com.freeup.dino.runner.utils.config;
-import com.freeup.engine.collision.BoundaryHelper;
 
 public class PlayScreen implements Screen {
 	
@@ -37,9 +39,7 @@ public class PlayScreen implements Screen {
 	
 	private float duraAddPipe;
 	private float duraAddCloud;
-	private int oldScore = 0;	
-	private boolean isHit = false;
-	public static BoundaryHelper boundaryHelper;
+	private int oldScore = 0;
 	
 	/*public long startTime = 0;
 	public long oldScore = 0;
@@ -70,6 +70,7 @@ public class PlayScreen implements Screen {
 	int iCloud = 0;
 	int iPlant = 0;
 			
+	ShapeRenderer shapeRenderer;
 	public PlayScreen(DinoRunner game) {		
 		
 		this.game = game;		
@@ -83,10 +84,11 @@ public class PlayScreen implements Screen {
 		
 		// Create (or retrieve existing) preferences file
 		prefs = Gdx.app.getPreferences("firstrunner");
-		boundaryHelper = new BoundaryHelper();
 		if (!prefs.contains("highScore")) {
 			prefs.putInteger("highScore", 0);
 		}		
+		
+		shapeRenderer = new ShapeRenderer();		
 	}
 	
 	public void setHighScore(long val) {
@@ -285,7 +287,7 @@ public class PlayScreen implements Screen {
 	    
 	    stage.addActor(cloud);	    
 	}
-		
+	
     @Override
     public void resize(int width, int height){    	
     	// resize the stage
@@ -306,21 +308,13 @@ public class PlayScreen implements Screen {
         {
             scale = (float)width/(float)VIRTUAL_WIDTH;
         }
-
+        config.scale = scale;
         float w = (float)VIRTUAL_WIDTH*scale;
         float h = (float)VIRTUAL_HEIGHT*scale;
         
         // set viewport
         Gdx.gl.glViewport((width - (int)w)/2, (height - (int)h)/2, (int)w, (int)h);
     }
-    
-    private void checkHit() {
-    	System.out.println("1111111111");
-		if (pipe.checkHit(dino))
-			isHit = true;
-		else
-			isHit = false;
-	}
     	
     @Override
     public void render (float delta ){
@@ -343,24 +337,27 @@ public class PlayScreen implements Screen {
     		break;
 		case GameState.GAME_RUNNING:
 			
+			// clear the screen with the given RGB color (black)
+	        Gdx.gl.glClearColor( 247/255f, 247/255f, 247/255f, 1f );
+	        Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT );
+	        
+	        shapeRenderer.begin(ShapeType.Filled);
+	        shapeRenderer.setColor(Color.RED);
+	        shapeRenderer.circle(dino.getBoundingBottom().x, 
+	        		dino.getBoundingBottom().y, dino.getBoundingBottom().radius);
+	        shapeRenderer.circle(dino.getBoundingTop().x,
+	        		dino.getBoundingTop().y, dino.getBoundingTop().radius);
+	        if(pipe != null){
+	        	shapeRenderer.rect(pipe.getBoundingPlant().x, pipe.getBoundingPlant().y, 
+	        			pipe.getBoundingPlant().width, pipe.getBoundingPlant().height);	        	
+	        }       
+	        shapeRenderer.end();
 			if(stage.getCamera().position.x -VIRTUAL_WIDTH/2> subLand.getX()){
 	            land.moveleft.setDuration(config.kmoveLeftDura);
 				land.setPosition(subLand.getX(),200);
 				subLand.moveleft.setDuration(config.kmoveLeftDura);
 	            subLand.setPosition(land.getX()+VIRTUAL_WIDTH, 200);
 	        }
-			
-			if(isHit){
-				dino.hitMe();
-				DinoRunner.sounds.get(config.SoundHit).play(config.volume);
-			}
-			if(dino == null){
-				System.out.println("nnnnnnnnnnnnnnnn");
-			}
-			if(pipe == null){
-				System.out.println("mmmmmmmmmmmmmmmmmmmm");
-			}
-			////////////////////////checkHit();
 			
 			if (dino.isDie){
 	    		if (dino.score > getHighScore()) {
@@ -439,14 +436,9 @@ public class PlayScreen implements Screen {
 		    		addCloud();
 		    		cloud.toBack();
 		    	}		    	
-	    	}
-	    	
+	    	}	    	
 	        // update the action of actors
 	        stage.act(delta);
-
-	        // clear the screen with the given RGB color (black)
-	        Gdx.gl.glClearColor( 247/255f, 247/255f, 247/255f, 1f );
-	        Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT );
 			break;
 		case GameState.GAME_PAUSED:			
 			stage.act(0f);
