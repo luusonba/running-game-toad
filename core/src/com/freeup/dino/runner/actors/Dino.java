@@ -2,19 +2,18 @@ package com.freeup.dino.runner.actors;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.freeup.dino.runner.screen.PlayScreen;
 import com.freeup.dino.runner.utils.config;
+import com.freeup.engine.collision.ImageCheckHit;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
 
-public class Dino extends Image {
+public class Dino extends ImageCheckHit {
 		
 	private Action curAction;
 
@@ -24,8 +23,6 @@ public class Dino extends Image {
 	float dura;
 	public boolean isDie;
 	public int score;
-	private Circle boundingBottom;
-	private Circle boundingTop;
 		
 	public Dino(TextureRegion[] regions)
 	{
@@ -35,8 +32,6 @@ public class Dino extends Image {
 		TextureRegion[] runs = new TextureRegion[] { regions[0],
 				regions[1] };
 		animation = new Animation (0.1f, runs);
-		boundingBottom = new Circle();
-		boundingTop = new Circle();		
 		dura = 0;
 		isDie = false;		
 	}
@@ -49,25 +44,12 @@ public class Dino extends Image {
 	@Override
 	public void act(float delta) {
 		super.act(delta);
-		boundingBottom.set(getX()*config.scale, getY()*config.scale, 5);
 		if (isDie || getY()> config.landY){ 
 			return;		
 		}
 		dura += delta;
 		curFrame = animation.getKeyFrame(dura, true);
 		setDrawable(new TextureRegionDrawable(curFrame));				
-	}
-	
-	public Circle getBoundingBottom() {
-		return boundingBottom;
-	}
-	
-	public Circle getBoundingTop() {
-		return boundingTop;
-	}
-	
-	public void setBoundingTop() {
-		boundingTop.set(getX(), getY(), 25);
 	}
 	
 	public void tapMe() {

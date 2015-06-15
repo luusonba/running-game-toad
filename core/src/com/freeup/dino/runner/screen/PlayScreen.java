@@ -25,6 +25,7 @@ import com.freeup.dino.runner.actors.Land;
 import com.freeup.dino.runner.actors.Plant;
 import com.freeup.dino.runner.utils.MyStage;
 import com.freeup.dino.runner.utils.config;
+import com.freeup.engine.collision.BoundaryHelper;
 
 public class PlayScreen implements Screen {
 	
@@ -48,8 +49,8 @@ public class PlayScreen implements Screen {
 	public static Label labelScore;
 	public Table tableTop;
 	private Preferences prefs;
-	private int minR = -2;
-	private int maxR = 5;
+	private int minR = -3;
+	private int maxR = 4;
 	/*private float famousNumber = 253.3f;*/
 	
 	private static final int VIRTUAL_WIDTH = 480;
@@ -69,8 +70,12 @@ public class PlayScreen implements Screen {
 	DinoRunner game;
 	int iCloud = 0;
 	int iPlant = 0;
-			
-	ShapeRenderer shapeRenderer;
+	
+	private boolean isHit = false;
+	public static BoundaryHelper boundaryHelper;
+	
+	ShapeRenderer render;
+	
 	public PlayScreen(DinoRunner game) {		
 		
 		this.game = game;		
@@ -81,14 +86,13 @@ public class PlayScreen implements Screen {
 		game.manager.load("images/sprites.atlas", TextureAtlas.class);
 		game.manager.finishLoading();
 		atlas = game.manager.get("images/sprites.atlas", TextureAtlas.class);			    
-		
+		boundaryHelper = new BoundaryHelper();
 		// Create (or retrieve existing) preferences file
 		prefs = Gdx.app.getPreferences("firstrunner");
 		if (!prefs.contains("highScore")) {
 			prefs.putInteger("highScore", 0);
 		}		
-		
-		shapeRenderer = new ShapeRenderer();		
+		render = new ShapeRenderer();
 	}
 	
 	public void setHighScore(long val) {
@@ -98,6 +102,18 @@ public class PlayScreen implements Screen {
 
 	public long getHighScore() {
 		return prefs.getLong("highScore");
+	}
+	
+	private void checkHit() {
+		if(pipe != null){
+			if (dino.checkHit(pipe)){
+				System.out.println("DIE");
+				isHit = true;
+			}else{
+				System.out.println("UNDIE");
+				isHit = false;
+			}
+		}
 	}
 	
 	@Override
@@ -308,7 +324,6 @@ public class PlayScreen implements Screen {
         {
             scale = (float)width/(float)VIRTUAL_WIDTH;
         }
-        config.scale = scale;
         float w = (float)VIRTUAL_WIDTH*scale;
         float h = (float)VIRTUAL_HEIGHT*scale;
         
@@ -341,18 +356,14 @@ public class PlayScreen implements Screen {
 	        Gdx.gl.glClearColor( 247/255f, 247/255f, 247/255f, 1f );
 	        Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT );
 	        
-	        shapeRenderer.begin(ShapeType.Filled);
-	        shapeRenderer.setColor(Color.RED);
-	        shapeRenderer.circle(dino.getBoundingBottom().x, 
-	        		dino.getBoundingBottom().y, dino.getBoundingBottom().radius);
-	        shapeRenderer.circle(dino.getBoundingTop().x,
-	        		dino.getBoundingTop().y, dino.getBoundingTop().radius);
-	        if(pipe != null){
-	        	shapeRenderer.rect(pipe.getBoundingPlant().x, pipe.getBoundingPlant().y, 
-	        			pipe.getBoundingPlant().width, pipe.getBoundingPlant().height);	        	
-	        }       
-	        shapeRenderer.end();
-			if(stage.getCamera().position.x -VIRTUAL_WIDTH/2> subLand.getX()){
+	        render.begin(ShapeType.Filled);
+	        render.setColor(Color.RED);
+	        render.circle(dino.pA.getBoundingRectangle().x, dino.pA.getBoundingRectangle().y, 25);
+	        if(pipe!=null){
+	        	render.circle(pipe.pA.getBoundingRectangle().x, pipe.pA.getBoundingRectangle().y, 30);
+	        }
+	        render.end();
+	        if(stage.getCamera().position.x -VIRTUAL_WIDTH/2> subLand.getX()){
 	            land.moveleft.setDuration(config.kmoveLeftDura);
 				land.setPosition(subLand.getX(),200);
 				subLand.moveleft.setDuration(config.kmoveLeftDura);
@@ -373,24 +384,24 @@ public class PlayScreen implements Screen {
 	    	else {
 	    		if(dino.score > oldScore && dino.score % 10 == 0){
 	    			oldScore = dino.score;	    				 
-	    			if(config.kmoveLeftDura > config.maxspeed){
+	    			if(config.kmoveLeftDura > config.maxSpeed){
 	    				config.kmoveLeftDura = config.kmoveLeftDura - 0.01f;
 	    			}
 	    			
-	    			if(dino.score % 25 == 0 && config.kfallDura < config.maxFallDura){
+	    			if(dino.score % 20 == 0 && config.kfallDura < config.maxFallDura){
 	    				config.kfallDura = config.kfallDura - 0.005f;	    				    			
 		    		}
 	    			
-	    			if(dino.score == 150){
+	    			if(dino.score == 100){
 	    				minR = minR + 1;
 	    				maxR = maxR + 1;
 	    			}
 	    			
-	    			if(dino.score == 200){
+	    			if(dino.score == 150){
 	    				minR = minR + 1;
 	    			}
 	    			
-	    			if(dino.score == 250){
+	    			if(dino.score == 200){
 	    				minR = minR + 1;
 	    				maxR = maxR + 1;
 	    			}
@@ -436,7 +447,8 @@ public class PlayScreen implements Screen {
 		    		addCloud();
 		    		cloud.toBack();
 		    	}		    	
-	    	}	    	
+	    	}	    
+			checkHit();
 	        // update the action of actors
 	        stage.act(delta);
 			break;
