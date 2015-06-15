@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.freeup.dino.runner.utils.config;
 /**
  * @author phuongnh
  */
@@ -64,8 +64,9 @@ public class ImageCheckHit extends Image implements ImageCheckHitInterface{
 	@Override
 	public void setPosition(float x, float y) {
 		super.setPosition(x, y);
-		if (enableHitTest)
-			pA.polygonDimension.setPosition(x, y);
+		if (enableHitTest){
+			pA.polygonDimension.setPosition(x * config.scale, y * config.scale);
+		}
 	}
 	
 	@Override
@@ -92,7 +93,6 @@ public class ImageCheckHit extends Image implements ImageCheckHitInterface{
 	@Override
 	public void setRotation(float degrees) {
 		super.setRotation(degrees);
-		//Lưu ý rotate phải luôn bật enableHitTest.
 		pA.polygonDimension.setRotation(degrees);
 	}
 

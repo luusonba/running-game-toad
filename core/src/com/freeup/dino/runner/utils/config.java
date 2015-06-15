@@ -17,9 +17,11 @@ public class config {
     //thoi gian move sang trai khoang kLandWidth
     public static float kmoveLeftDura = 0.50f;
     public static float kfallDura = 0.20f;
-    
-    public static float maxFallDura = 0.15f;
+        
     public static float maxSpeed = 0.30f;
+    public static float maxFallDura = 0.15f;
+    
+    public static float scale = 1f;
     
     //chieu cao va thoi gian khi bay len do "tap"
     public static int kjumpHeight = 250;

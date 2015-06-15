@@ -41,17 +41,12 @@ public class PlayScreen implements Screen {
 	private float duraAddPipe;
 	private float duraAddCloud;
 	private int oldScore = 0;
-	
-	/*public long startTime = 0;
-	public long oldScore = 0;
-	public long hundredScore = 0;*/
 		
 	public static Label labelScore;
 	public Table tableTop;
 	private Preferences prefs;
-	private int minR = -3;
+	private int minR = -4;
 	private int maxR = 4;
-	/*private float famousNumber = 253.3f;*/
 	
 	private static final int VIRTUAL_WIDTH = 480;
     private static final int VIRTUAL_HEIGHT = 800;
@@ -87,7 +82,6 @@ public class PlayScreen implements Screen {
 		game.manager.finishLoading();
 		atlas = game.manager.get("images/sprites.atlas", TextureAtlas.class);			    
 		boundaryHelper = new BoundaryHelper();
-		// Create (or retrieve existing) preferences file
 		prefs = Gdx.app.getPreferences("firstrunner");
 		if (!prefs.contains("highScore")) {
 			prefs.putInteger("highScore", 0);
@@ -107,10 +101,10 @@ public class PlayScreen implements Screen {
 	private void checkHit() {
 		if(pipe != null){
 			if (dino.checkHit(pipe)){
-				System.out.println("DIE");
+				//System.out.println("DIE");
 				isHit = true;
 			}else{
-				System.out.println("UNDIE");
+				//System.out.println("UNDIE");
 				isHit = false;
 			}
 		}
@@ -324,6 +318,9 @@ public class PlayScreen implements Screen {
         {
             scale = (float)width/(float)VIRTUAL_WIDTH;
         }
+        
+        config.scale = scale;
+        
         float w = (float)VIRTUAL_WIDTH*scale;
         float h = (float)VIRTUAL_HEIGHT*scale;
         
@@ -361,6 +358,7 @@ public class PlayScreen implements Screen {
 	        render.circle(dino.pA.getBoundingRectangle().x, dino.pA.getBoundingRectangle().y, 25);
 	        if(pipe!=null){
 	        	render.circle(pipe.pA.getBoundingRectangle().x, pipe.pA.getBoundingRectangle().y, 30);
+	        	pipe.setPosition(pipe.getX(), pipe.getY());
 	        }
 	        render.end();
 	        if(stage.getCamera().position.x -VIRTUAL_WIDTH/2> subLand.getX()){
@@ -383,55 +381,29 @@ public class PlayScreen implements Screen {
 	    	}
 	    	else {
 	    		if(dino.score > oldScore && dino.score % 10 == 0){
-	    			oldScore = dino.score;	    				 
+	    			oldScore = dino.score;
 	    			if(config.kmoveLeftDura > config.maxSpeed){
-	    				config.kmoveLeftDura = config.kmoveLeftDura - 0.01f;
+	    				config.kmoveLeftDura = config.kmoveLeftDura - 0.008f;
 	    			}
 	    			
 	    			if(dino.score % 20 == 0 && config.kfallDura < config.maxFallDura){
 	    				config.kfallDura = config.kfallDura - 0.005f;	    				    			
 		    		}
 	    			
-	    			if(dino.score == 100){
-	    				minR = minR + 1;
-	    				maxR = maxR + 1;
-	    			}
-	    			
-	    			if(dino.score == 150){
-	    				minR = minR + 1;
-	    			}
-	    			
-	    			if(dino.score == 200){
-	    				minR = minR + 1;
-	    				maxR = maxR + 1;
-	    			}
-	    			
 	    			if(dino.score % 50 == 0){
 	    				DinoRunner.sounds.get(config.SoundScore).play(config.volume);
+	    				if(dino.score == 50 || dino.score == 100 ||dino.score == 200){
+		    				minR = minR + 1;
+		    			}
 	    			}	
-	    		}	
-	    		/*if(score > 0 && score % 100 == 0){
-	    			DinoRunner.sounds.get(config.SoundScore).play(config.volume);
-	    			startTime = System.currentTimeMillis();
-	    			hundredScore = hundredScore + 100;
-	    			oldScore = 0;
-	    			config.kmoveLeftDura = config.kmoveLeftDura - 0.1f;
-	    		}	    		
-	    		score = 1 + hundredScore + (System.currentTimeMillis() - startTime)/(int)(famousNumber*config.kmoveLeftDura);	    		   			    			    		
-	    		if(score > oldScore){
-	    			if(score % 100 == 1){
-	    				labelScore.setText(""+(score-1));
-	    			}else{
-	    				labelScore.setText(""+score);
-	    			}
-	    			oldScore = score;	    			
-	    		}*/
+	    		}
 	    			    		
 		    	duraAddPipe += delta;		    	
 		    	if(iPlant == 0){
 		    		iPlant = random(minR, maxR);
-		    	}		    	
-		    	if (duraAddPipe > config.kmoveLeftDura/0.60f + 0.1f * iPlant){		    		
+		    	}
+		    	
+		    	if (duraAddPipe > config.kmoveLeftDura/0.60f + 0.1f * iPlant){
 		    		iPlant = 0;
 		    		duraAddPipe = 0;
 		    		addPipe();
