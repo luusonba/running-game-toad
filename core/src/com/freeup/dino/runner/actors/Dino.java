@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.freeup.dino.runner.DinoRunner;
 import com.freeup.dino.runner.screen.PlayScreen;
 import com.freeup.dino.runner.utils.config;
 import com.freeup.engine.collision.ImageCheckHit;
@@ -77,6 +78,7 @@ public class Dino extends ImageCheckHit {
 	}
 
 	public void hitMe() {
+		DinoRunner.sounds.get(config.SoundHit).play(config.volume);
 		isDie = true;		
 		this.removeAction(curAction);
 		setDrawable(new TextureRegionDrawable(regions[3]));

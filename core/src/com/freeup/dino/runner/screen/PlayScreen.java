@@ -65,8 +65,7 @@ public class PlayScreen implements Screen {
 	DinoRunner game;
 	int iCloud = 0;
 	int iPlant = 0;
-	
-	private boolean isHit = false;
+		
 	public static BoundaryHelper boundaryHelper;
 	
 	ShapeRenderer render;
@@ -97,15 +96,11 @@ public class PlayScreen implements Screen {
 	public long getHighScore() {
 		return prefs.getLong("highScore");
 	}
-	
+	reset position cua plant to start
 	private void checkHit() {
 		if(pipe != null){
 			if (dino.checkHit(pipe)){
-				//System.out.println("DIE");
-				isHit = true;
-			}else{
-				//System.out.println("UNDIE");
-				isHit = false;
+				dino.hitMe();
 			}
 		}
 	}
@@ -347,8 +342,7 @@ public class PlayScreen implements Screen {
 	        Gdx.gl.glClearColor( 247/255f, 247/255f, 247/255f, 1f );
 	        Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT );	        
     		break;
-		case GameState.GAME_RUNNING:
-			
+		case GameState.GAME_RUNNING:			
 			// clear the screen with the given RGB color (black)
 	        Gdx.gl.glClearColor( 247/255f, 247/255f, 247/255f, 1f );
 	        Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT );
@@ -356,10 +350,11 @@ public class PlayScreen implements Screen {
 	        render.begin(ShapeType.Filled);
 	        render.setColor(Color.RED);
 	        render.circle(dino.pA.getBoundingRectangle().x, dino.pA.getBoundingRectangle().y, 25);
+	        dino.setPosition(dino.getX(), dino.getY());
 	        if(pipe!=null){
 	        	render.circle(pipe.pA.getBoundingRectangle().x, pipe.pA.getBoundingRectangle().y, 30);
 	        	pipe.setPosition(pipe.getX(), pipe.getY());
-	        }
+	        }	        
 	        render.end();
 	        if(stage.getCamera().position.x -VIRTUAL_WIDTH/2> subLand.getX()){
 	            land.moveleft.setDuration(config.kmoveLeftDura);
@@ -377,6 +372,7 @@ public class PlayScreen implements Screen {
 	    		 * hundredScore = 0;*/
 	    		config.kmoveLeftDura = 0.55f; 
 	    		config.kfallDura = 0.20f;
+	    		System.out.println("config.state running: " + config.state  + " dino " + dino.isDie);
 	    		config.state = GameState.GAME_OVER;    		
 	    	}
 	    	else {
@@ -418,9 +414,9 @@ public class PlayScreen implements Screen {
 		    		duraAddCloud = 0;
 		    		addCloud();
 		    		cloud.toBack();
-		    	}		    	
-	    	}	    
-			checkHit();
+		    	}
+		    	checkHit();
+	    	}
 	        // update the action of actors
 	        stage.act(delta);
 			break;

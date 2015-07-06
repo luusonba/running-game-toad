@@ -23,14 +23,12 @@ public class MyStage extends Stage {
 
 		if (screen != null)
 		{
-			if (screen.dino.isDie) {
+			if (screen.dino.isDie) {				
+				screen.dino.isDie = false;
+				System.out.println("dino running: " + screen.dino.isDie);
 				screen.showGame();
-				config.state = GameState.GAME_RUNNING;
-				/*screen.oldScore = 0;
-				screen.startTime = System.currentTimeMillis();*/				
-			}
-			else
-			{
+				config.state = GameState.GAME_RUNNING;				
+			} else {
 				if(screen.dino.getY() == config.landY){
 					if(config.state == GameState.GAME_RUNNING){						
 						screen.dino.tapMe();

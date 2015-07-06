@@ -3,7 +3,6 @@ package com.freeup.dino.runner.actors;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.forever;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveByAction;
-import com.freeup.dino.runner.DinoRunner;
 import com.freeup.dino.runner.screen.PlayScreen.GameState;
 import com.freeup.dino.runner.utils.config;
 import com.freeup.engine.collision.ImageCheckHit;
@@ -36,8 +35,7 @@ public class Plant extends ImageCheckHit {
 		//ra khoi man hinh remove...
 		if (getX() < -getWidth()) {
 			remove();
-		}
-		checkCollision();
+		}		
         bypass();
 	}
 	
@@ -55,16 +53,5 @@ public class Plant extends ImageCheckHit {
         		dino.updateScore();
         	}
         }
-	}
-	
-	private void checkCollision(){
-		if (isCollision()){
-			dino.hitMe();
-			DinoRunner.sounds.get(config.SoundHit).play(config.volume);
-		}
-	}
-	
-	private boolean isCollision(){		
-		return false;
 	}
 }
