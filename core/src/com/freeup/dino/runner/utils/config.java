@@ -21,7 +21,8 @@ public class config {
     public static float maxSpeed = 0.30f;
     public static float maxFallDura = 0.15f;
     
-    public static float scale = 1f;
+    public static float scaleX = 1f;
+    public static float scaleY = 1f;
     
     //chieu cao va thoi gian khi bay len do "tap"
     public static int kjumpHeight = 250;

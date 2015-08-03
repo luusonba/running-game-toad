@@ -3,18 +3,20 @@ package com.freeup.dino.runner.actors;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.freeup.dino.runner.DinoRunner;
 import com.freeup.dino.runner.screen.PlayScreen;
 import com.freeup.dino.runner.utils.config;
-import com.freeup.engine.collision.ImageCheckHit;
 
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.parallel;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 
 
-public class Dino extends ImageCheckHit {
+public class Dino extends Image {
 		
 	private Action curAction;
 
@@ -24,6 +26,9 @@ public class Dino extends ImageCheckHit {
 	float dura;
 	public boolean isDie;
 	public int score;
+	Rectangle boundRectTop;
+	Rectangle boundRectMiddle;
+	Rectangle boundRectBottom;
 		
 	public Dino(TextureRegion[] regions)
 	{
@@ -32,9 +37,30 @@ public class Dino extends ImageCheckHit {
 		this.regions = regions;
 		TextureRegion[] runs = new TextureRegion[] { regions[0],
 				regions[1] };
+		boundRectTop = new Rectangle();
+		boundRectMiddle = new Rectangle();
+		boundRectBottom = new Rectangle();
 		animation = new Animation (0.1f, runs);
 		dura = 0;
 		isDie = false;		
+	}
+	
+	public void setBounding(){
+		boundRectTop.set((getX()+getWidth()/2)*config.scaleX, (getY()+(getHeight()/3)*2)*config.scaleY, getWidth()/2*config.scaleX, (getHeight()/3)*config.scaleY);
+		boundRectMiddle.set(getX()*config.scaleX, (getY()+(getHeight()/3))*config.scaleY, (getWidth()*2/3)*config.scaleX, (getHeight()*2/3)*config.scaleY);
+		boundRectBottom.set((getX()+getWidth()/3-15)*config.scaleX, getY()*config.scaleY, (getWidth()/3+15)*config.scaleX, getHeight()*config.scaleY);
+	}
+	
+	public Rectangle getBoundingTop(){
+		return boundRectTop;
+	}
+	
+	public Rectangle getBoundingMiddle(){
+		return boundRectMiddle;
+	}
+	
+	public Rectangle getBoundingBottom(){
+		return boundRectBottom;
 	}
 	
 	public void updateScore() {
