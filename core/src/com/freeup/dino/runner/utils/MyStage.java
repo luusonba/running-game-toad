@@ -21,11 +21,9 @@ public class MyStage extends Stage {
 	@Override
 	public boolean touchDown(int x, int y, int pointer, int button) {
 
-		if (screen != null)
-		{
+		if (screen != null) {
 			if (screen.dino.isDie) {				
 				screen.dino.isDie = false;
-				System.out.println("dino running: " + screen.dino.isDie);
 				screen.showGame();
 				config.state = GameState.GAME_RUNNING;				
 			} else {
