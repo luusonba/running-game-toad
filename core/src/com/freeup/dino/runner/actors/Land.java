@@ -13,7 +13,6 @@ public class Land extends Image {
 	
 	public Land(TextureRegion region) {
 		super(region);
-		
 		if(config.state == GameState.GAME_RUNNING || config.state == GameState.GAME_START){
 			actionMoveLeft();
 		}
@@ -24,7 +23,7 @@ public class Land extends Image {
 		super.act(delta);
 	}
 	
-	public void actionMoveLeft() {		
+	public void actionMoveLeft() {
 		moveleft = new MoveByAction();
 	    moveleft.setDuration(config.kmoveLeftDura);
 	    moveleft.setAmountX(-config.kLandWidth);

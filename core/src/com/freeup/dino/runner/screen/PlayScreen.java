@@ -5,13 +5,10 @@ import java.util.Random;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -62,8 +59,7 @@ public class PlayScreen implements Screen {
 	float screenH = 0;
 	DinoRunner game;
 	int iCloud = 0;
-	int iPlant = 0;		
-	private ShapeRenderer render;
+	int iPlant = 0;
 	
 	public PlayScreen(DinoRunner game) {		
 		
@@ -78,8 +74,7 @@ public class PlayScreen implements Screen {
 		prefs = Gdx.app.getPreferences("firstrunner");
 		if (!prefs.contains("highScore")) {
 			prefs.putInteger("highScore", 0);
-		}		
-		render = new ShapeRenderer();
+		}
 	}
 	
 	public void setHighScore(long val) {
@@ -90,28 +85,6 @@ public class PlayScreen implements Screen {
 	public long getHighScore() {
 		return prefs.getLong("highScore");
 	}
-		
-	private void checkHit() {
-		if(pipe != null){
-//			if (overlaps(dino.getBoundingTop(),pipe.getBounding())||
-//					overlaps(dino.getBoundingMiddle(),pipe.getBounding())||
-//					overlaps(dino.getBoundingBottom(),pipe.getBounding())){				
-//				dino.hitMe();
-//			}
-			if (dino.getBoundingTop().overlaps(pipe.getBounding())||
-					dino.getBoundingMiddle().overlaps(pipe.getBounding())||
-					dino.getBoundingBottom().overlaps(pipe.getBounding())){				
-				dino.hitMe();
-			}
-		}
-	}
-	
-//	private boolean overlaps(Rectangle rectDino, Rectangle rectPlant){
-//		return (((rectDino.getX()+rectDino.getWidth()>=rectPlant.getX())
-//				&&rectDino.getX()+rectDino.getWidth()<=rectPlant.getX()+rectPlant.getWidth())
-//				||(rectDino.getX()>=rectPlant.getX()&&rectDino.getX()<=(rectPlant.getX()+rectPlant.getWidth()))
-//				)&&(rectDino.getY()>=rectPlant.getY()&&rectDino.getY()<=rectPlant.getY()+rectPlant.getHeight());
-//	}
 	
 	@Override
     public void show() {
@@ -241,14 +214,14 @@ public class PlayScreen implements Screen {
 	private void addLand() {
 		land = new Land(atlas.findRegion("lands/land"));
 		land.setY(200);
-		land.setX(0);		
+		land.setX(0);
 		stage.addActor(land);
 	}
 	
 	private void addSubLand() {
 		subLand = new Land(atlas.findRegion("lands/land"));
 		subLand.setY(200);
-		subLand.setX(subLand.getWidth()/2);		
+		subLand.setX(subLand.getWidth()/2);
 		stage.addActor(subLand);
 	}
 	
@@ -315,8 +288,6 @@ public class PlayScreen implements Screen {
         } else {
             scale = (float)width/(float)VIRTUAL_WIDTH;
         }
-        config.scaleX = (float)width/(float)VIRTUAL_WIDTH;
-        config.scaleY = (float)height/(float)VIRTUAL_HEIGHT;
         float w = (float)VIRTUAL_WIDTH*scale;
         float h = (float)VIRTUAL_HEIGHT*scale;
         
@@ -332,7 +303,7 @@ public class PlayScreen implements Screen {
     	case GameState.GAME_START:
 	        stage.act(delta);
 	        
-	        if(stage.getCamera().position.x -VIRTUAL_WIDTH/2> subLand.getX()){	        	
+	        if(stage.getCamera().position.x - VIRTUAL_WIDTH/2> subLand.getX()){	        	
 	        	land.setPosition(subLand.getX(),200);
 	            subLand.setPosition(land.getX()+VIRTUAL_WIDTH, 200);
 	        }
@@ -343,19 +314,7 @@ public class PlayScreen implements Screen {
 		case GameState.GAME_RUNNING:
 	        Gdx.gl.glClearColor( 247/255f, 247/255f, 247/255f, 1f );
 	        Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT );
-	        
-	        render.begin(ShapeType.Filled);
-	        render.setColor(Color.RED);
-	        render.rect(dino.getBoundingTop().x, dino.getBoundingTop().y, dino.getBoundingTop().width, dino.getBoundingTop().height);
-	        render.rect(dino.getBoundingMiddle().x, dino.getBoundingMiddle().y, dino.getBoundingMiddle().width, dino.getBoundingMiddle().height);
-	        render.rect(dino.getBoundingBottom().x, dino.getBoundingBottom().y, dino.getBoundingBottom().width, dino.getBoundingBottom().height);
-	        dino.setBounding();
-	        if(pipe!=null){	        	
-	        	pipe.setBounding();
-	        	render.rect(pipe.getBounding().x, pipe.getBounding().y, pipe.getBounding().width, pipe.getBounding().height);
-	        }	        
-	        render.end();
-	        if(stage.getCamera().position.x -VIRTUAL_WIDTH/2> subLand.getX()){
+	        if(stage.getCamera().position.x - VIRTUAL_WIDTH/2> subLand.getX()){
 	            land.moveleft.setDuration(config.kmoveLeftDura);
 				land.setPosition(subLand.getX(),200);
 				subLand.moveleft.setDuration(config.kmoveLeftDura);
@@ -369,6 +328,8 @@ public class PlayScreen implements Screen {
 	    		oldScore = 0;
 	    		config.kmoveLeftDura = 0.50f;
 	    		config.kfallDura = 0.20f;
+	    		config.doubleJump = 2;
+	    		config.canJump = true;
 	    		config.state = GameState.GAME_OVER;    		
 	    	}
 	    	else {
@@ -383,6 +344,7 @@ public class PlayScreen implements Screen {
 		    		}
 	    			
 	    			if(dino.score % 50 == 0){
+	    				config.doubleJump = config.doubleJump + 1;
 	    				DinoRunner.sounds.get(config.SoundScore).play(config.volume);
 	    				if(dino.score == 50 || dino.score == 100 ||dino.score == 200){
 		    				minR = minR + 1;
@@ -411,7 +373,6 @@ public class PlayScreen implements Screen {
 		    		addCloud();
 		    		cloud.toBack();
 		    	}
-		    	checkHit();
 	    	}
 	        // update the action of actors
 	        stage.act(delta);

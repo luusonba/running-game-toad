@@ -20,18 +20,24 @@ public class MyStage extends Stage {
 	
 	@Override
 	public boolean touchDown(int x, int y, int pointer, int button) {
-
 		if (screen != null) {
 			if (screen.dino.isDie) {				
 				screen.dino.isDie = false;
+				config.state = GameState.GAME_RUNNING;
 				screen.showGame();
-				config.state = GameState.GAME_RUNNING;				
-			} else {
-				if(screen.dino.getY() == config.landY){
-					if(config.state == GameState.GAME_RUNNING){						
+			} else {				
+				if(config.state == GameState.GAME_RUNNING){
+					if (screen.dino.getY() == config.landY) {
 						screen.dino.tapMe();
 						DinoRunner.sounds.get(config.SoundJump).play(config.volume);
-					}					
+						config.canJump = true;
+					} else if ((screen.dino.getY() != config.landY) && config.canJump == true 
+							&& config.doubleJump > 0) {
+						screen.dino.tapMe();
+						DinoRunner.sounds.get(config.SoundJump).play(config.volume);
+						config.canJump = false;
+						config.doubleJump = config.doubleJump - 1;
+					}
 				}
 			}
 		}		
