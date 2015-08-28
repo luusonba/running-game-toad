@@ -84,8 +84,8 @@ repeat: none
 lands/land
   rotate: false
   xy: 1, 1
-  size: 1008, 126
-  orig: 1008, 126
+  size: 1024, 128
+  orig: 1024, 128
   offset: 0, 0
   index: -1
 

@@ -34,4 +34,6 @@ public class config {
     public static float landY = 0;
     
     public static int state = -1;
+    
+    public static float scale = 1f;
 }

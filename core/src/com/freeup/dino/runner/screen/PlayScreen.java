@@ -45,8 +45,6 @@ public class PlayScreen implements Screen {
 	
 	private static final int VIRTUAL_WIDTH = 480;
     private static final int VIRTUAL_HEIGHT = 800;
-    private static final float ASPECT_RATIO =
-        (float)VIRTUAL_WIDTH/(float)VIRTUAL_HEIGHT;
     	
 	public class GameState {
 		public static final int GAME_START = 0;
@@ -278,19 +276,10 @@ public class PlayScreen implements Screen {
 	}
 	
     @Override
-    public void resize(int width, int height){
-        float aspectRatio = (float)width/(float)height;
-        float scale = 1f;
-        if(aspectRatio > ASPECT_RATIO) {
-            scale = (float)height/(float)VIRTUAL_HEIGHT;
-        } else if(aspectRatio < ASPECT_RATIO) {
-            scale = (float)width/(float)VIRTUAL_WIDTH;
-        } else {
-            scale = (float)width/(float)VIRTUAL_WIDTH;
-        }
+    public void resize(int width, int height){    	
+    	float scale = config.scale;        
         float w = (float)VIRTUAL_WIDTH*scale;
         float h = (float)VIRTUAL_HEIGHT*scale;
-        
         Gdx.gl.glViewport((width - (int)w)/2, (height - (int)h)/2, (int)w, (int)h);
     }
     	
@@ -308,12 +297,12 @@ public class PlayScreen implements Screen {
 	            subLand.setPosition(land.getX()+VIRTUAL_WIDTH, 200);
 	        }
 	        
-	        Gdx.gl.glClearColor( 247/255f, 247/255f, 247/255f, 1f );
-	        Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT );	        
+	        Gdx.gl.glClearColor(247/255f, 247/255f, 247/255f, 1f);
+	        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);	        
     		break;
 		case GameState.GAME_RUNNING:
-	        Gdx.gl.glClearColor( 247/255f, 247/255f, 247/255f, 1f );
-	        Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT );
+			Gdx.gl.glClearColor(247/255f, 247/255f, 247/255f, 1f);
+	        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 	        if(stage.getCamera().position.x - VIRTUAL_WIDTH/2> subLand.getX()){
 	            land.moveleft.setDuration(config.kmoveLeftDura);
 				land.setPosition(subLand.getX(),200);
