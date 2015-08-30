@@ -5,6 +5,7 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.forever;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveByAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.freeup.dino.runner.screen.PlayScreen;
 import com.freeup.dino.runner.screen.PlayScreen.GameState;
 import com.freeup.dino.runner.utils.config;
 
@@ -13,6 +14,7 @@ public class Plant extends Image {
 	boolean getScore;
 	Dino dino;
 	TextureRegion txtRegion;
+	PlayScreen screen;
 	
 	public Plant(TextureRegion region, Dino dino, boolean getScore) {
 		super(region);
@@ -23,7 +25,11 @@ public class Plant extends Image {
 			actionMoveLeft();
 		}		
 	}
-		
+	
+	public void setPlayScreen(PlayScreen screen){
+		this.screen = screen;		
+	}
+	
 	@Override
 	public void act(float delta) {		
 		super.act(delta);
@@ -51,7 +57,7 @@ public class Plant extends Image {
         if (getX() <= dino.getX()) {
         	if (getScore) {
         		getScore = false;
-        		dino.updateScore();
+        		screen.updateScore();
         	}
         }
 	}

@@ -27,17 +27,20 @@ public class MyStage extends Stage {
 				screen.showGame();
 			} else {				
 				if(config.state == GameState.GAME_RUNNING){
-					if (screen.dino.getY() == config.landY) {
+					if (screen.dino.getY() <= config.landY + 20) {
 						screen.dino.tapMe();
 						DinoRunner.sounds.get(config.SoundJump).play(config.volume);
 						config.canJump = true;
-					} else if ((screen.dino.getY() != config.landY) && config.canJump == true 
+					} else if ((screen.dino.getY() > config.landY + 20) && config.canJump == true 
 							&& config.doubleJump > 0) {
 						screen.dino.tapMe();
 						DinoRunner.sounds.get(config.SoundJump).play(config.volume);
 						config.canJump = false;
 						config.doubleJump = config.doubleJump - 1;
 					}
+				} else if(config.state == GameState.GAME_START) {
+					config.state = GameState.GAME_RUNNING;
+					screen.showPlay(false);
 				}
 			}
 		}		

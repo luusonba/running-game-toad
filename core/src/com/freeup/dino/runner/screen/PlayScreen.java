@@ -9,8 +9,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -37,7 +35,8 @@ public class PlayScreen implements Screen {
 	private float duraAddCloud;
 	private int oldScore = 0;
 		
-	public static Label labelScore;
+	private Label labelScore;
+	private Label labelHiScore;
 	public Table tableTop;
 	private Preferences prefs;
 	private int minR = -4;
@@ -45,6 +44,8 @@ public class PlayScreen implements Screen {
 	
 	private static final int VIRTUAL_WIDTH = 480;
     private static final int VIRTUAL_HEIGHT = 800;
+	private int score;
+	private float wScore;
     	
 	public class GameState {
 		public static final int GAME_START = 0;
@@ -65,7 +66,7 @@ public class PlayScreen implements Screen {
 		screenW = DinoRunner.VIEWPORT.x;
 		screenH = DinoRunner.VIEWPORT.y;
 		stage = new MyStage(0, 0, true);
-		stage.setPlayScreen(this);		
+		stage.setPlayScreen(this);
 		game.manager.load("images/sprites.atlas", TextureAtlas.class);
 		game.manager.finishLoading();
 		atlas = game.manager.get("images/sprites.atlas", TextureAtlas.class);
@@ -109,13 +110,12 @@ public class PlayScreen implements Screen {
                 
         if(config.state == GameState.GAME_START){
         	addScreenPlay();
-        	addScreenTap();
         }
 	}
 	
-	/*private void showPlay(boolean isShow) {
+	public void showPlay(boolean isShow) {
 		tableTop.setVisible(isShow);
-	}*/
+	}
 		
 	private void addButton() {
 		        
@@ -149,43 +149,29 @@ public class PlayScreen implements Screen {
 		
 	private void addLabelScore() {
 		LabelStyle textStyle = new LabelStyle();
-		textStyle.font = new BitmapFont(Gdx.files.internal("font/score.fnt"), Gdx.files.internal("font/score.png"), false);
-
+		textStyle.font = new BitmapFont(Gdx.files.internal("font/score.fnt"),
+				Gdx.files.internal("font/score.png"), false);
 		labelScore = new Label("0",textStyle);
-		labelScore.setPosition(screenW - labelScore.getWidth()/2 - 30, screenH - labelScore.getHeight() - 5);
-		
+		wScore = labelScore.getWidth() * 4; 
+		textStyle.font = new BitmapFont(Gdx.files.internal("font/hiscore.fnt"),
+				Gdx.files.internal("font/hiscore.png"), false);
+		labelHiScore = new Label("HI 0",textStyle);
+		updatePositionScore();
+		stage.addActor(labelHiScore);
 		stage.addActor(labelScore);
 	}
 	
-	private void addScreenTap() {
-		LabelStyle textStyle = new LabelStyle();
-		textStyle.font = new BitmapFont(Gdx.files.internal("font/tap.fnt"), Gdx.files.internal("font/tap.png"), false);
-		
-		Label labelTitle;
-		labelTitle = new Label("TAP TO START",textStyle);
-		labelTitle.setFontScale((float)screenW/480);		       	
-            	/*showPlay(false);
-            	config.state = GameState.GAME_RUNNING;   
-            	oldScore = 0;
-            	startTime = System.currentTimeMillis();*/
-        		
-		/*tableTop = new Table();*/		
-		tableTop.add(labelTitle);
-		tableTop.row();
-
-		labelTitle.addListener(new InputListener() {
-			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {                    
-                return true;
-            }
-            
-            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {            	
-				// TODO Auto-generated method stub
-				config.state = GameState.GAME_RUNNING;
-            }			
-		});
-		
-		/*tableTop.setPosition(screenW/2, screenH - screenH/4);
-	    stage.addActor(tableTop);*/
+	public void updateScore() {
+		score ++;
+		labelScore.setText("" + score);
+		updatePositionScore();
+	}
+	
+	public void updatePositionScore() {
+		labelScore.setPosition(screenW - wScore/2 - 20,
+				screenH - labelScore.getHeight() - 10);
+		labelHiScore.setPosition(screenW - 2*wScore - 20,
+				screenH - labelHiScore.getHeight() - 10);
 	}
 	
 	private void addScreenPlay() {
@@ -193,20 +179,23 @@ public class PlayScreen implements Screen {
 		textStyle.font = new BitmapFont(Gdx.files.internal("font/dino.fnt"), Gdx.files.internal("font/dino.png"), false);
 		
 		Label labelTitle;
-		labelTitle = new Label("DINO RUNNER",textStyle);
-		labelTitle.setFontScale((float)screenW/480);		       	
-            	/*showPlay(false);
-            	config.state = GameState.GAME_RUNNING;   
-            	oldScore = 0;
-            	startTime = System.currentTimeMillis();*/
+		labelTitle = new Label("DINO RUNNER", textStyle);
+		labelTitle.setFontScale((float)screenW/480);
         		
 		tableTop = new Table();
-		tableTop.add(labelTitle);
-		tableTop.row();
-
+		tableTop.add(labelTitle).row();
+		
+		textStyle.font = new BitmapFont(Gdx.files.internal("font/tap.fnt"), Gdx.files.internal("font/tap.png"), false);
+		labelTitle = new Label(" ", textStyle);
+		labelTitle.setFontScale((float)screenW/480);
+		tableTop.add(labelTitle).row();
 		
 		tableTop.setPosition(screenW/2, screenH - screenH/4);
 	    stage.addActor(tableTop);
+	    	    
+		labelTitle = new Label("TAP TO START", textStyle);
+		labelTitle.setFontScale((float)screenW/480);
+		tableTop.add(labelTitle).row();
 	}
 	
 	private void addLand() {
@@ -253,7 +242,8 @@ public class PlayScreen implements Screen {
 			pipe = new Plant(atlas.findRegion("plants/plant5"), dino, true);
 			break;
 		}
-		pipe.setZIndex(1);	    
+		pipe.setZIndex(1);
+		pipe.setPlayScreen(this);
 	    float x = screenW + 10;
 	    float y = config.landY;	    	
 	    pipe.setPosition(x, y);	    
@@ -270,8 +260,7 @@ public class PlayScreen implements Screen {
 		cloud = new Cloud(atlas.findRegion("cloud/cloud"));
 	    float x = screenW + 10;
 	    float y = config.landY + (40 * random(8, 10));
-	    cloud.setPosition(x, y);
-	    
+	    cloud.setPosition(x, y);	    
 	    stage.addActor(cloud);	    
 	}
 	
@@ -288,6 +277,8 @@ public class PlayScreen implements Screen {
     	if (delta > 0.1f){
     	    delta = 0.1f;
     	}
+    	Gdx.gl.glClearColor(247/255f, 247/255f, 247/255f, 1f);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     	switch (config.state) {
     	case GameState.GAME_START:
 	        stage.act(delta);
@@ -295,26 +286,22 @@ public class PlayScreen implements Screen {
 	        if(stage.getCamera().position.x - VIRTUAL_WIDTH/2> subLand.getX()){	        	
 	        	land.setPosition(subLand.getX(),200);
 	            subLand.setPosition(land.getX()+VIRTUAL_WIDTH, 200);
-	        }
-	        
-	        Gdx.gl.glClearColor(247/255f, 247/255f, 247/255f, 1f);
-	        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);	        
+	        }	        
     		break;
 		case GameState.GAME_RUNNING:
-			Gdx.gl.glClearColor(247/255f, 247/255f, 247/255f, 1f);
-	        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-	        if(stage.getCamera().position.x - VIRTUAL_WIDTH/2> subLand.getX()){
+	        if(stage.getCamera().position.x - VIRTUAL_WIDTH/2 > subLand.getX()){
 	            land.moveleft.setDuration(config.kmoveLeftDura);
 				land.setPosition(subLand.getX(),200);
 				subLand.moveleft.setDuration(config.kmoveLeftDura);
-	            subLand.setPosition(land.getX()+VIRTUAL_WIDTH, 200);
+	            subLand.setPosition(land.getX() + VIRTUAL_WIDTH, 200);
 	        }
 			
 			if (dino.isDie){
-	    		if (dino.score > getHighScore()) {
-					setHighScore(dino.score);
+	    		if (score > getHighScore()) {
+					setHighScore(score);
 				}	    
 	    		oldScore = 0;
+	    		score = 0;
 	    		config.kmoveLeftDura = 0.50f;
 	    		config.kfallDura = 0.20f;
 	    		config.doubleJump = 2;
@@ -322,20 +309,20 @@ public class PlayScreen implements Screen {
 	    		config.state = GameState.GAME_OVER;    		
 	    	}
 	    	else {
-	    		if(dino.score > oldScore && dino.score % 10 == 0){
-	    			oldScore = dino.score;
+	    		if(score > oldScore && score % 10 == 0){
+	    			oldScore = score;
 	    			if(config.kmoveLeftDura > config.maxSpeed){
 	    				config.kmoveLeftDura = config.kmoveLeftDura - 0.008f;
 	    			}
 	    			
-	    			if(dino.score % 20 == 0 && config.kfallDura < config.maxFallDura){
+	    			if(score % 20 == 0 && config.kfallDura < config.maxFallDura){
 	    				config.kfallDura = config.kfallDura - 0.005f;	    				    			
 		    		}
 	    			
-	    			if(dino.score % 50 == 0){
+	    			if(score % 50 == 0){
 	    				config.doubleJump = config.doubleJump + 1;
 	    				DinoRunner.sounds.get(config.SoundScore).play(config.volume);
-	    				if(dino.score == 50 || dino.score == 100 ||dino.score == 200){
+	    				if(score == 50 || score == 100 || score == 200){
 		    				minR = minR + 1;
 		    			}
 	    			}	
@@ -368,16 +355,11 @@ public class PlayScreen implements Screen {
 			break;
 		case GameState.GAME_PAUSED:			
 			stage.act(0f);
-
 	        // clear the screen with the given RGB color (black)
-	        Gdx.gl.glClearColor( 247/255f, 247/255f, 247/255f, 1f );
-	        Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT );
 			break;
 		case GameState.GAME_OVER:
 			stage.act(0f);
 	        // clear the screen with the given RGB color (black)
-	        Gdx.gl.glClearColor( 247/255f, 247/255f, 247/255f, 1f );
-	        Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT );
 			land.clearActions();
 			break;		
 		default:
@@ -391,7 +373,6 @@ public class PlayScreen implements Screen {
     public int random(int min, int max)	{
     	Random rand = new Random();
         int randomNum = rand.nextInt((max - min) + 1) + min;
-
         return randomNum;
 	}	
 
