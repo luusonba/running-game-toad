@@ -37,7 +37,9 @@ public class PlayScreen implements Screen {
 		
 	private Label labelScore;
 	private Label labelHiScore;
-	public Table tableTop;
+	private Label labelCountDJ;
+	private Label labelDJ;
+	private Table tableTop;
 	private Preferences prefs;
 	private int minR = -4;
 	private int maxR = 4;
@@ -60,8 +62,7 @@ public class PlayScreen implements Screen {
 	int iCloud = 0;
 	int iPlant = 0;
 	
-	public PlayScreen(DinoRunner game) {		
-		
+	public PlayScreen(DinoRunner game) {
 		this.game = game;		
 		screenW = DinoRunner.VIEWPORT.x;
 		screenH = DinoRunner.VIEWPORT.y;
@@ -106,7 +107,7 @@ public class PlayScreen implements Screen {
         config.landY = land.getY() + land.getHeight() - 15;	
         addBird();               
         addButton();
-        addLabelScore();
+        addLabel();
                 
         if(config.state == GameState.GAME_START){
         	addScreenPlay();
@@ -147,31 +148,49 @@ public class PlayScreen implements Screen {
 		config.volume = 1.0f;
 	}
 		
-	private void addLabelScore() {
+	private void addLabel() {
 		LabelStyle textStyle = new LabelStyle();
+		
 		textStyle.font = new BitmapFont(Gdx.files.internal("font/score.fnt"),
 				Gdx.files.internal("font/score.png"), false);
 		labelScore = new Label("0",textStyle);
-		wScore = labelScore.getWidth() * 4; 
+		wScore = labelScore.getWidth() * 4;
+		labelScore.setPosition(screenW - wScore/2 - 20,
+				screenH - labelScore.getHeight() - 10);
+		
 		textStyle.font = new BitmapFont(Gdx.files.internal("font/hiscore.fnt"),
 				Gdx.files.internal("font/hiscore.png"), false);
-		labelHiScore = new Label("HI 0",textStyle);
-		updatePositionScore();
+		labelHiScore = new Label("HI " + getHighScore(), textStyle);		
+		labelHiScore.setPosition(screenW - 2*wScore - 50,
+				screenH - labelHiScore.getHeight() - 10);
+		
+		textStyle.font = new BitmapFont(Gdx.files.internal("font/dj.fnt"),
+				Gdx.files.internal("font/dj.png"), false);
+		labelCountDJ = new Label("DOUBLE JUMP: " + config.doubleJump, textStyle);		
+		labelCountDJ.setPosition(screenW - labelCountDJ.getWidth() - 10,
+				land.getY() + 70);
+		
+		labelDJ = new Label("DOUBLE JUMP!", textStyle);		
+		labelDJ.setPosition(screenW/2, screenH - screenH/4);
+		
 		stage.addActor(labelHiScore);
 		stage.addActor(labelScore);
+		stage.addActor(labelCountDJ);
+		stage.addActor(labelDJ);
+		showDJ(false);
+	}
+	
+	public void showDJ(boolean isJump) {
+		labelDJ.setVisible(isJump);
 	}
 	
 	public void updateScore() {
 		score ++;
 		labelScore.setText("" + score);
-		updatePositionScore();
 	}
 	
-	public void updatePositionScore() {
-		labelScore.setPosition(screenW - wScore/2 - 20,
-				screenH - labelScore.getHeight() - 10);
-		labelHiScore.setPosition(screenW - 2*wScore - 20,
-				screenH - labelHiScore.getHeight() - 10);
+	public void updateCountDJ() {
+		labelCountDJ.setText("DOUBLE JUMP: " + config.doubleJump);
 	}
 	
 	private void addScreenPlay() {

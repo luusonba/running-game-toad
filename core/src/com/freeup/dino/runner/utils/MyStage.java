@@ -21,6 +21,7 @@ public class MyStage extends Stage {
 	@Override
 	public boolean touchDown(int x, int y, int pointer, int button) {
 		if (screen != null) {
+			screen.showDJ(false);
 			if (screen.dino.isDie) {				
 				screen.dino.isDie = false;
 				config.state = GameState.GAME_RUNNING;
@@ -37,6 +38,8 @@ public class MyStage extends Stage {
 						DinoRunner.sounds.get(config.SoundJump).play(config.volume);
 						config.canJump = false;
 						config.doubleJump = config.doubleJump - 1;
+						screen.showDJ(true);
+						screen.updateCountDJ();
 					}
 				} else if(config.state == GameState.GAME_START) {
 					config.state = GameState.GAME_RUNNING;
