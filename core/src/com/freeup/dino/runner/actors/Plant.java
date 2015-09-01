@@ -64,7 +64,7 @@ public class Plant extends Image {
 
 	private void checkCollision() {
 		if (isCollision()) {
-			///////////////////////////////dino.hitMe();
+			dino.hitMe();
 		}
 	}
 	

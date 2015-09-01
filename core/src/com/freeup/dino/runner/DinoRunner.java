@@ -14,7 +14,7 @@ import com.freeup.dino.runner.utils.config;
 public class DinoRunner  extends Game {
 
 	//design viewport
-	public static final Vector2 VIEWPORT = new Vector2(480, 800);
+	public final Vector2 VIEWPORT = new Vector2(480, 800);
 		
 	//Quan ly textureAtals va sound
     public AssetManager manager = new AssetManager();

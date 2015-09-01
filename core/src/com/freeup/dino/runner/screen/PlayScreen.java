@@ -41,11 +41,9 @@ public class PlayScreen implements Screen {
 	private Label labelDJ;
 	private Table tableTop;
 	private Preferences prefs;
-	private int minR = -4;
-	private int maxR = 4;
+	private int minR = -3;
+	private int maxR = 5;
 	
-	private static final int VIRTUAL_WIDTH = 480;
-    private static final int VIRTUAL_HEIGHT = 800;
 	private int score;
 	private float wScore;
     	
@@ -56,16 +54,22 @@ public class PlayScreen implements Screen {
 	    public static final int GAME_OVER = 3;
 	}
 		
-	float screenW = 0;
-	float screenH = 0;
-	DinoRunner game;
-	int iCloud = 0;
-	int iPlant = 0;
+	private float screenW = 0;
+	private float screenH = 0;
+	private int iCloud = 0;
+	private int iPlant = 0;
+	private final float CONST_COLOR = 247/255f;
 	
-	public PlayScreen(DinoRunner game) {
-		this.game = game;		
-		screenW = DinoRunner.VIEWPORT.x;
-		screenH = DinoRunner.VIEWPORT.y;
+	private String CONST_STR_START = "TAP TO START";
+	private String CONST_STR_DINO = "DINO RUNNER";
+	private String CONST_STR_COUNTDJ = "2JUMP: ";
+	private String CONST_STR_DJ = "DOUBLE JUMP!";
+	private String CONST_STR_HI = "HI ";
+	private String CONST_STR_SPACE = " ";
+	
+	public PlayScreen(DinoRunner game) {		
+		screenW = game.VIEWPORT.x;
+		screenH = game.VIEWPORT.y;
 		stage = new MyStage(0, 0, true);
 		stage.setPlayScreen(this);
 		game.manager.load("images/sprites.atlas", TextureAtlas.class);
@@ -155,23 +159,22 @@ public class PlayScreen implements Screen {
 				Gdx.files.internal("font/score.png"), false);
 		labelScore = new Label("0",textStyle);
 		wScore = labelScore.getWidth() * 4;
-		labelScore.setPosition(screenW - wScore/2 - 20,
+		labelScore.setPosition(screenW - wScore / 2 - 20,
 				screenH - labelScore.getHeight() - 10);
 		
 		textStyle.font = new BitmapFont(Gdx.files.internal("font/hiscore.fnt"),
 				Gdx.files.internal("font/hiscore.png"), false);
-		labelHiScore = new Label("HI " + getHighScore(), textStyle);		
-		labelHiScore.setPosition(screenW - 2*wScore - 50,
+		labelHiScore = new Label(CONST_STR_HI + getHighScore(), textStyle);		
+		labelHiScore.setPosition(screenW - 2 * wScore - 50,
 				screenH - labelHiScore.getHeight() - 10);
 		
 		textStyle.font = new BitmapFont(Gdx.files.internal("font/dj.fnt"),
 				Gdx.files.internal("font/dj.png"), false);
-		labelCountDJ = new Label("DOUBLE JUMP: " + config.doubleJump, textStyle);		
-		labelCountDJ.setPosition(screenW - labelCountDJ.getWidth() - 10,
-				land.getY() + 70);
+		labelCountDJ = new Label(CONST_STR_COUNTDJ + config.doubleJump, textStyle);		
+		labelCountDJ.setPosition(10, screenH - labelHiScore.getHeight() - 10);
 		
-		labelDJ = new Label("DOUBLE JUMP!", textStyle);		
-		labelDJ.setPosition(screenW/2, screenH - screenH/4);
+		labelDJ = new Label(CONST_STR_DJ, textStyle);		
+		labelDJ.setPosition(screenW / 2 - labelDJ.getWidth() / 2, screenH - screenH / 4);
 		
 		stage.addActor(labelHiScore);
 		stage.addActor(labelScore);
@@ -181,7 +184,7 @@ public class PlayScreen implements Screen {
 	}
 	
 	public void showDJ(boolean isJump) {
-		labelDJ.setVisible(isJump);
+		labelDJ.setVisible(isJump); bo cho n ay remove bot label ra khi start
 	}
 	
 	public void updateScore() {
@@ -190,7 +193,7 @@ public class PlayScreen implements Screen {
 	}
 	
 	public void updateCountDJ() {
-		labelCountDJ.setText("DOUBLE JUMP: " + config.doubleJump);
+		labelCountDJ.setText(CONST_STR_COUNTDJ + config.doubleJump);
 	}
 	
 	private void addScreenPlay() {
@@ -198,21 +201,21 @@ public class PlayScreen implements Screen {
 		textStyle.font = new BitmapFont(Gdx.files.internal("font/dino.fnt"), Gdx.files.internal("font/dino.png"), false);
 		
 		Label labelTitle;
-		labelTitle = new Label("DINO RUNNER", textStyle);
+		labelTitle = new Label(CONST_STR_DINO, textStyle);
 		labelTitle.setFontScale((float)screenW/480);
         		
 		tableTop = new Table();
 		tableTop.add(labelTitle).row();
 		
 		textStyle.font = new BitmapFont(Gdx.files.internal("font/tap.fnt"), Gdx.files.internal("font/tap.png"), false);
-		labelTitle = new Label(" ", textStyle);
+		labelTitle = new Label(CONST_STR_SPACE, textStyle);
 		labelTitle.setFontScale((float)screenW/480);
 		tableTop.add(labelTitle).row();
 		
 		tableTop.setPosition(screenW/2, screenH - screenH/4);
 	    stage.addActor(tableTop);
 	    	    
-		labelTitle = new Label("TAP TO START", textStyle);
+		labelTitle = new Label(CONST_STR_START, textStyle);
 		labelTitle.setFontScale((float)screenW/480);
 		tableTop.add(labelTitle).row();
 	}
@@ -286,8 +289,8 @@ public class PlayScreen implements Screen {
     @Override
     public void resize(int width, int height){    	
     	float scale = config.scale;        
-        float w = (float)VIRTUAL_WIDTH*scale;
-        float h = (float)VIRTUAL_HEIGHT*scale;
+        float w = (float)config.VIRTUAL_WIDTH * scale;
+        float h = (float)config.VIRTUAL_HEIGHT * scale;
         Gdx.gl.glViewport((width - (int)w)/2, (height - (int)h)/2, (int)w, (int)h);
     }
     	
@@ -296,23 +299,23 @@ public class PlayScreen implements Screen {
     	if (delta > 0.1f){
     	    delta = 0.1f;
     	}
-    	Gdx.gl.glClearColor(247/255f, 247/255f, 247/255f, 1f);
+    	Gdx.gl.glClearColor(CONST_COLOR, CONST_COLOR, CONST_COLOR, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     	switch (config.state) {
     	case GameState.GAME_START:
 	        stage.act(delta);
 	        
-	        if(stage.getCamera().position.x - VIRTUAL_WIDTH/2> subLand.getX()){	        	
+	        if(stage.getCamera().position.x - config.VIRTUAL_WIDTH / 2> subLand.getX()){	        	
 	        	land.setPosition(subLand.getX(),200);
-	            subLand.setPosition(land.getX()+VIRTUAL_WIDTH, 200);
+	            subLand.setPosition(land.getX()+ config.VIRTUAL_WIDTH, 200);
 	        }	        
     		break;
 		case GameState.GAME_RUNNING:
-	        if(stage.getCamera().position.x - VIRTUAL_WIDTH/2 > subLand.getX()){
+	        if(stage.getCamera().position.x - config.VIRTUAL_WIDTH / 2 > subLand.getX()){
 	            land.moveleft.setDuration(config.kmoveLeftDura);
 				land.setPosition(subLand.getX(),200);
 				subLand.moveleft.setDuration(config.kmoveLeftDura);
-	            subLand.setPosition(land.getX() + VIRTUAL_WIDTH, 200);
+	            subLand.setPosition(land.getX() + config.VIRTUAL_WIDTH, 200);
 	        }
 			
 			if (dino.isDie){
@@ -331,7 +334,7 @@ public class PlayScreen implements Screen {
 	    		if(score > oldScore && score % 10 == 0){
 	    			oldScore = score;
 	    			if(config.kmoveLeftDura > config.maxSpeed){
-	    				config.kmoveLeftDura = config.kmoveLeftDura - 0.008f;
+	    				config.kmoveLeftDura = config.kmoveLeftDura - 0.0075f;
 	    			}
 	    			
 	    			if(score % 20 == 0 && config.kfallDura < config.maxFallDura){

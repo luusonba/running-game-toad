@@ -10,12 +10,15 @@ public class config {
     //Volume
     public static float volume = 1.0f;
     
+    public static final int VIRTUAL_WIDTH = 480;
+    public static final int VIRTUAL_HEIGHT = 800;
+    
     //chieu cao va chieu dai thiet ke cua hinh land.png
     public static int kLandHeight = 112;
     public static float kLandWidth = 336;
     
     //thoi gian move sang trai khoang kLandWidth
-    public static float kmoveLeftDura = 0.50f;
+    public static float kmoveLeftDura = 0.45f;
     public static float kfallDura = 0.20f;
         
     public static float maxSpeed = 0.30f;

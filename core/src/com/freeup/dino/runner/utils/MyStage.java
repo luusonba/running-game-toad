@@ -8,10 +8,11 @@ import com.freeup.dino.runner.screen.PlayScreen.GameState;
 
 public class MyStage extends Stage {
 	
-	PlayScreen screen;
+	private PlayScreen screen;
+	private int CONST_SPACE_LAND = 20;
 	
 	public MyStage(float width, float height, boolean keepAspecyRatio) {
-		super(new StretchViewport(480, 800));
+		super(new StretchViewport(config.VIRTUAL_WIDTH, config.VIRTUAL_HEIGHT));
 	}
 		
 	public void setPlayScreen(PlayScreen screen){
@@ -28,11 +29,11 @@ public class MyStage extends Stage {
 				screen.showGame();
 			} else {				
 				if(config.state == GameState.GAME_RUNNING){
-					if (screen.dino.getY() <= config.landY + 20) {
+					if (screen.dino.getY() <= config.landY + CONST_SPACE_LAND) {
 						screen.dino.tapMe();
 						DinoRunner.sounds.get(config.SoundJump).play(config.volume);
 						config.canJump = true;
-					} else if ((screen.dino.getY() > config.landY + 20) && config.canJump == true 
+					} else if ((screen.dino.getY() > config.landY + CONST_SPACE_LAND) && config.canJump == true 
 							&& config.doubleJump > 0) {
 						screen.dino.tapMe();
 						DinoRunner.sounds.get(config.SoundJump).play(config.volume);
