@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -27,23 +28,20 @@ public class PlayScreen implements Screen {
 	private MyStage stage;
 	private TextureAtlas atlas;
 	
-	private Land land;
-	private Land subLand;
+	private Land land, subLand;
 	private Cloud cloud;
 	private Plant pipe;
+	private Image btnPause;
 	
-	private float duraAddPipe;
-	private float duraAddCloud;
+	private float duraAddPipe, duraAddCloud;
 	private int oldScore = 0;
 		
-	private Label labelScore;
-	private Label labelHiScore;
-	private Label labelCountDJ;
-	private Label labelDJ;
+	private Label labelScore, labelHiScore,
+		labelCountDJ, labelDJ, labelOver;
 	private Table tableTop;
 	private Preferences prefs;
 	private int minR = -4;
-	private int maxR = 4;
+	private int maxR = 3;
 	
 	private int score;
 	private float wScore;
@@ -67,6 +65,7 @@ public class PlayScreen implements Screen {
 	private String CONST_STR_DJ = "DOUBLE JUMP!";
 	private String CONST_STR_HI = "HI ";
 	private String CONST_STR_SPACE = " ";
+	private String CONST_STR_OVER = "GAME OVER";
 	
 	public PlayScreen(DinoRunner game) {		
 		screenW = game.VIEWPORT.x;
@@ -99,24 +98,32 @@ public class PlayScreen implements Screen {
         config.state = GameState.GAME_START;
         showGame();
     }
-		
-	public void showGame()	{
-		stage.clear();		
-        duraAddPipe = 0;
-        duraAddCloud = 0;
-        pipe = null;
-        land = null;
-        dino = null;
-        addLand();        
-        addSubLand();
-        config.landY = land.getY() + land.getHeight() - 15;	
-        addBird();               
-        addButton();
+
+	private void initActor() {
+		addButton();
         addLabel();
         
         if(config.state == GameState.GAME_START){
         	addScreenPlay();
         }
+	}
+	
+	private void initValue() {
+		duraAddPipe = 0;
+        duraAddCloud = 0;
+        pipe = null;
+        land = null;
+        dino = null;
+	}
+	
+	public void showGame()	{
+		stage.clear();
+		initValue();
+        addLand();      
+        addSubLand();
+        config.landY = land.getY() + land.getHeight() - 15;
+        addBird();
+        initActor();
 	}
 	
 	public void showPlay(boolean isShow) {
@@ -145,14 +152,15 @@ public class PlayScreen implements Screen {
             }
         });*/
 	}
-	
+
 	public static void muteFX(){
 	    config.volume = 0.0f;
 	}
+
 	public static void normalizeFX(){
 		config.volume = 1.0f;
 	}
-	
+
 	private void addLabel() {
 		LabelStyle textStyle = new LabelStyle();
 		
@@ -179,13 +187,32 @@ public class PlayScreen implements Screen {
 		showRunning(false);
 		
 		labelDJ = new Label(CONST_STR_DJ, textStyle);		
-		labelDJ.setPosition(screenW / 2 - labelDJ.getWidth() / 2, screenH - screenH / 4);
+		labelDJ.setPosition(screenW / 2 - labelDJ.getWidth() / 2,
+				screenH - screenH / 4);
 		stage.addActor(labelDJ);
 		showDJ(false);
+		
+		textStyle.font = new BitmapFont(Gdx.files.internal("font/over.fnt"),
+				Gdx.files.internal("font/over.png"), false);
+		labelOver = new Label(CONST_STR_OVER, textStyle);		
+		labelOver.setPosition(screenW / 2 - labelOver.getWidth() / 2,
+				screenH - screenH / 4);
+		stage.addActor(labelOver);
+		
+		btnPause = new Image(atlas.findRegion("buttons/restart"));
+		btnPause.setPosition(screenW / 2 - btnPause.getWidth() / 2,
+				screenH - screenH / 4 - btnPause.getHeight() - 20);
+		stage.addActor(btnPause);		
+		showOver(false);
 	}
 	
 	public void showDJ(boolean isJump) {
 		labelDJ.setVisible(isJump);
+	}
+
+	private void showOver(boolean isJump) {
+		labelOver.setVisible(isJump);
+		btnPause.setVisible(isJump);
 	}
 	
 	public void showRunning(boolean isJump) {
@@ -288,7 +315,7 @@ public class PlayScreen implements Screen {
 	    float x = screenW + 10;
 	    float y = config.landY + (40 * random(8, 10));
 	    cloud.setPosition(x, y);	    
-	    stage.addActor(cloud);	    
+	    stage.addActor(cloud);
 	}
 	
     @Override
@@ -402,6 +429,7 @@ public class PlayScreen implements Screen {
 		config.doubleJump = 2;
 		config.canJump = true;
 		config.state = GameState.GAME_OVER;
+		showOver(true);
     }
 
     @Override
