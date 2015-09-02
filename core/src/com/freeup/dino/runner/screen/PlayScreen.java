@@ -22,13 +22,14 @@ import com.freeup.dino.runner.utils.config;
 
 public class PlayScreen implements Screen {
 	
+	public Dino dino;
+	
 	private MyStage stage;
 	private TextureAtlas atlas;
 	
 	private Land land;
 	private Land subLand;
 	private Cloud cloud;
-	public Dino dino;
 	private Plant pipe;
 	
 	private float duraAddPipe;
@@ -41,8 +42,8 @@ public class PlayScreen implements Screen {
 	private Label labelDJ;
 	private Table tableTop;
 	private Preferences prefs;
-	private int minR = -3;
-	private int maxR = 5;
+	private int minR = -4;
+	private int maxR = 4;
 	
 	private int score;
 	private float wScore;
@@ -112,7 +113,7 @@ public class PlayScreen implements Screen {
         addBird();               
         addButton();
         addLabel();
-                
+        
         if(config.state == GameState.GAME_START){
         	addScreenPlay();
         }
@@ -151,7 +152,7 @@ public class PlayScreen implements Screen {
 	public static void normalizeFX(){
 		config.volume = 1.0f;
 	}
-		
+	
 	private void addLabel() {
 		LabelStyle textStyle = new LabelStyle();
 		
@@ -161,30 +162,34 @@ public class PlayScreen implements Screen {
 		wScore = labelScore.getWidth() * 4;
 		labelScore.setPosition(screenW - wScore / 2 - 20,
 				screenH - labelScore.getHeight() - 10);
+		stage.addActor(labelScore);
 		
 		textStyle.font = new BitmapFont(Gdx.files.internal("font/hiscore.fnt"),
 				Gdx.files.internal("font/hiscore.png"), false);
 		labelHiScore = new Label(CONST_STR_HI + getHighScore(), textStyle);		
 		labelHiScore.setPosition(screenW - 2 * wScore - 50,
-				screenH - labelHiScore.getHeight() - 10);
+				screenH - labelHiScore.getHeight() - 10);		
+		stage.addActor(labelHiScore);
 		
 		textStyle.font = new BitmapFont(Gdx.files.internal("font/dj.fnt"),
 				Gdx.files.internal("font/dj.png"), false);
 		labelCountDJ = new Label(CONST_STR_COUNTDJ + config.doubleJump, textStyle);		
 		labelCountDJ.setPosition(10, screenH - labelHiScore.getHeight() - 10);
+		stage.addActor(labelCountDJ);
+		showRunning(false);
 		
 		labelDJ = new Label(CONST_STR_DJ, textStyle);		
 		labelDJ.setPosition(screenW / 2 - labelDJ.getWidth() / 2, screenH - screenH / 4);
-		
-		stage.addActor(labelHiScore);
-		stage.addActor(labelScore);
-		stage.addActor(labelCountDJ);
 		stage.addActor(labelDJ);
 		showDJ(false);
 	}
 	
 	public void showDJ(boolean isJump) {
-		labelDJ.setVisible(isJump); bo cho n ay remove bot label ra khi start
+		labelDJ.setVisible(isJump);
+	}
+	
+	public void showRunning(boolean isJump) {
+		labelCountDJ.setVisible(isJump);
 	}
 	
 	public void updateScore() {
@@ -318,19 +323,7 @@ public class PlayScreen implements Screen {
 	            subLand.setPosition(land.getX() + config.VIRTUAL_WIDTH, 200);
 	        }
 			
-			if (dino.isDie){
-	    		if (score > getHighScore()) {
-					setHighScore(score);
-				}	    
-	    		oldScore = 0;
-	    		score = 0;
-	    		config.kmoveLeftDura = 0.50f;
-	    		config.kfallDura = 0.20f;
-	    		config.doubleJump = 2;
-	    		config.canJump = true;
-	    		config.state = GameState.GAME_OVER;    		
-	    	}
-	    	else {
+			if (!dino.isDie){
 	    		if(score > oldScore && score % 10 == 0){
 	    			oldScore = score;
 	    			if(config.kmoveLeftDura > config.maxSpeed){
@@ -343,6 +336,7 @@ public class PlayScreen implements Screen {
 	    			
 	    			if(score % 50 == 0){
 	    				config.doubleJump = config.doubleJump + 1;
+	    				updateCountDJ();
 	    				DinoRunner.sounds.get(config.SoundScore).play(config.volume);
 	    				if(score == 50 || score == 100 || score == 200){
 		    				minR = minR + 1;
@@ -387,16 +381,28 @@ public class PlayScreen implements Screen {
 		default:
 			break;
 		}
-    	    	        
         // draw the actors
         stage.draw();       
     }
     
-    public int random(int min, int max)	{
+    private int random(int min, int max)	{
     	Random rand = new Random();
         int randomNum = rand.nextInt((max - min) + 1) + min;
         return randomNum;
-	}	
+	}
+    
+    public void resetConfig() {
+    	if (score > getHighScore()) {
+			setHighScore(score);
+		}	    
+		oldScore = 0;
+		score = 0;
+		config.kmoveLeftDura = 0.50f;
+		config.kfallDura = 0.20f;
+		config.doubleJump = 2;
+		config.canJump = true;
+		config.state = GameState.GAME_OVER;
+    }
 
     @Override
     public void hide(){

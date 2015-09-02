@@ -75,8 +75,7 @@ public class Dino extends Image {
 		setDrawable(new TextureRegionDrawable(regions[3]));
 	}
 	
-	float getDuraDown(float up, float down) {
-	    
+	float getDuraDown(float up, float down) {	    
 	    float dy = up - down;
 	    float duraDown;
 	    
@@ -84,8 +83,7 @@ public class Dino extends Image {
 	    	duraDown = 0.33f*config.kmoveLeftDura;
 	    } else {
 	        duraDown = dy * (0.33f*config.kmoveLeftDura) / config.kjumpHeight;
-	    }
-	    
+	    }	    
 	    return duraDown;
 	}
 }

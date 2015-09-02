@@ -11,14 +11,13 @@ import com.freeup.dino.runner.utils.config;
 
 public class Plant extends Image {
 
-	boolean getScore;
-	Dino dino;
-	TextureRegion txtRegion;
-	PlayScreen screen;
+	private boolean getScore;
+	private Dino dino;
+	private PlayScreen screen;
+	private float space = 20;
 	
 	public Plant(TextureRegion region, Dino dino, boolean getScore) {
 		super(region);
-		this.txtRegion = region;
 		this.dino = dino;
 		this.getScore = getScore;
 		if(config.state == GameState.GAME_RUNNING){
@@ -65,22 +64,20 @@ public class Plant extends Image {
 	private void checkCollision() {
 		if (isCollision()) {
 			dino.hitMe();
+			screen.resetConfig();
 		}
 	}
 	
 	private boolean isCollision() {
-		float b = 20;
-		float a = 30;
-		float u = 20;
 		float maxx1 = getX() + getWidth();
 		float minx1 = getX();
 		float maxy1 = getY() + getHeight();
 		float miny1 = getY();
     
-		float maxx2 = dino.getX() + dino.getWidth() - b;
-		float minx2 = dino.getX() + a;
-		float miny2 = dino.getY() + u;
-		float maxy2 = dino.getY() + dino.getHeight() - u;
+		float maxx2 = dino.getX() + dino.getWidth() - space;
+		float minx2 = dino.getX() + space;
+		float miny2 = dino.getY() + space;
+		float maxy2 = dino.getY() + dino.getHeight() - space;
 	    
 		return !(maxx1 < minx2 ||
 				maxx2 < minx1 ||

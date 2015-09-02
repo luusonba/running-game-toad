@@ -9,7 +9,7 @@ import com.freeup.dino.runner.screen.PlayScreen.GameState;
 public class MyStage extends Stage {
 	
 	private PlayScreen screen;
-	private int CONST_SPACE_LAND = 20;
+	private int CONST_SPACE_LAND = 0;
 	
 	public MyStage(float width, float height, boolean keepAspecyRatio) {
 		super(new StretchViewport(config.VIRTUAL_WIDTH, config.VIRTUAL_HEIGHT));
@@ -27,6 +27,7 @@ public class MyStage extends Stage {
 				screen.dino.isDie = false;
 				config.state = GameState.GAME_RUNNING;
 				screen.showGame();
+				screen.showRunning(true);
 			} else {				
 				if(config.state == GameState.GAME_RUNNING){
 					if (screen.dino.getY() <= config.landY + CONST_SPACE_LAND) {
@@ -45,6 +46,7 @@ public class MyStage extends Stage {
 				} else if(config.state == GameState.GAME_START) {
 					config.state = GameState.GAME_RUNNING;
 					screen.showPlay(false);
+					screen.showRunning(true);
 				}
 			}
 		}		
