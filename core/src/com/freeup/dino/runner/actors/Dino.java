@@ -70,7 +70,8 @@ public class Dino extends Image {
 
 	public void hitMe() {
 		DinoRunner.sounds.get(config.SoundHit).play(config.volume);
-		isDie = true;		
+		isDie = true;
+		config.dieTime = System.currentTimeMillis();
 		this.removeAction(curAction);
 		setDrawable(new TextureRegionDrawable(regions[3]));
 	}

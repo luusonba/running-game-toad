@@ -153,13 +153,13 @@ public class PlayScreen implements Screen {
         });*/
 	}
 
-	public static void muteFX(){
-	    config.volume = 0.0f;
-	}
-
-	public static void normalizeFX(){
-		config.volume = 1.0f;
-	}
+//	private void muteFX(){
+//	    config.volume = 0.0f;
+//	}
+//
+//	private void normalizeFX(){
+//		config.volume = 1.0f;
+//	}
 
 	private void addLabel() {
 		LabelStyle textStyle = new LabelStyle();
@@ -330,7 +330,7 @@ public class PlayScreen implements Screen {
     public void render (float delta ){
     	if (delta > 0.1f){
     	    delta = 0.1f;
-    	}
+    	} 
     	Gdx.gl.glClearColor(CONST_COLOR, CONST_COLOR, CONST_COLOR, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     	switch (config.state) {
@@ -430,6 +430,8 @@ public class PlayScreen implements Screen {
 		config.canJump = true;
 		config.state = GameState.GAME_OVER;
 		showOver(true);
+		
+		render sau 500 thi moi show btn Restart
     }
 
     @Override

@@ -34,9 +34,9 @@ public class config {
     public static boolean canJump = true;
             
     //position land Y
-    public static float landY = 0;
-    
-    public static int state = -1;
-    
+    public static float landY = 0;    
+    public static int state = -1;    
     public static float scale = 1f;
+    
+    public static long dieTime = 0;
 }

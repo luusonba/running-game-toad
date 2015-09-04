@@ -23,7 +23,8 @@ public class MyStage extends Stage {
 	public boolean touchDown(int x, int y, int pointer, int button) {
 		if (screen != null) {
 			screen.showDJ(false);
-			if (screen.dino.isDie) {				
+			boolean isTimeStart = System.currentTimeMillis() - 400 > config.dieTime; 
+			if (screen.dino.isDie && isTimeStart) {				
 				screen.dino.isDie = false;
 				config.state = GameState.GAME_RUNNING;
 				screen.showGame();
