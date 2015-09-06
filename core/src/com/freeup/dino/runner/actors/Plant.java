@@ -65,6 +65,7 @@ public class Plant extends Image {
 		if (isCollision()) {
 			dino.hitMe();
 			screen.resetConfig();
+			screen.updateOver();
 		}
 	}
 	

@@ -31,7 +31,7 @@ public class PlayScreen implements Screen {
 	private Land land, subLand;
 	private Cloud cloud;
 	private Plant pipe;
-	private Image btnPause;
+	public Image btnRestart;
 	
 	private float duraAddPipe, duraAddCloud;
 	private int oldScore = 0;
@@ -66,7 +66,8 @@ public class PlayScreen implements Screen {
 	private String CONST_STR_HI = "HI ";
 	private String CONST_STR_SPACE = " ";
 	private String CONST_STR_OVER = "GAME OVER";
-	
+	private int CONST_MILLI_SHOW = 750;
+
 	public PlayScreen(DinoRunner game) {		
 		screenW = game.VIEWPORT.x;
 		screenH = game.VIEWPORT.y;
@@ -199,11 +200,12 @@ public class PlayScreen implements Screen {
 				screenH - screenH / 4);
 		stage.addActor(labelOver);
 		
-		btnPause = new Image(atlas.findRegion("buttons/restart"));
-		btnPause.setPosition(screenW / 2 - btnPause.getWidth() / 2,
-				screenH - screenH / 4 - btnPause.getHeight() - 20);
-		stage.addActor(btnPause);		
+		btnRestart = new Image(atlas.findRegion("buttons/restart"));
+		btnRestart.setPosition(screenW / 2 - btnRestart.getWidth() / 2,
+				screenH - screenH / 4 - btnRestart.getHeight() - 20);
+		stage.addActor(btnRestart);		
 		showOver(false);
+		showRestart(false);
 	}
 	
 	public void showDJ(boolean isJump) {
@@ -212,7 +214,10 @@ public class PlayScreen implements Screen {
 
 	private void showOver(boolean isJump) {
 		labelOver.setVisible(isJump);
-		btnPause.setVisible(isJump);
+	}
+	
+	private void showRestart(boolean isJump) {
+		btnRestart.setVisible(isJump);
 	}
 	
 	public void showRunning(boolean isJump) {
@@ -222,6 +227,9 @@ public class PlayScreen implements Screen {
 	public void updateScore() {
 		score ++;
 		labelScore.setText("" + score);
+		if (score > getHighScore()) {
+			setHighScore(score);
+		}
 	}
 	
 	public void updateCountDJ() {
@@ -350,21 +358,24 @@ public class PlayScreen implements Screen {
 	            subLand.setPosition(land.getX() + config.VIRTUAL_WIDTH, 200);
 	        }
 			
-			if (!dino.isDie){
-	    		if(score > oldScore && score % 10 == 0){
+			if (!dino.isDie) {
+	    		if(score > oldScore && score % 10 == 0) {
 	    			oldScore = score;
-	    			if(config.kmoveLeftDura > config.maxSpeed){
+	    			if(config.kmoveLeftDura > config.maxSpeed) {
 	    				config.kmoveLeftDura = config.kmoveLeftDura - 0.0075f;
 	    			}
 	    			
-	    			if(score % 20 == 0 && config.kfallDura < config.maxFallDura){
+	    			if(score % 20 == 0) {
+	    				config.doubleJump = config.doubleJump + 1;
+	    				updateCountDJ();
+	    				DinoRunner.sounds.get(config.SoundScore).play(config.volume);	    				    			
+		    		}
+	    			
+	    			if(score % 20 == 0 && config.kfallDura < config.maxFallDura) {
 	    				config.kfallDura = config.kfallDura - 0.005f;	    				    			
 		    		}
 	    			
-	    			if(score % 50 == 0){
-	    				config.doubleJump = config.doubleJump + 1;
-	    				updateCountDJ();
-	    				DinoRunner.sounds.get(config.SoundScore).play(config.volume);
+	    			if(score % 50 == 0) {
 	    				if(score == 50 || score == 100 || score == 200){
 		    				minR = minR + 1;
 		    			}
@@ -404,6 +415,9 @@ public class PlayScreen implements Screen {
 			stage.act(0f);
 	        // clear the screen with the given RGB color (black)
 			land.clearActions();
+			if (System.currentTimeMillis() - CONST_MILLI_SHOW > config.dieTime) {
+	    		showRestart(true);
+	    	}
 			break;		
 		default:
 			break;
@@ -418,10 +432,15 @@ public class PlayScreen implements Screen {
         return randomNum;
 	}
     
+    public void updateOver() {
+    	showDJ(false);
+    	showOver(true);
+    	
+//		update hi score, check khi hi scroe = 0
+//		2jum = hi
+    }
+    
     public void resetConfig() {
-    	if (score > getHighScore()) {
-			setHighScore(score);
-		}	    
 		oldScore = 0;
 		score = 0;
 		config.kmoveLeftDura = 0.50f;
@@ -429,9 +448,6 @@ public class PlayScreen implements Screen {
 		config.doubleJump = 2;
 		config.canJump = true;
 		config.state = GameState.GAME_OVER;
-		showOver(true);
-		
-		render sau 500 thi moi show btn Restart
     }
 
     @Override
