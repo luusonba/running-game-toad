@@ -66,6 +66,8 @@ public class PlayScreen implements Screen {
 	private String CONST_STR_HI = "HI ";
 	private String CONST_STR_SPACE = " ";
 	private String CONST_STR_OVER = "GAME OVER";
+	private String CONST_STR_RATE = "RATE";
+	
 	private int CONST_MILLI_SHOW = 750;
 
 	public PlayScreen(DinoRunner game) {		
@@ -183,7 +185,7 @@ public class PlayScreen implements Screen {
 		textStyle.font = new BitmapFont(Gdx.files.internal("font/dj.fnt"),
 				Gdx.files.internal("font/dj.png"), false);
 		labelCountDJ = new Label(CONST_STR_COUNTDJ + config.doubleJump, textStyle);		
-		labelCountDJ.setPosition(10, screenH - labelHiScore.getHeight() - 10);
+		labelCountDJ.setPosition(15, screenH - labelHiScore.getHeight() - 10);
 		stage.addActor(labelCountDJ);
 		showRunning(false);
 		
@@ -256,6 +258,14 @@ public class PlayScreen implements Screen {
 	    stage.addActor(tableTop);
 	    	    
 		labelTitle = new Label(CONST_STR_START, textStyle);
+		labelTitle.setFontScale((float)screenW/480);
+		tableTop.add(labelTitle).row();
+		
+		labelTitle = new Label(CONST_STR_SPACE, textStyle);
+		labelTitle.setFontScale((float)screenW/480);
+		tableTop.add(labelTitle).row();
+		
+		labelTitle = new Label(CONST_STR_RATE, textStyle);
 		labelTitle.setFontScale((float)screenW/480);
 		tableTop.add(labelTitle).row();
 	}
@@ -435,9 +445,6 @@ public class PlayScreen implements Screen {
     public void updateOver() {
     	showDJ(false);
     	showOver(true);
-    	
-//		update hi score, check khi hi scroe = 0
-//		2jum = hi
     }
     
     public void resetConfig() {
