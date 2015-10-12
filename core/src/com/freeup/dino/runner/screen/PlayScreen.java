@@ -9,10 +9,14 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.freeup.dino.runner.DinoRunner;
 import com.freeup.dino.runner.actors.Dino;
 import com.freeup.dino.runner.actors.Cloud;
@@ -38,6 +42,7 @@ public class PlayScreen implements Screen {
 		
 	private Label labelScore, labelHiScore,
 		labelCountDJ, labelDJ, labelOver;
+	private Rectangle bounds;
 	private Table tableTop;
 	private Preferences prefs;
 	private int minR = -4;
@@ -59,14 +64,14 @@ public class PlayScreen implements Screen {
 	private int iPlant = 0;
 	private final float CONST_COLOR = 247/255f;
 	
-	private String CONST_STR_START = "TAP TO START";
-	private String CONST_STR_DINO = "DINO RUNNER";
-	private String CONST_STR_COUNTDJ = "2JUMP: ";
-	private String CONST_STR_DJ = "DOUBLE JUMP!";
-	private String CONST_STR_HI = "HI ";
-	private String CONST_STR_SPACE = " ";
-	private String CONST_STR_OVER = "GAME OVER";
-	private String CONST_STR_RATE = "RATE";
+	private final String CONST_STR_START = "TAP TO START";
+	private final String CONST_STR_DINO = "DINO RUNNER";
+	private final String CONST_STR_COUNTDJ = "2JUMP: ";
+	private final String CONST_STR_DJ = "DOUBLE JUMP!";
+	private final String CONST_STR_HI = "HI ";
+	private final String CONST_STR_SPACE = " ";
+	private final String CONST_STR_OVER = "GAME OVER";
+	private final String CONST_STR_RATE = "RATE";
 	
 	private int CONST_MILLI_SHOW = 750;
 
@@ -243,6 +248,7 @@ public class PlayScreen implements Screen {
 		textStyle.font = new BitmapFont(Gdx.files.internal("font/dino.fnt"), Gdx.files.internal("font/dino.png"), false);
 		
 		Label labelTitle;
+		TextButton txtRate;
 		labelTitle = new Label(CONST_STR_DINO, textStyle);
 		labelTitle.setFontScale((float)screenW/480);
         		
@@ -267,9 +273,24 @@ public class PlayScreen implements Screen {
 		
 		labelTitle = new Label(CONST_STR_RATE, textStyle);
 		labelTitle.setFontScale((float)screenW/480);
-		tableTop.add(labelTitle).row();
+		labelTitle.setPosition(0, 10 * config.scale);
+		bounds = new Rectangle(0, 10 * config.scale,
+				labelTitle.getWidth(), labelTitle.getHeight());
+		stage.addActor(labelTitle);
 	}
-	
+	public boolean isTouch(float x, float y) {
+		System.out.println("x: " + x);
+		System.out.println("y: " + y);
+		System.out.println("w: " + bounds.x);
+		System.out.println("h: " + (bounds.x + bounds.width));
+		System.out.println("bx: " + (480 - bounds.y));
+		System.out.println("by: " + (480 - (bounds.y + bounds.height)));
+		
+		return x * config.scale > bounds.x
+				&& x * config.scale < bounds.x + bounds.width
+				&& y * config.scale < 480 - bounds.y
+				&& y * config.scale > 480 - (bounds.y + bounds.height);
+	}
 	private void addLand() {
 		land = new Land(atlas.findRegion("lands/land"));
 		land.setY(200);

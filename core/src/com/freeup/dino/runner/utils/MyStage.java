@@ -44,9 +44,13 @@ public class MyStage extends Stage {
 						screen.updateCountDJ();
 					}
 				} else if(config.state == GameState.GAME_START) {
-					config.state = GameState.GAME_RUNNING;
-					screen.showPlay(false);
-					screen.showRunning(true);
+					if (screen.isTouch(x, y)) {
+						
+					} else {
+						config.state = GameState.GAME_RUNNING;
+						screen.showPlay(false);
+						screen.showRunning(true);
+					}
 				}
 			}
 		}		
