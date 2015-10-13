@@ -5,15 +5,12 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.freeup.dino.runner.DinoRunner;
 
 public class DesktopLauncher {
-	public static void main (String[] arg) {
-		
+	public static void main(String[] arg) {
+
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 		cfg.title = "Dino Runner";
-		cfg.width = 320;
-		cfg.height = 480;
-		
-//		cfg.width = 480;
-//		cfg.height = 800;
+		cfg.width = 480;
+		cfg.height = 800;
 		new LwjglApplication(new DinoRunner(), cfg);
 	}
 }
