@@ -86,6 +86,7 @@ public class PlayScreen implements Screen {
 		atlas = game.manager.get("images/sprites.atlas", TextureAtlas.class);
 		atlasPlus = game.manager.get("images/spritesplus.atlas", TextureAtlas.class);
 		prefs = Gdx.app.getPreferences("firstrunner");
+
 		if (!prefs.contains("highScore")) {
 			prefs.putInteger("highScore", 0);
 		}
@@ -119,6 +120,7 @@ public class PlayScreen implements Screen {
 		Gdx.input.setInputProcessor( stage );
 		Gdx.input.setCatchBackKey(true);
 		config.state = GameState.GAME_START;
+		config.volume = getVolume();
 		showGame();
 	}
 
