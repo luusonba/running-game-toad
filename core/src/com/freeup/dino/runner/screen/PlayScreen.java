@@ -33,16 +33,13 @@ public class PlayScreen implements Screen {
 	private Land land, subLand;
 	private Cloud cloud;
 	private Plant pipe;
-	public Image btnRestart, btnRate,
-		btnController, btnMute, btnVolume;
+	public Image btnRestart, btnRate, btnController, btnMute, btnVolume;
 
 	private float duraAddPipe, duraAddCloud;
 	private int oldScore = 0;
 
-	private Label labelScore, labelHiScore,
-		labelCountDJ, labelDJ, labelOver;
-	private Rectangle boundRate, boundController,
-		boundSound;
+	private Label labelScore, labelHiScore, labelCountDJ, labelDJ, labelOver;
+	private Rectangle boundRate, boundController, boundSound;
 	private Table tableTop;
 	private Preferences prefs;
 	private int minR = -4;
@@ -62,7 +59,7 @@ public class PlayScreen implements Screen {
 	private float screenH = 0;
 	private int iCloud = 0;
 	private int iPlant = 0;
-	private final float CONST_COLOR = 247/255f;
+	private final float CONST_COLOR = 247 / 255f;
 
 	private final String CONST_STR_START = "TAP TO START";
 	private final String CONST_STR_DINO = "DINO RUNNER";
@@ -84,7 +81,8 @@ public class PlayScreen implements Screen {
 		game.manager.load("images/spritesplus.atlas", TextureAtlas.class);
 		game.manager.finishLoading();
 		atlas = game.manager.get("images/sprites.atlas", TextureAtlas.class);
-		atlasPlus = game.manager.get("images/spritesplus.atlas", TextureAtlas.class);
+		atlasPlus = game.manager.get("images/spritesplus.atlas",
+				TextureAtlas.class);
 		prefs = Gdx.app.getPreferences("firstrunner");
 
 		if (!prefs.contains("highScore")) {
@@ -96,13 +94,13 @@ public class PlayScreen implements Screen {
 		}
 	}
 
-	public void setHighScore(long val) {
-		prefs.putLong("highScore", val);
+	public void setHighScore(int val) {
+		prefs.putInteger("highScore", val);
 		prefs.flush();
 	}
 
-	public long getHighScore() {
-		return prefs.getLong("highScore");
+	public int getHighScore() {
+		return prefs.getInteger("highScore");
 	}
 
 	public void setVolume(float vol) {
@@ -117,7 +115,7 @@ public class PlayScreen implements Screen {
 	@Override
 	public void show() {
 		// set the stage as the input processor
-		Gdx.input.setInputProcessor( stage );
+		Gdx.input.setInputProcessor(stage);
 		Gdx.input.setCatchBackKey(true);
 		config.state = GameState.GAME_START;
 		config.volume = getVolume();
@@ -127,7 +125,7 @@ public class PlayScreen implements Screen {
 	private void initActor() {
 		addLabel();
 
-		if(config.state == GameState.GAME_START){
+		if (config.state == GameState.GAME_START) {
 			addScreenPlay();
 		}
 	}
@@ -140,10 +138,10 @@ public class PlayScreen implements Screen {
 		dino = null;
 	}
 
-	public void showGame()	{
+	public void showGame() {
 		stage.clear();
 		initValue();
-		addLand();	  
+		addLand();
 		addSubLand();
 		config.landY = land.getY() + land.getHeight() - 15;
 		addBird();
@@ -154,7 +152,7 @@ public class PlayScreen implements Screen {
 		tableTop.setVisible(isShow);
 	}
 
-	public void changeFX(){
+	public void changeFX() {
 		if (getVolume() == 1.0f) {
 			config.volume = 0.0f;
 			btnMute.setVisible(true);
@@ -173,7 +171,7 @@ public class PlayScreen implements Screen {
 
 		textStyle.font = new BitmapFont(Gdx.files.internal("font/score.fnt"),
 				Gdx.files.internal("font/score.png"), false);
-		labelScore = new Label("0",textStyle);
+		labelScore = new Label("0", textStyle);
 		wScore = labelScore.getWidth() * 4;
 		labelScore.setPosition(screenW - wScore / 2 - 20,
 				screenH - labelScore.getHeight() - 10);
@@ -182,62 +180,61 @@ public class PlayScreen implements Screen {
 		textStyle.font = new BitmapFont(Gdx.files.internal("font/hiscore.fnt"),
 				Gdx.files.internal("font/hiscore.png"), false);
 		labelHiScore = new Label(CONST_STR_HI + getHighScore(), textStyle);
-		labelHiScore.setPosition(screenW - 2 * wScore - 50,
-				screenH - labelHiScore.getHeight() - 10);
+		labelHiScore.setPosition(screenW - 2 * wScore - 50, screenH
+				- labelHiScore.getHeight() - 10);
 		stage.addActor(labelHiScore);
 
 		textStyle.font = new BitmapFont(Gdx.files.internal("font/dj.fnt"),
 				Gdx.files.internal("font/dj.png"), false);
-		labelCountDJ = new Label(CONST_STR_COUNTDJ + config.doubleJump, textStyle);
+		labelCountDJ = new Label(CONST_STR_COUNTDJ + config.doubleJump,
+				textStyle);
 		labelCountDJ.setPosition(15, screenH - labelHiScore.getHeight() - 10);
 		stage.addActor(labelCountDJ);
 		showRunning(false);
 
 		labelDJ = new Label(CONST_STR_DJ, textStyle);
-		labelDJ.setPosition(screenW / 2 - labelDJ.getWidth() / 2,
-				screenH - screenH / 4);
+		labelDJ.setPosition(screenW / 2 - labelDJ.getWidth() / 2, screenH
+				- screenH / 4);
 		stage.addActor(labelDJ);
 		showDJ(false);
 
 		textStyle.font = new BitmapFont(Gdx.files.internal("font/over.fnt"),
 				Gdx.files.internal("font/over.png"), false);
 		labelOver = new Label(CONST_STR_OVER, textStyle);
-		labelOver.setPosition(screenW / 2 - labelOver.getWidth() / 2,
-				screenH - screenH / 4);
+		labelOver.setPosition(screenW / 2 - labelOver.getWidth() / 2, screenH
+				- screenH / 4);
 		stage.addActor(labelOver);
 
 		btnRestart = new Image(atlas.findRegion("buttons/restart"));
-		btnRestart.setPosition(screenW / 2 - btnRestart.getWidth() / 2,
-				screenH - screenH / 4 - btnRestart.getHeight() - 20);
+		btnRestart.setPosition(screenW / 2 - btnRestart.getWidth() / 2, screenH
+				- screenH / 4 - btnRestart.getHeight() - 20);
 		stage.addActor(btnRestart);
 
 		btnRate = new Image(atlasPlus.findRegion("rate"));
-		float posRate = 10 * config.scale;
+		float posRate = 10;
 		btnRate.setPosition(posRate, posRate);
-		boundRate = new Rectangle(posRate, posRate, btnRate.getWidth(), btnRate.getHeight());
+		boundRate = new Rectangle(posRate, posRate, btnRate.getWidth(),
+				btnRate.getHeight());
 		stage.addActor(btnRate);
 
-//		btnShare = new Image(atlasPlus.findRegion("share"));
-//		float posWShare = (20 + btnRate.getWidth()) * config.scale;
-//		btnShare.setPosition(posWShare, posRate);
-//		boundShare = new Rectangle(posWShare, posRate, btnShare.getWidth(), btnShare.getHeight());
-//		stage.addActor(btnShare);
-
 		btnController = new Image(atlas.findRegion("buttons/controller"));
-		float posWController = (20 + btnRate.getWidth()) * config.scale;
+		float posWController = (20 + btnRate.getWidth());
 		btnController.setPosition(posWController, posRate);
-		boundController = new Rectangle(posWController, posRate, btnController.getWidth(), btnController.getHeight());
+		boundController = new Rectangle(posWController, posRate,
+				btnController.getWidth(), btnController.getHeight());
 		stage.addActor(btnController);
 
 		btnMute = new Image(atlas.findRegion("buttons/mute"));
-		float posWSound = (30 + btnRate.getWidth() + btnMute.getWidth()) * config.scale;
+		float posWSound = (30 + btnRate.getWidth() + btnMute.getWidth());
 		btnMute.setPosition(posWSound, posRate);
-		boundSound = new Rectangle(posWSound, posRate, btnMute.getWidth(), btnMute.getHeight());
+		boundSound = new Rectangle(posWSound, posRate, btnMute.getWidth(),
+				btnMute.getHeight());
 		stage.addActor(btnMute);
 
 		btnVolume = new Image(atlas.findRegion("buttons/volumn"));
 		btnVolume.setPosition(posWSound, posRate);
-		boundSound = new Rectangle(posWSound, posRate, btnVolume.getWidth(), btnVolume.getHeight());
+		boundSound = new Rectangle(posWSound, posRate, btnVolume.getWidth(),
+				btnVolume.getHeight());
 		stage.addActor(btnVolume);
 
 		if (getVolume() == 1.0f) {
@@ -253,30 +250,30 @@ public class PlayScreen implements Screen {
 
 	public boolean isTouchRate(float x, float y) {
 		return x > boundRate.x
-			&& x < boundRate.x + boundRate.width
-			&& y < (screenH * config.scale) - boundRate.y
-			&& y > (screenH * config.scale) - (boundRate.y + boundRate.height);
+				&& x < boundRate.x + boundRate.width
+				&& y < screenH - boundRate.y
+				&& y > screenH - (boundRate.y + boundRate.height);
 	}
 
-//	public boolean isTouchShare(float x, float y) {
-//		return x > boundShare.x
-//			&& x < boundShare.x + boundShare.width
-//			&& y < (screenH * config.scale) - boundShare.y
-//			&& y > (screenH * config.scale) - (boundShare.y + boundShare.height);
-//	}
+	// public boolean isTouchShare(float x, float y) {
+	// return x > boundShare.x
+	// && x < boundShare.x + boundShare.width
+	// && y < (screenH * config.scale) - boundShare.y
+	// && y > (screenH * config.scale) - (boundShare.y + boundShare.height);
+	// }
 
 	public boolean isTouchController(float x, float y) {
 		return x > boundController.x
-			&& x < boundController.x + boundController.width
-			&& y < (screenH * config.scale) - boundController.y
-			&& y > (screenH * config.scale) - (boundController.y + boundController.height);
+				&& x < boundController.x + boundController.width
+				&& y < screenH - boundController.y
+				&& y > screenH - (boundController.y + boundController.height);
 	}
 
 	public boolean isTouchSound(float x, float y) {
 		return x > boundSound.x
-			&& x < boundSound.x + boundSound.width
-			&& y < (screenH * config.scale) - boundSound.y
-			&& y > (screenH * config.scale) - (boundSound.y + boundSound.height);
+				&& x < boundSound.x + boundSound.width
+				&& y < screenH - boundSound.y
+				&& y > screenH - (boundSound.y + boundSound.height);
 	}
 
 	public void showDJ(boolean isJump) {
@@ -296,7 +293,7 @@ public class PlayScreen implements Screen {
 	}
 
 	public void updateScore() {
-		score ++;
+		score++;
 		labelScore.setText("" + score);
 		if (score > getHighScore()) {
 			setHighScore(score);
@@ -309,29 +306,31 @@ public class PlayScreen implements Screen {
 
 	private void addScreenPlay() {
 		LabelStyle textStyle = new LabelStyle();
-		textStyle.font = new BitmapFont(Gdx.files.internal("font/dino.fnt"), Gdx.files.internal("font/dino.png"), false);
-		
+		textStyle.font = new BitmapFont(Gdx.files.internal("font/dino.fnt"),
+				Gdx.files.internal("font/dino.png"), false);
+
 		Label labelTitle;
 		labelTitle = new Label(CONST_STR_DINO, textStyle);
-		labelTitle.setFontScale((float)screenW/480);
-				
+		labelTitle.setFontScale((float) screenW / 480);
+
 		tableTop = new Table();
 		tableTop.add(labelTitle).row();
-		
-		textStyle.font = new BitmapFont(Gdx.files.internal("font/tap.fnt"), Gdx.files.internal("font/tap.png"), false);
+
+		textStyle.font = new BitmapFont(Gdx.files.internal("font/tap.fnt"),
+				Gdx.files.internal("font/tap.png"), false);
 		labelTitle = new Label(CONST_STR_SPACE, textStyle);
-		labelTitle.setFontScale((float)screenW/480);
+		labelTitle.setFontScale((float) screenW / 480);
 		tableTop.add(labelTitle).row();
 
-		tableTop.setPosition(screenW/2, screenH - screenH/4);
+		tableTop.setPosition(screenW / 2, screenH - screenH / 4);
 		stage.addActor(tableTop);
 
 		labelTitle = new Label(CONST_STR_START, textStyle);
-		labelTitle.setFontScale((float)screenW/480);
+		labelTitle.setFontScale((float) screenW / 480);
 		tableTop.add(labelTitle).row();
 
 		labelTitle = new Label(CONST_STR_SPACE, textStyle);
-		labelTitle.setFontScale((float)screenW/480);
+		labelTitle.setFontScale((float) screenW / 480);
 		tableTop.add(labelTitle).row();
 	}
 
@@ -345,15 +344,17 @@ public class PlayScreen implements Screen {
 	private void addSubLand() {
 		subLand = new Land(atlas.findRegion("lands/land"));
 		subLand.setY(200);
-		subLand.setX(subLand.getWidth()/2);
+		subLand.setX(subLand.getWidth() / 2);
 		stage.addActor(subLand);
 	}
 
 	private void addBird() {
-		TextureRegion[] regions = new TextureRegion[] { atlas.findRegion("dinos/left"),
-				atlas.findRegion("dinos/right"), atlas.findRegion("dinos/fly"), atlas.findRegion("dinos/die") };
+		TextureRegion[] regions = new TextureRegion[] {
+				atlas.findRegion("dinos/left"),
+				atlas.findRegion("dinos/right"), atlas.findRegion("dinos/fly"),
+				atlas.findRegion("dinos/die") };
 		dino = new Dino(regions);
-		dino.setPosition(dino.getWidth()/2, config.landY);
+		dino.setPosition(dino.getWidth() / 2, config.landY);
 		stage.addActor(dino);
 	}
 
@@ -402,16 +403,16 @@ public class PlayScreen implements Screen {
 	}
 
 	@Override
-	public void resize(int width, int height){
-		float scale = config.scale;
-		float w = (float)config.VIRTUAL_WIDTH * scale;
-		float h = (float)config.VIRTUAL_HEIGHT * scale;
-		Gdx.gl.glViewport((width - (int)w)/2, (height - (int)h)/2, (int)w, (int)h);
+	public void resize(int width, int height) {
+		float w = (float) config.VIRTUAL_WIDTH;
+		float h = (float) config.VIRTUAL_HEIGHT;
+		Gdx.gl.glViewport((width - (int) w) / 2, (height - (int) h) / 2,
+				(int) w, (int) h);
 	}
 
 	@Override
-	public void render (float delta ){
-		if (delta > 0.1f){
+	public void render(float delta) {
+		if (delta > 0.1f) {
 			delta = 0.1f;
 		}
 		Gdx.gl.glClearColor(CONST_COLOR, CONST_COLOR, CONST_COLOR, 1f);
@@ -420,59 +421,63 @@ public class PlayScreen implements Screen {
 		case GameState.GAME_START:
 			stage.act(delta);
 
-			if(stage.getCamera().position.x - config.VIRTUAL_WIDTH / 2> subLand.getX()){
-				land.setPosition(subLand.getX(),200);
-				subLand.setPosition(land.getX()+ config.VIRTUAL_WIDTH, 200);
+			if (stage.getCamera().position.x - config.VIRTUAL_WIDTH / 2 > subLand
+					.getX()) {
+				land.setPosition(subLand.getX(), 200);
+				subLand.setPosition(land.getX() + config.VIRTUAL_WIDTH, 200);
 			}
 			break;
 		case GameState.GAME_RUNNING:
-			if(stage.getCamera().position.x - config.VIRTUAL_WIDTH / 2 > subLand.getX()){
+			if (stage.getCamera().position.x - config.VIRTUAL_WIDTH / 2 > subLand
+					.getX()) {
 				land.moveleft.setDuration(config.kmoveLeftDura);
-				land.setPosition(subLand.getX(),200);
+				land.setPosition(subLand.getX(), 200);
 				subLand.moveleft.setDuration(config.kmoveLeftDura);
 				subLand.setPosition(land.getX() + config.VIRTUAL_WIDTH, 200);
 			}
 
 			if (!dino.isDie) {
-				if(score > oldScore && score % 10 == 0) {
+				if (score > oldScore && score % 10 == 0) {
 					oldScore = score;
-					if(config.kmoveLeftDura > config.maxSpeed) {
+					if (config.kmoveLeftDura > config.maxSpeed) {
 						config.kmoveLeftDura = config.kmoveLeftDura - 0.0075f;
 					}
 
-					if(score % 20 == 0) {
+					if (score % 20 == 0) {
 						config.doubleJump = config.doubleJump + 1;
 						updateCountDJ();
-						DinoRunner.sounds.get(config.SoundScore).play(config.volume);
+						DinoRunner.sounds.get(config.SoundScore).play(
+								config.volume);
 					}
-					
-					if(score % 20 == 0 && config.kfallDura < config.maxFallDura) {
+
+					if (score % 20 == 0
+							&& config.kfallDura < config.maxFallDura) {
 						config.kfallDura = config.kfallDura - 0.005f;
 					}
 
-					if(score % 50 == 0) {
-						if(score == 50 || score == 100 || score == 200){
+					if (score % 50 == 0) {
+						if (score == 50 || score == 100 || score == 200) {
 							minR = minR + 1;
 						}
-					}	
+					}
 				}
 
 				duraAddPipe += delta;
-				if(iPlant == 0){
+				if (iPlant == 0) {
 					iPlant = random(minR, maxR);
 				}
 
-				if (duraAddPipe > config.kmoveLeftDura/0.60f + 0.1f * iPlant){
+				if (duraAddPipe > config.kmoveLeftDura / 0.60f + 0.1f * iPlant) {
 					iPlant = 0;
 					duraAddPipe = 0;
 					addPipe();
 				}
 
 				duraAddCloud += delta;
-				if(iCloud == 0){
+				if (iCloud == 0) {
 					iCloud = random(2, 5);
 				}
-				if (duraAddCloud > config.kmoveLeftDura/0.60f * iCloud){
+				if (duraAddCloud > config.kmoveLeftDura / 0.60f * iCloud) {
 					iCloud = 0;
 					duraAddCloud = 0;
 					addCloud();
@@ -493,7 +498,7 @@ public class PlayScreen implements Screen {
 			if (System.currentTimeMillis() - CONST_MILLI_SHOW > config.dieTime) {
 				showRestart(true);
 			}
-			break;		
+			break;
 		default:
 			break;
 		}
@@ -501,7 +506,7 @@ public class PlayScreen implements Screen {
 		stage.draw();
 	}
 
-	private int random(int min, int max)	{
+	private int random(int min, int max) {
 		Random rand = new Random();
 		int randomNum = rand.nextInt((max - min) + 1) + min;
 		return randomNum;
@@ -523,19 +528,19 @@ public class PlayScreen implements Screen {
 	}
 
 	@Override
-	public void hide(){
+	public void hide() {
 		// dispose the resources by default
 		dispose();
 	}
 
 	@Override
-	public void pause() {	
-		//state = GameState.GAME_PAUSED;
+	public void pause() {
+		// state = GameState.GAME_PAUSED;
 	}
 
 	@Override
 	public void resume() {
-		//state = GameState.GAME_RUNNING;
+		// state = GameState.GAME_RUNNING;
 	}
 
 	@Override
