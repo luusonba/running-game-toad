@@ -27,6 +27,7 @@ public class PlayScreen implements Screen {
 	public Dino dino;
 
 	private MyStage stage;
+	private DinoRunner game;
 	private TextureAtlas atlas;
 	private TextureAtlas atlasPlus;
 
@@ -38,7 +39,8 @@ public class PlayScreen implements Screen {
 	private float duraAddPipe, duraAddCloud;
 	private int oldScore = 0;
 
-	private Label labelScore, labelHiScore, labelCountDJ, labelDJ, labelOver;
+	private Label labelScore, labelHiScore, labelCountDJ, labelPlusDJ, labelDJ,
+			labelOver;
 	private Rectangle boundRate, boundController, boundSound;
 	private Table tableTop;
 	private Preferences prefs;
@@ -63,6 +65,7 @@ public class PlayScreen implements Screen {
 
 	private final String CONST_STR_START = "TAP TO START";
 	private final String CONST_STR_DINO = "DINO RUNNER";
+	private final String CONST_STR_PLUS_DJ = "+1 2JUMP";
 	private final String CONST_STR_COUNTDJ = "2JUMP: ";
 	private final String CONST_STR_DJ = "DOUBLE JUMP!";
 	private final String CONST_STR_HI = "HI ";
@@ -83,6 +86,9 @@ public class PlayScreen implements Screen {
 		atlas = game.manager.get("images/sprites.atlas", TextureAtlas.class);
 		atlasPlus = game.manager.get("images/spritesplus.atlas",
 				TextureAtlas.class);
+
+		this.game = game;
+
 		prefs = Gdx.app.getPreferences("firstrunner");
 
 		if (!prefs.contains("highScore")) {
@@ -192,9 +198,17 @@ public class PlayScreen implements Screen {
 		stage.addActor(labelCountDJ);
 		showRunning(false);
 
+		labelPlusDJ = new Label(CONST_STR_PLUS_DJ, textStyle);
+		labelPlusDJ.setPosition(screenW / 2 - labelPlusDJ.getWidth() / 2, screenH
+				- screenH / 5);
+		labelPlusDJ.toBack();
+		stage.addActor(labelPlusDJ);
+		showPlusDJ(false);
+
 		labelDJ = new Label(CONST_STR_DJ, textStyle);
 		labelDJ.setPosition(screenW / 2 - labelDJ.getWidth() / 2, screenH
 				- screenH / 4);
+		labelDJ.toBack();
 		stage.addActor(labelDJ);
 		showDJ(false);
 
@@ -249,8 +263,7 @@ public class PlayScreen implements Screen {
 	}
 
 	public boolean isTouchRate(float x, float y) {
-		return x > boundRate.x
-				&& x < boundRate.x + boundRate.width
+		return x > boundRate.x && x < boundRate.x + boundRate.width
 				&& y < screenH - boundRate.y
 				&& y > screenH - (boundRate.y + boundRate.height);
 	}
@@ -270,14 +283,17 @@ public class PlayScreen implements Screen {
 	}
 
 	public boolean isTouchSound(float x, float y) {
-		return x > boundSound.x
-				&& x < boundSound.x + boundSound.width
+		return x > boundSound.x && x < boundSound.x + boundSound.width
 				&& y < screenH - boundSound.y
 				&& y > screenH - (boundSound.y + boundSound.height);
 	}
 
 	public void showDJ(boolean isJump) {
 		labelDJ.setVisible(isJump);
+	}
+
+	public void showPlusDJ(boolean isJump) {
+		labelPlusDJ.setVisible(isJump);
 	}
 
 	private void showOver(boolean isJump) {
@@ -420,6 +436,7 @@ public class PlayScreen implements Screen {
 		switch (config.state) {
 		case GameState.GAME_START:
 			stage.act(delta);
+			game.adsController.hideBannerAd();
 
 			if (stage.getCamera().position.x - config.VIRTUAL_WIDTH / 2 > subLand
 					.getX()) {
@@ -428,6 +445,7 @@ public class PlayScreen implements Screen {
 			}
 			break;
 		case GameState.GAME_RUNNING:
+			game.adsController.hideBannerAd();
 			if (stage.getCamera().position.x - config.VIRTUAL_WIDTH / 2 > subLand
 					.getX()) {
 				land.moveleft.setDuration(config.kmoveLeftDura);
@@ -444,6 +462,7 @@ public class PlayScreen implements Screen {
 					}
 
 					if (score % 20 == 0) {
+						showPlusDJ(true);
 						config.doubleJump = config.doubleJump + 1;
 						updateCountDJ();
 						DinoRunner.sounds.get(config.SoundScore).play(
@@ -495,6 +514,9 @@ public class PlayScreen implements Screen {
 			stage.act(0f);
 			// clear the screen with the given RGB color (black)
 			land.clearActions();
+			if(game.adsController.isWifiConnected()) {
+				game.adsController.showBannerAd();
+			}
 			if (System.currentTimeMillis() - CONST_MILLI_SHOW > config.dieTime) {
 				showRestart(true);
 			}
@@ -514,6 +536,7 @@ public class PlayScreen implements Screen {
 
 	public void updateOver() {
 		showDJ(false);
+		showPlusDJ(false);
 		showOver(true);
 	}
 
@@ -535,12 +558,12 @@ public class PlayScreen implements Screen {
 
 	@Override
 	public void pause() {
-		// state = GameState.GAME_PAUSED;
+		config.state = GameState.GAME_PAUSED;
 	}
 
 	@Override
 	public void resume() {
-		// state = GameState.GAME_RUNNING;
+		config.state = GameState.GAME_RUNNING;
 	}
 
 	@Override

@@ -13,6 +13,8 @@ import com.freeup.dino.runner.utils.config;
 
 public class DinoRunner extends Game {
 
+	public AdsController adsController;
+
 	// design viewport
 	public final Vector2 VIEWPORT = new Vector2(480, 800);
 
@@ -22,6 +24,10 @@ public class DinoRunner extends Game {
 
 	public SplashScreen getSplashScreen() {
 		return new SplashScreen(this);
+	}
+
+	public DinoRunner(AdsController adsController) {
+		this.adsController = adsController;
 	}
 
 	@Override

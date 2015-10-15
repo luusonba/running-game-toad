@@ -31,6 +31,7 @@ public class MyStage extends Stage {
 				screen.changeFX();
 			} else {
 				screen.showDJ(false);
+				screen.showPlusDJ(false);
 				if (screen.dino.isDie && screen.btnRestart.isVisible()) {
 					screen.dino.isDie = false;
 					config.state = GameState.GAME_RUNNING;

@@ -11,6 +11,6 @@ public class DesktopLauncher {
 		cfg.title = "Dino Runner";
 		cfg.width = 480;
 		cfg.height = 800;
-		new LwjglApplication(new DinoRunner(), cfg);
+		new LwjglApplication(new DinoRunner(null), cfg);
 	}
 }
