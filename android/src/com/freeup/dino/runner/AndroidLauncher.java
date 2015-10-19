@@ -5,6 +5,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -35,6 +36,9 @@ public class AndroidLauncher extends AndroidApplication implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		if (getResources().getBoolean(R.bool.portrait_only)) {
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		}
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		// Create a gameView and a bannerAd AdView
 		View gameView = initializeForView(new DinoRunner(this, this), config);

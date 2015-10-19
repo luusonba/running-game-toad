@@ -16,6 +16,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.freeup.dino.runner.DinoRunner;
 import com.freeup.dino.runner.utils.SpriteAccessor;
+import com.freeup.dino.runner.utils.config;
 
 public class SplashScreen implements Screen {
 
@@ -25,6 +26,11 @@ public class SplashScreen implements Screen {
 	private DinoRunner game;
 	public static TextureRegion logo;
 	public static Texture logoTexture;
+
+	private static final int VIRTUAL_WIDTH = 480;
+	private static final int VIRTUAL_HEIGHT = 800;
+	private static final float ASPECT_RATIO =
+			(float)VIRTUAL_WIDTH/(float)VIRTUAL_HEIGHT;
 
 	public SplashScreen(DinoRunner game) {
 		this.game = game;
@@ -43,9 +49,19 @@ public class SplashScreen implements Screen {
 		float width = Gdx.graphics.getWidth();
 		float height = Gdx.graphics.getHeight();
 
-		sprite.setSize(sprite.getWidth(), sprite.getHeight());
-		sprite.setPosition(((width / 2) - (sprite.getWidth() / 2)),
-				((height / 2) - (sprite.getHeight() / 2)));
+		float aspectRatio = (float)width/(float)height;
+		float scale = 1f;
+		if(aspectRatio > ASPECT_RATIO) {
+			scale = (float)height/(float)VIRTUAL_HEIGHT;
+		} else if(aspectRatio < ASPECT_RATIO) {
+			scale = (float)width/(float)VIRTUAL_WIDTH;
+		} else {
+			scale = (float)width/(float)VIRTUAL_WIDTH;
+		}
+		config.scale = scale;
+		sprite.setSize(sprite.getWidth() * scale, sprite.getHeight() * scale);
+		sprite.setPosition(((width / 2) - (sprite.getWidth() / 2)), ((height / 2)
+				- (sprite.getHeight() / 2)));
 		setupTween();
 		batcher = new SpriteBatch();
 	}

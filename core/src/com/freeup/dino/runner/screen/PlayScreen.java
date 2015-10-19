@@ -73,7 +73,6 @@ public class PlayScreen implements Screen {
 	private final String CONST_STR_OVER = "GAME OVER";
 
 	private int CONST_MILLI_SHOW = 750;
-	private int plusBtn = 70;
 
 	public PlayScreen(DinoRunner game) {
 		screenW = game.VIEWPORT.x;
@@ -264,6 +263,12 @@ public class PlayScreen implements Screen {
 	}
 
 	public boolean isTouchRate(float x, float y) {
+		System.out.println("X: " + x);
+		System.out.println("Y: " + y);
+		System.out.println("minX: " + boundRate.x);
+		System.out.println("maxX: " + boundRate.x + boundRate.width);
+		System.out.println("minY: " + (screenH - boundRate.y));
+		System.out.println("maxY: " + (screenH - (boundRate.y + boundRate.height)));
 		return x > boundRate.x && x < boundRate.x + boundRate.width
 				&& y < screenH - boundRate.y
 				&& y > screenH - (boundRate.y + boundRate.height);
@@ -421,8 +426,9 @@ public class PlayScreen implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-		float w = (float) config.VIRTUAL_WIDTH;
-		float h = (float) config.VIRTUAL_HEIGHT;
+		float scale = config.scale;
+		float w = (float) config.VIRTUAL_WIDTH * scale;
+		float h = (float) config.VIRTUAL_HEIGHT * scale;
 		Gdx.gl.glViewport((width - (int) w) / 2, (height - (int) h) / 2,
 				(int) w, (int) h);
 	}
@@ -541,10 +547,11 @@ public class PlayScreen implements Screen {
 	private void actionOver() {
 		if(game.adsController.isNetworkConnected()) {
 			game.adsController.showBannerAd();
-			btnController.setY(btnController.getY() + plusBtn);
-			btnRate.setY(btnRate.getY() + plusBtn);
-			btnMute.setY(btnMute.getY() + plusBtn);
-			btnVolume.setY(btnVolume.getY() + plusBtn);
+			int size = 100;
+			btnController.setY(btnController.getY() + size);
+			btnRate.setY(btnRate.getY() + size);
+			btnMute.setY(btnMute.getY() + size);
+			btnVolume.setY(btnVolume.getY() + size);
 			boundController.setY(btnController.getY());
 			boundRate.setY(boundRate.getY());
 			boundSound.setY(boundSound.getY());

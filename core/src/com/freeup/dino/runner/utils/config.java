@@ -38,4 +38,5 @@ public class config {
 	public static int state = -1;
 
 	public static long dieTime = 0;
+	public static float scale = 1f;
 }
