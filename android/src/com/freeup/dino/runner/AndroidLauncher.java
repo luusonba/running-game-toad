@@ -1,9 +1,14 @@
 package com.freeup.dino.runner;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -25,6 +30,7 @@ public class AndroidLauncher extends AndroidApplication implements
 
 	private AdView bannerAd;
 	private GameHelper gameHelper;
+	private boolean isShow = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +51,12 @@ public class AndroidLauncher extends AndroidApplication implements
 		layout.addView(bannerAd, params);
 
 		setContentView(layout);
+
+		if (gameHelper == null) {
+			gameHelper = new GameHelper(this, GameHelper.CLIENT_GAMES);
+			gameHelper.enableDebugLog(true);
+		}
+		gameHelper.setup(this);
 	}
 
 	public void setupAds() {
@@ -58,6 +70,7 @@ public class AndroidLauncher extends AndroidApplication implements
 	@Override
 	public void showBannerAd() {
 		// TODO Auto-generated method stub
+		isShow = true;
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
@@ -72,6 +85,7 @@ public class AndroidLauncher extends AndroidApplication implements
 	@Override
 	public void hideBannerAd() {
 		// TODO Auto-generated method stub
+		isShow = false;
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
@@ -81,12 +95,29 @@ public class AndroidLauncher extends AndroidApplication implements
 	}
 
 	@Override
-	public boolean isWifiConnected() {
-		// TODO Auto-generated method stub
-		ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo ni = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+	public boolean isNetworkConnected() {
+		if (isNetworkAvailable()) {
+			try {
+				HttpURLConnection urlc = (HttpURLConnection) (new URL("http://www.google.com").openConnection());
+				urlc.setRequestProperty("User-Agent", "Test");
+				urlc.setRequestProperty("Connection", "close");
+				urlc.setConnectTimeout(1500); 
+				urlc.connect();
+				return (urlc.getResponseCode() == 200);
+			} catch (IOException e) {
+				Log.e("ERR", "Error checking internet connection", e);
+			}
+		} else {
+			Log.d("ERR", "No network available!");
+		}
+		return false;
+	}
 
-		return (ni != null && ni.isConnected());
+	private boolean isNetworkAvailable() {
+		ConnectivityManager connectivityManager 
+			 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+		return activeNetworkInfo != null;
 	}
 
 	@Override
@@ -157,5 +188,11 @@ public class AndroidLauncher extends AndroidApplication implements
 	public void onSignInSucceeded() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public boolean isShowAds() {
+		// TODO Auto-generated method stub
+		return isShow;
 	}
 }

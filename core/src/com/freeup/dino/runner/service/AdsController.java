@@ -6,5 +6,7 @@ public interface AdsController {
 
 	public void hideBannerAd();
 
-	public boolean isWifiConnected();
+	public boolean isNetworkConnected();
+
+	public boolean isShowAds();
 }

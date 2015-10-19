@@ -25,17 +25,23 @@ import com.freeup.dino.runner.utils.config;
 public class PlayScreen implements Screen {
 
 	public Dino dino;
+	public DinoRunner game;
+	public Image btnRestart, btnRate, btnController,
+		btnMute, btnVolume;
+	public class GameState {
+		public static final int GAME_START = 0;
+		public static final int GAME_RUNNING = 1;
+		public static final int GAME_PAUSED = 2;
+		public static final int GAME_OVER = 3;
+	}
 
 	private MyStage stage;
-	public DinoRunner game;
 	private TextureAtlas atlas;
 	private TextureAtlas atlasPlus;
 
 	private Land land, subLand;
 	private Cloud cloud;
 	private Plant pipe;
-	public Image btnRestart, btnRate, btnController,
-		btnMute, btnVolume;
 
 	private float duraAddPipe, duraAddCloud;
 	private int oldScore = 0;
@@ -50,13 +56,6 @@ public class PlayScreen implements Screen {
 
 	private int score;
 	private float wScore;
-
-	public class GameState {
-		public static final int GAME_START = 0;
-		public static final int GAME_RUNNING = 1;
-		public static final int GAME_PAUSED = 2;
-		public static final int GAME_OVER = 3;
-	}
 
 	private float screenW = 0;
 	private float screenH = 0;
@@ -74,6 +73,7 @@ public class PlayScreen implements Screen {
 	private final String CONST_STR_OVER = "GAME OVER";
 
 	private int CONST_MILLI_SHOW = 750;
+	private int plusBtn = 70;
 
 	public PlayScreen(DinoRunner game) {
 		screenW = game.VIEWPORT.x;
@@ -437,7 +437,9 @@ public class PlayScreen implements Screen {
 		switch (config.state) {
 		case GameState.GAME_START:
 			stage.act(delta);
-			actionRunning();
+			if(game.adsController.isShowAds()) {
+				actionRunning();
+			}
 
 			if (stage.getCamera().position.x - config.VIRTUAL_WIDTH / 2 > subLand
 					.getX()) {
@@ -446,7 +448,9 @@ public class PlayScreen implements Screen {
 			}
 			break;
 		case GameState.GAME_RUNNING:
-			actionRunning();
+			if(game.adsController.isShowAds()) {
+				actionRunning();
+			}
 			if (stage.getCamera().position.x - config.VIRTUAL_WIDTH / 2 > subLand
 					.getX()) {
 				land.moveleft.setDuration(config.kmoveLeftDura);
@@ -515,7 +519,10 @@ public class PlayScreen implements Screen {
 			stage.act(0f);
 			// clear the screen with the given RGB color (black)
 			land.clearActions();
-			actionOver();
+			if(!game.adsController.isShowAds()) {
+				actionOver();
+			}
+
 			if (System.currentTimeMillis() - CONST_MILLI_SHOW > config.dieTime) {
 				showRestart(true);
 			}
@@ -532,8 +539,15 @@ public class PlayScreen implements Screen {
 	}
 
 	private void actionOver() {
-		if(game.adsController.isWifiConnected()) {
+		if(game.adsController.isNetworkConnected()) {
 			game.adsController.showBannerAd();
+			btnController.setY(btnController.getY() + plusBtn);
+			btnRate.setY(btnRate.getY() + plusBtn);
+			btnMute.setY(btnMute.getY() + plusBtn);
+			btnVolume.setY(btnVolume.getY() + plusBtn);
+			boundController.setY(btnController.getY());
+			boundRate.setY(boundRate.getY());
+			boundSound.setY(boundSound.getY());
 			if (game.actionResolver.getSignedInGPGS()) {
 				game.actionResolver.submitScoreGPGS(score);
 				if (score >= 10)
