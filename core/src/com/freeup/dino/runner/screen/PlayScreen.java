@@ -27,20 +27,21 @@ public class PlayScreen implements Screen {
 	public Dino dino;
 
 	private MyStage stage;
-	private DinoRunner game;
+	public DinoRunner game;
 	private TextureAtlas atlas;
 	private TextureAtlas atlasPlus;
 
 	private Land land, subLand;
 	private Cloud cloud;
 	private Plant pipe;
-	public Image btnRestart, btnRate, btnController, btnMute, btnVolume;
+	public Image btnRestart, btnRate, btnController,
+		btnMute, btnVolume;
 
 	private float duraAddPipe, duraAddCloud;
 	private int oldScore = 0;
 
-	private Label labelScore, labelHiScore, labelCountDJ, labelPlusDJ, labelDJ,
-			labelOver;
+	private Label labelScore, labelHiScore, labelCountDJ,
+		labelPlusDJ, labelDJ, labelOver;
 	private Rectangle boundRate, boundController, boundSound;
 	private Table tableTop;
 	private Preferences prefs;
@@ -436,7 +437,7 @@ public class PlayScreen implements Screen {
 		switch (config.state) {
 		case GameState.GAME_START:
 			stage.act(delta);
-			game.adsController.hideBannerAd();
+			actionRunning();
 
 			if (stage.getCamera().position.x - config.VIRTUAL_WIDTH / 2 > subLand
 					.getX()) {
@@ -445,7 +446,7 @@ public class PlayScreen implements Screen {
 			}
 			break;
 		case GameState.GAME_RUNNING:
-			game.adsController.hideBannerAd();
+			actionRunning();
 			if (stage.getCamera().position.x - config.VIRTUAL_WIDTH / 2 > subLand
 					.getX()) {
 				land.moveleft.setDuration(config.kmoveLeftDura);
@@ -514,9 +515,7 @@ public class PlayScreen implements Screen {
 			stage.act(0f);
 			// clear the screen with the given RGB color (black)
 			land.clearActions();
-			if(game.adsController.isWifiConnected()) {
-				game.adsController.showBannerAd();
-			}
+			actionOver();
 			if (System.currentTimeMillis() - CONST_MILLI_SHOW > config.dieTime) {
 				showRestart(true);
 			}
@@ -526,6 +525,29 @@ public class PlayScreen implements Screen {
 		}
 		// draw the actors
 		stage.draw();
+	}
+
+	private void actionRunning() {
+		game.adsController.hideBannerAd();
+	}
+
+	private void actionOver() {
+		if(game.adsController.isWifiConnected()) {
+			game.adsController.showBannerAd();
+			if (game.actionResolver.getSignedInGPGS()) {
+				game.actionResolver.submitScoreGPGS(score);
+				if (score >= 10)
+					game.actionResolver.unlockAchievementGPGS("CgkIsrydxtYTEAIQAg");
+				if (score >= 25)
+					game.actionResolver.unlockAchievementGPGS("CgkIsrydxtYTEAIQAw");
+				if (score >= 50)
+					game.actionResolver.unlockAchievementGPGS("CgkIsrydxtYTEAIQBA");
+				if (score >= 100)
+					game.actionResolver.unlockAchievementGPGS("CgkIsrydxtYTEAIQBQ");
+				if (score >= 250)
+					game.actionResolver.unlockAchievementGPGS("CgkIsrydxtYTEAIQBg");
+			}
+		}
 	}
 
 	private int random(int min, int max) {
@@ -558,12 +580,12 @@ public class PlayScreen implements Screen {
 
 	@Override
 	public void pause() {
-		config.state = GameState.GAME_PAUSED;
+		//config.state = GameState.GAME_PAUSED;
 	}
 
 	@Override
 	public void resume() {
-		config.state = GameState.GAME_RUNNING;
+		//config.state = GameState.GAME_RUNNING;
 	}
 
 	@Override

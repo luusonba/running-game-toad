@@ -2,4 +2,11 @@
 <resources>
 	<string name="app_name">Dino Runner</string>
 	<string name="ad_unit_id">ca-app-pub-6706530349295285/6419718256</string>
+	<string name="app_id">676067761714</string>
+	<string name="achievement_baby_dino">CgkIsrydxtYTEAIQAg</string>
+	<string name="achievement_teen_dino">CgkIsrydxtYTEAIQAw</string>
+	<string name="achievement_grown_dino">CgkIsrydxtYTEAIQBA</string>
+	<string name="achievement_master_dino">CgkIsrydxtYTEAIQBQ</string>
+	<string name="achievement_maxspeed_dino">CgkIsrydxtYTEAIQBg</string>
+	<string name="leaderboard_dino_leaderboard">CgkIsrydxtYTEAIQAQ</string>
 </resources>

@@ -9,11 +9,14 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
 import com.freeup.dino.runner.screen.SplashScreen;
+import com.freeup.dino.runner.service.ActionResolver;
+import com.freeup.dino.runner.service.AdsController;
 import com.freeup.dino.runner.utils.config;
 
 public class DinoRunner extends Game {
 
 	public AdsController adsController;
+	public ActionResolver actionResolver;
 
 	// design viewport
 	public final Vector2 VIEWPORT = new Vector2(480, 800);
@@ -26,8 +29,9 @@ public class DinoRunner extends Game {
 		return new SplashScreen(this);
 	}
 
-	public DinoRunner(AdsController adsController) {
+	public DinoRunner(AdsController adsController, ActionResolver actionResolver) {
 		this.adsController = adsController;
+		this.actionResolver = actionResolver;
 	}
 
 	@Override

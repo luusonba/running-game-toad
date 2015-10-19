@@ -26,7 +26,11 @@ public class MyStage extends Stage {
 			if (screen.isTouchRate(x, y)) {
 				Gdx.net.openURI("https://play.google.com/store/apps/details?id=com.freeup.dino.runner");
 			} else if (screen.isTouchController(x, y)) {
-				
+				if (screen.game.actionResolver.getSignedInGPGS()) {
+					screen.game.actionResolver.getLeaderboardGPGS();
+				} else {
+					screen.game.actionResolver.loginGPGS();
+				}
 			} else if (screen.isTouchSound(x, y)) {
 				screen.changeFX();
 			} else {
