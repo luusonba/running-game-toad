@@ -263,12 +263,6 @@ public class PlayScreen implements Screen {
 	}
 
 	public boolean isTouchRate(float x, float y) {
-		System.out.println("X: " + x);
-		System.out.println("Y: " + y);
-		System.out.println("minX: " + boundRate.x);
-		System.out.println("maxX: " + boundRate.x + boundRate.width);
-		System.out.println("minY: " + (screenH - boundRate.y));
-		System.out.println("maxY: " + (screenH - (boundRate.y + boundRate.height)));
 		return x > boundRate.x && x < boundRate.x + boundRate.width
 				&& y < screenH - boundRate.y
 				&& y > screenH - (boundRate.y + boundRate.height);

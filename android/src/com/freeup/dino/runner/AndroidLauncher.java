@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.net.ConnectivityManager;
@@ -12,6 +13,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
@@ -26,6 +28,7 @@ import com.google.android.gms.games.Games;
 import com.google.example.games.basegameutils.GameHelper;
 import com.google.example.games.basegameutils.GameHelper.GameHelperListener;
 
+@SuppressLint("InflateParams")
 public class AndroidLauncher extends AndroidApplication implements
 		AdsController, GameHelperListener, ActionResolver {
 
@@ -52,10 +55,18 @@ public class AndroidLauncher extends AndroidApplication implements
 				ViewGroup.LayoutParams.MATCH_PARENT,
 				ViewGroup.LayoutParams.WRAP_CONTENT);
 		params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+		View child = getLayoutInflater().inflate(R.layout.button, null);
+		layout.addView(child);
 		layout.addView(bannerAd, params);
 
 		setContentView(layout);
-
+		Button btnRate = (Button) child.findViewById(R.id.btnRate);
+		btnRate.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Perform action on click
+            	
+            }
+        });
 		if (gameHelper == null) {
 			gameHelper = new GameHelper(this, GameHelper.CLIENT_GAMES);
 			gameHelper.enableDebugLog(true);
@@ -155,7 +166,6 @@ public class AndroidLauncher extends AndroidApplication implements
 	public void unlockAchievementGPGS(String achievementId) {
 		// TODO Auto-generated method stub
 		Games.Achievements.unlock(gameHelper.getApiClient(), achievementId);
-		
 	}
 
 	@Override
