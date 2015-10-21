@@ -13,7 +13,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+//import android.widget.Button;
 import android.widget.RelativeLayout;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
@@ -51,22 +51,29 @@ public class AndroidLauncher extends AndroidApplication implements
 		RelativeLayout layout = new RelativeLayout(this);
 		layout.addView(gameView, ViewGroup.LayoutParams.MATCH_PARENT,
 				ViewGroup.LayoutParams.MATCH_PARENT);
+//		RelativeLayout.LayoutParams paramsAd = new RelativeLayout.LayoutParams(
+//				ViewGroup.LayoutParams.MATCH_PARENT,
+//				ViewGroup.LayoutParams.WRAP_CONTENT);
+//		paramsAd.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+//		paramsAd.addRule(RelativeLayout., R.id.btnRate);
+
 		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
 				ViewGroup.LayoutParams.MATCH_PARENT,
 				ViewGroup.LayoutParams.WRAP_CONTENT);
 		params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-		View child = getLayoutInflater().inflate(R.layout.button, null);
-		layout.addView(child);
+
+//		View child = getLayoutInflater().inflate(R.layout.button, null);
 		layout.addView(bannerAd, params);
+//		layout.addView(child, params);
 
 		setContentView(layout);
-		Button btnRate = (Button) child.findViewById(R.id.btnRate);
-		btnRate.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                // Perform action on click
-            	
-            }
-        });
+//		Button btnRate = (Button) child.findViewById(R.id.btnRate);
+//		btnRate.setOnClickListener(new View.OnClickListener() {
+//			public void onClick(View v) {
+//				// Perform action on click
+//				
+//			}
+//		});
 		if (gameHelper == null) {
 			gameHelper = new GameHelper(this, GameHelper.CLIENT_GAMES);
 			gameHelper.enableDebugLog(true);

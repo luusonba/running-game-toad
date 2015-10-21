@@ -283,6 +283,13 @@ public class PlayScreen implements Screen {
 	}
 
 	public boolean isTouchSound(float x, float y) {
+		System.out.println("scale: " + config.scale);
+		System.out.println("x: " + x);
+		System.out.println("y: " + y);
+		System.out.println("minx: " + boundSound.x);
+		System.out.println("maxx: " + (boundSound.x + boundSound.width));
+		System.out.println("miny: " + (screenH - boundSound.y));
+		System.out.println("maxy: " + (screenH - (boundSound.y + boundSound.height)));
 		return x > boundSound.x && x < boundSound.x + boundSound.width
 				&& y < screenH - boundSound.y
 				&& y > screenH - (boundSound.y + boundSound.height);
@@ -547,8 +554,8 @@ public class PlayScreen implements Screen {
 			btnMute.setY(btnMute.getY() + size);
 			btnVolume.setY(btnVolume.getY() + size);
 			boundController.setY(btnController.getY());
-			boundRate.setY(boundRate.getY());
-			boundSound.setY(boundSound.getY());
+			boundRate.setY(btnRate.getY());
+			boundSound.setY(btnMute.getY());
 			if (game.actionResolver.getSignedInGPGS()) {
 				game.actionResolver.submitScoreGPGS(score);
 				if (score >= 10)
