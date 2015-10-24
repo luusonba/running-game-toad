@@ -263,9 +263,20 @@ public class PlayScreen implements Screen {
 	}
 
 	public boolean isTouchRate(float x, float y) {
-		return x > boundRate.x && x < boundRate.x + boundRate.width
-				&& y < screenH - boundRate.y
-				&& y > screenH - (boundRate.y + boundRate.height);
+		float realX = x / config.scale;
+		float realY = y / config.scale;
+		System.out.println("x: " + x);
+		System.out.println("y: " + y);
+		System.out.println("realX: " + realX);
+		System.out.println("realY: " + realY);
+		System.out.println("minx: " + boundRate.x);
+		System.out.println("maxx: " + (boundRate.x + boundRate.width));
+		System.out.println("miny: " + (screenH - boundRate.y));
+		System.out.println("maxy: " + (screenH - (boundRate.y + boundRate.height)));
+		return realX > boundRate.x
+				&& realX < boundRate.x + boundRate.width
+				&& realY < screenH - boundRate.y
+				&& realY > screenH - (boundRate.y + boundRate.height);
 	}
 
 	// public boolean isTouchShare(float x, float y) {
@@ -276,23 +287,21 @@ public class PlayScreen implements Screen {
 	// }
 
 	public boolean isTouchController(float x, float y) {
-		return x > boundController.x
-				&& x < boundController.x + boundController.width
-				&& y < screenH - boundController.y
-				&& y > screenH - (boundController.y + boundController.height);
+		float realX = x / config.scale;
+		float realY = y / config.scale;
+		return realX > boundController.x
+				&& realX < boundController.x + boundController.width
+				&& realY < screenH - boundController.y
+				&& realY > screenH - (boundController.y + boundController.height);
 	}
 
 	public boolean isTouchSound(float x, float y) {
-		System.out.println("scale: " + config.scale);
-		System.out.println("x: " + x);
-		System.out.println("y: " + y);
-		System.out.println("minx: " + boundSound.x);
-		System.out.println("maxx: " + (boundSound.x + boundSound.width));
-		System.out.println("miny: " + (screenH - boundSound.y));
-		System.out.println("maxy: " + (screenH - (boundSound.y + boundSound.height)));
-		return x > boundSound.x && x < boundSound.x + boundSound.width
-				&& y < screenH - boundSound.y
-				&& y > screenH - (boundSound.y + boundSound.height);
+		float realX = x / config.scale;
+		float realY = y / config.scale;
+		return realX > boundSound.x
+				&& realX < boundSound.x + boundSound.width
+				&& realY < screenH - boundSound.y
+				&& realY > screenH - (boundSound.y + boundSound.height);
 	}
 
 	public void showDJ(boolean isJump) {
